@@ -8,6 +8,13 @@ Versione "easy" del progetto [dermoZanetta](../dermoZanetta): stessi dati e stes
 ma senza database, prenotazione online e area riservata. Solo HTML + CSS + 20 righe di JS:
 si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 
+**Indice** — [File](#file) · [Provare il sito](#provare-il-sito-in-locale) ·
+[Cambiare telefono, indirizzo o nome](#cambiare-telefono-indirizzo-o-nome-dello-studio) ·
+[Orari](#modificare-gli-orari) · [Foto](#foto) ·
+[Prestazioni](#aggiungere-togliere-o-modificare-una-prestazione) ·
+[Domande frequenti](#modificare-le-domande-frequenti) · [Colori](#colori) ·
+[Checklist prima di pubblicare](#checklist-prima-di-pubblicare) · [Pubblicare](#pubblicare)
+
 ## File
 
 | File | Cosa contiene |
@@ -18,6 +25,33 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
 | `img/` | immagini (ora segnaposto `.svg`) |
+
+## Provare il sito in locale
+
+Doppio clic su `index.html` (o `prestazioni.html`): si apre nel browser predefinito,
+niente server necessario. Dopo ogni modifica salva il file e ricarica la pagina con
+`Ctrl+F5` (ricarica "forzata", ignora la cache — con `F5` normale a volte non si vede
+subito il cambiamento).
+
+## Cambiare telefono, indirizzo o nome dello studio
+
+Non c'è un solo punto: il numero di telefono compare **~25 volte** fra `index.html` e
+`prestazioni.html` (bottoni "Chiama", link `tel:`, testo nel footer, dati strutturati
+per Google). Il modo sicuro per cambiarlo ovunque è **cerca e sostituisci su tutti i
+file**, con un editor di testo (es. VS Code, notepad++) o da riga di comando:
+
+- numero da chiamare (formato link): `+393515118880`
+- numero mostrato a video: `351 511 8880`
+- nome: `Roberta Zanetta` (attenzione: compare sia come `Dott.ssa Roberta Zanetta`
+  sia da sola dentro ad altri testi)
+- indirizzo: `Piazza Castello 27` / `Piazza Castello, 27` (due formati, uno per il
+  testo normale e uno per i dati strutturati JSON-LD) e `Verbania`
+- link Google Maps: `https://maps.google.com/?cid=15553148866995770811` — questo è
+  legato alla scheda Google reale dello studio, per cambiarlo serve il link della
+  scheda giusta (si trova su Google Maps → Condividi, sulla scheda dello studio)
+
+Dopo aver sostituito, apri le pagine e verifica che i bottoni "Chiama" e i link a
+Google Maps puntino ancora al posto giusto.
 
 ## Dati già inseriti
 
@@ -139,12 +173,61 @@ pubblicità sanitaria in Italia vieta formule tipo "i migliori risultati" o
 
 Dopo una modifica, ricarica la pagina nel browser con `Ctrl+F5` (svuota la cache).
 
+## Modificare le domande frequenti
+
+Sono in `index.html`, sezione `<section id="domande">`. Ogni domanda è un blocco:
+
+```html
+<details class="faq">
+  <summary>Quanto dura la visita dermatologica?</summary>
+  <p>
+    Gli appuntamenti sono fissati a intervalli di quindici minuti...
+  </p>
+</details>
+```
+
+- **modificare** → cambia il testo dentro `<summary>` (la domanda) o dentro `<p>`
+  (la risposta);
+- **aggiungere** → copia un blocco intero da `<details` a `</details>` e incollalo
+  dove vuoi che compaia;
+- **togliere** → cancella il blocco.
+
+Si apre e chiude da sola al clic: non serve JavaScript, è una funzione nativa del
+browser (tag `<details>`).
+
 ## Colori
 
 Tutti in cima a `style.css`, nel blocco `:root`. Cambiare `--terracotta` cambia bottoni
 e dettagli in tutto il sito.
 
+```css
+--crema:      #fdf8f3;  /* sfondo pagina */
+--sabbia:     #f4e9de;  /* sfondo sezioni alternate */
+--terracotta: #c0764e;  /* bottoni, filetti, accenti */
+--salvia:     #7f8f7a;  /* eyebrow, pallini elenco */
+--bruno:      #3b2e27;  /* testo principale, footer */
+```
+
+## Checklist prima di pubblicare
+
+- [ ] Telefono, indirizzo e nome corretti ovunque (vedi sezione sopra)
+- [ ] **P. IVA** e **numero di iscrizione all'Ordine dei Medici** inseriti — sono
+  obbligatori per legge sul sito di un medico (pubblicità sanitaria). Cerca i
+  commenti `DA COMPLETARE` in `index.html` e `prestazioni.html`: segnano il punto
+  esatto in cui va tolto il commento e scritto il dato vero
+- [ ] Email dello studio, se attiva (riga già pronta e commentata nella sezione
+  contatti di `index.html`)
+- [ ] Orari reali nella tabella **e** nel blocco JSON-LD (vedi sopra: due punti,
+  se aggiorni solo uno Google mostra orari sbagliati)
+- [ ] Foto vere al posto dei segnaposto `.svg` in `img/`
+- [ ] Aperto `index.html` e `prestazioni.html` nel browser e cliccato su tutti i
+  bottoni "Chiama" e sul link Google Maps, per controllare che portino al posto giusto
+- [ ] Provato il sito anche da telefono (o restringendo la finestra del browser):
+  il menu si apre, il bottone "Chiama" in basso funziona
+
 ## Pubblicare
 
 Sito statico: carica la cartella su un qualsiasi hosting, oppure attiva GitHub Pages
-(Settings → Pages → branch `main`, cartella `/root`).
+(Settings del repository → Pages → Source: *Deploy from a branch* → branch `main`,
+cartella `/ (root)`). Dopo qualche minuto il sito è online all'indirizzo che GitHub
+mostra in quella stessa pagina di impostazioni.
