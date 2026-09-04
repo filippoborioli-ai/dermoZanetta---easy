@@ -1,0 +1,364 @@
+/* =========================================================
+   Studio Dermatologico Zanetta — foglio di stile unico
+   Palette: terracotta, sabbia, crema, salvia, bruno caldo
+   ========================================================= */
+
+:root{
+  --crema:      #fdf8f3;
+  --sabbia:     #f4e9de;
+  --sabbia-2:   #eadbcb;
+  --terracotta: #c0764e;
+  --terracotta-scuro: #a45f3b;
+  --salvia:     #7f8f7a;
+  --bruno:      #3b2e27;
+  --bruno-soft: #6d5c50;
+  --bianco:     #fffdfb;
+
+  --radius:   18px;
+  --radius-s: 12px;
+  --ombra:    0 10px 30px rgba(59,46,39,.08);
+  --ombra-f:  0 18px 40px rgba(59,46,39,.14);
+  --wrap:     1120px;
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-t: Georgia, "Times New Roman", "Iowan Old Style", serif;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  font-family:var(--font);
+  font-size:16px;
+  line-height:1.6;
+  color:var(--bruno);
+  background:var(--crema);
+  -webkit-font-smoothing:antialiased;
+}
+
+img{ max-width:100%; height:auto; display:block; }
+a{ color:var(--terracotta-scuro); }
+
+h1,h2,h3{ font-family:var(--font-t); font-weight:600; line-height:1.18; margin:0 0 .4em; text-wrap:balance; }
+h1{ font-size:clamp(1.7rem, 3.1vw, 2.35rem); letter-spacing:-.4px; }
+h2{ font-size:clamp(1.35rem, 2.2vw, 1.75rem); }
+h3{ font-size:1.05rem; }
+p{ margin:0 0 .85em; }
+
+.wrap{ width:100%; max-width:var(--wrap); margin:0 auto; padding:0 22px; }
+.center{ text-align:center; }
+
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-size:.7rem;
+  font-weight:700;
+  color:var(--salvia);
+  margin:0 0 .5em;
+}
+
+.section{ padding:58px 0; }
+.section-alt{ background:var(--sabbia); }
+.section-intro{ color:var(--bruno-soft); max-width:62ch; }
+.center.section-intro{ margin-left:auto; margin-right:auto; }
+
+.skip{
+  position:absolute; left:-9999px; top:0; background:var(--bruno); color:#fff;
+  padding:10px 16px; z-index:100;
+}
+.skip:focus{ left:8px; top:8px; }
+
+/* ---------------- Bottoni ---------------- */
+.btn{
+  display:inline-block;
+  background:var(--terracotta);
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  padding:14px 26px;
+  border-radius:999px;
+  transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 6px 18px rgba(192,118,78,.28);
+}
+.btn:hover{ background:var(--terracotta-scuro); transform:translateY(-2px); box-shadow:0 10px 24px rgba(192,118,78,.34); }
+.btn-ghost{
+  background:transparent; color:var(--bruno);
+  border:1.5px solid var(--sabbia-2); box-shadow:none;
+}
+.btn-ghost:hover{ background:var(--sabbia); color:var(--bruno); }
+.btn-sm{ padding:9px 18px; font-size:.92rem; }
+.btn-block{ display:block; text-align:center; margin-top:20px; }
+
+/* ---------------- Header ---------------- */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(253,248,243,.92);
+  backdrop-filter:saturate(160%) blur(10px);
+  border-bottom:1px solid var(--sabbia-2);
+}
+.header-inner{ display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:74px; }
+
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+.brand-mark{
+  width:42px; height:42px; flex:0 0 42px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:var(--terracotta); color:#fff;
+  font-family:var(--font-t); font-size:1.3rem; font-weight:700;
+}
+.brand-text{ display:flex; flex-direction:column; line-height:1.2; }
+.brand-text strong{ font-family:var(--font-t); font-size:1.03rem; }
+.brand-text small{ color:var(--bruno-soft); font-size:.76rem; letter-spacing:.03em; }
+
+.nav{ display:flex; align-items:center; gap:26px; }
+.nav a{ text-decoration:none; color:var(--bruno); font-size:.95rem; font-weight:500; }
+.nav a:not(.btn):hover{ color:var(--terracotta); }
+.nav .btn{ color:#fff; }
+
+.nav-toggle{
+  display:none; background:none; border:0; cursor:pointer;
+  width:44px; height:44px; padding:10px;
+}
+.nav-toggle span{ display:block; height:2px; background:var(--bruno); margin:5px 0; border-radius:2px; transition:.25s; }
+.nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+/* ---------------- Hero ---------------- */
+.hero{
+  background:
+    radial-gradient(900px 460px at 88% -12%, rgba(192,118,78,.16), transparent 60%),
+    linear-gradient(180deg, var(--sabbia) 0%, var(--crema) 100%);
+  padding:52px 0 58px;
+}
+.hero-inner{ display:grid; grid-template-columns:1.08fr .82fr; gap:44px; align-items:center; }
+.lead{ font-size:1.04rem; color:var(--bruno-soft); max-width:54ch; }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:12px; margin:20px 0 12px; }
+
+.hero-note{ font-size:.85rem; color:var(--bruno-soft); margin:0 0 22px; }
+
+.hero-facts{
+  list-style:none; margin:0; padding:20px 0 0;
+  border-top:1px solid var(--sabbia-2);
+  display:flex; flex-wrap:wrap; gap:30px;
+}
+.hero-facts li{ display:flex; flex-direction:column; }
+.hero-facts strong{ font-size:1.02rem; font-weight:700; color:var(--terracotta); }
+.hero-facts span{ font-size:.85rem; color:var(--bruno-soft); }
+
+.hero-photo{ margin:0; }
+.hero-photo img{
+  width:100%; border-radius:170px 170px var(--radius) var(--radius);
+  box-shadow:var(--ombra-f);
+  object-fit:cover; aspect-ratio:5/6;
+}
+
+/* ---------------- Due colonne ---------------- */
+.two-col{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center; }
+.col-photo{ margin:0; }
+.col-photo img{
+  width:100%; border-radius:var(--radius);
+  box-shadow:var(--ombra); object-fit:cover; aspect-ratio:1/1;
+}
+
+.check-list{ list-style:none; margin:18px 0 0; padding:0; }
+.check-list li{ position:relative; padding-left:28px; margin-bottom:8px; color:var(--bruno-soft); }
+.check-list li::before{
+  content:""; position:absolute; left:0; top:.62em;
+  width:9px; height:9px; border-radius:50%;
+  background:var(--salvia);
+  box-shadow:0 0 0 5px rgba(127,143,122,.18);
+}
+
+/* ---------------- Prestazioni ---------------- */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  gap:16px;
+  margin-top:30px;
+}
+.card{
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius);
+  padding:20px 20px 22px;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover{ transform:translateY(-4px); box-shadow:var(--ombra); border-color:var(--terracotta); }
+.card h3{ margin-bottom:.35em; font-size:1rem; }
+.card p{ margin:0; color:var(--bruno-soft); font-size:.9rem; line-height:1.5; }
+/* Filetto terracotta al posto dell'icona: sobrio, adatto a un sito medico. */
+.card::before{
+  content:""; display:block;
+  width:28px; height:3px; border-radius:2px;
+  background:var(--terracotta);
+  margin-bottom:12px;
+}
+
+/* In home mostriamo 6 prestazioni: tre per riga, due righe piene. */
+@media (min-width: 920px){
+  #elencoPrestazioni[data-quante]{ grid-template-columns:repeat(3, 1fr); }
+}
+
+/* ---------------- Galleria ---------------- */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  gap:16px;
+  margin-top:30px;
+}
+.gallery img{
+  width:100%; aspect-ratio:3/2; object-fit:cover;
+  border-radius:var(--radius); box-shadow:var(--ombra);
+}
+
+/* ---------------- Testata pagina interna ---------------- */
+.page-head{
+  background:linear-gradient(180deg, var(--sabbia) 0%, var(--crema) 100%);
+  padding:46px 0 38px;
+}
+.page-head h1{ font-size:clamp(1.6rem, 2.8vw, 2.1rem); max-width:20ch; }
+.page-head .lead{ margin-bottom:20px; }
+
+/* ---------------- Ricerca prestazioni ---------------- */
+.search{ max-width:480px; margin:0 0 26px; }
+.search label{
+  display:block; margin-bottom:8px;
+  font-size:.8rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.14em; color:var(--salvia);
+}
+.search input{
+  width:100%; font:inherit; color:var(--bruno);
+  padding:11px 16px;
+  background:var(--bianco);
+  border:1.5px solid var(--sabbia-2);
+  border-radius:999px;
+}
+.search input:focus{ outline:2px solid var(--terracotta); outline-offset:2px; border-color:transparent; }
+.search-esito{ margin:10px 2px 0; font-size:.85rem; color:var(--bruno-soft); min-height:1.2em; }
+
+.note-legale{
+  margin:26px 0 0; font-size:.85rem; color:var(--bruno-soft);
+  border-left:3px solid var(--sabbia-2); padding-left:16px; max-width:70ch;
+}
+
+/* ---------------- Striscia richiamo ---------------- */
+.cta-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:26px;
+}
+.cta-strip h2{ margin-bottom:.3em; }
+.cta-strip .section-intro{ margin:0; }
+.cta-strip-actions{ display:flex; flex-wrap:wrap; gap:12px; }
+
+/* ---------------- Domande frequenti ---------------- */
+.narrow{ max-width:760px; }
+.faq{
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius-s);
+  padding:4px 22px;
+  margin-top:14px;
+}
+.faq + .faq{ margin-top:12px; }
+.faq summary{
+  cursor:pointer; list-style:none;
+  padding:13px 0; font-weight:600;
+  display:flex; justify-content:space-between; align-items:center; gap:14px;
+}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{
+  content:"+"; color:var(--terracotta); font-size:1.4rem; line-height:1; flex:0 0 auto;
+}
+.faq[open] summary::after{ content:"–"; }
+.faq p{ margin:0 0 15px; color:var(--bruno-soft); font-size:.95rem; }
+
+/* ---------------- Contatti ---------------- */
+.contact-list{ display:grid; gap:10px; margin-top:20px; }
+.contact-row{
+  display:flex; align-items:center; gap:16px;
+  padding:13px 16px;
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius-s);
+  text-decoration:none; color:var(--bruno);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.contact-row:hover{ border-color:var(--terracotta); transform:translateX(3px); }
+.contact-row span:last-child{ display:flex; flex-direction:column; }
+.contact-row small{ color:var(--bruno-soft); font-size:.83rem; }
+.contact-icon{
+  flex:0 0 42px; width:42px; height:42px;
+  display:grid; place-items:center;
+  border-radius:50%; background:var(--sabbia); color:var(--terracotta);
+  font-size:1.15rem;
+}
+
+.hours-card{
+  background:var(--sabbia);
+  border-radius:var(--radius);
+  padding:26px 26px;
+  box-shadow:var(--ombra);
+}
+.hours{ width:100%; border-collapse:collapse; font-size:.96rem; }
+.hours th{ text-align:left; font-weight:500; color:var(--bruno-soft); padding:7px 0; }
+.hours td{ text-align:right; padding:7px 0; }
+.hours tr + tr th, .hours tr + tr td{ border-top:1px solid var(--sabbia-2); }
+.note{ font-size:.83rem; color:var(--bruno-soft); margin:16px 0 0; text-align:center; }
+
+/* ---------------- Footer ---------------- */
+.site-footer{
+  background:var(--bruno);
+  color:#e9ddd2;
+  padding:40px 0 32px;
+  font-size:.88rem;
+}
+.footer-inner{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:28px; }
+.site-footer a{ color:#f0c9ac; }
+.footer-note{ color:#b3a396; font-size:.82rem; }
+
+/* ---------------- Pulsante chiamata mobile ---------------- */
+.call-fab{
+  display:none;
+  position:fixed; left:16px; right:16px; bottom:16px; z-index:60;
+  background:var(--terracotta); color:#fff;
+  text-align:center; text-decoration:none; font-weight:600;
+  padding:15px; border-radius:999px;
+  box-shadow:0 10px 26px rgba(59,46,39,.3);
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 900px){
+  body{ font-size:15.5px; }
+  .section{ padding:44px 0; }
+  .hero-inner,
+  .two-col{ grid-template-columns:1fr; gap:28px; }
+  .hero-photo{ order:-1; max-width:420px; margin:0 auto; }
+  .col-photo{ max-width:520px; margin:0 auto; }
+
+  .nav-toggle{ display:block; }
+  .nav{
+    position:absolute; top:100%; left:0; right:0;
+    flex-direction:column; align-items:stretch; gap:0;
+    background:var(--crema);
+    border-bottom:1px solid var(--sabbia-2);
+    padding:8px 22px 20px;
+    display:none;
+  }
+  .nav.open{ display:flex; }
+  .nav a{ padding:13px 0; border-bottom:1px solid var(--sabbia-2); }
+  .nav .btn{ margin-top:14px; text-align:center; border-bottom:0; }
+
+  .call-fab{ display:block; }
+  body{ padding-bottom:76px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+@media print{
+  .site-header,.call-fab,.hero-cta,.nav-toggle{ display:none !important; }
+  body{ background:#fff; }
+}

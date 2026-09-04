@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
+<meta name="description" content="Le prestazioni dello studio dermatologico della Dott.ssa Roberta Zanetta a Verbania: visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia e altro.">
+<meta name="theme-color" content="#c0764e">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Vai al contenuto</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Z</span>
+      <span class="brand-text">
+        <strong>Dott.ssa Roberta Zanetta</strong>
+        <small>Dermatologia e Venereologia</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="nav" class="nav">
+      <a href="index.html#chi-sono">Il medico</a>
+      <a href="prestazioni.html" aria-current="page">Prestazioni</a>
+      <a href="index.html#studio">Lo studio</a>
+      <a href="index.html#domande">Domande</a>
+      <a href="index.html#contatti">Dove siamo</a>
+      <a class="btn btn-sm" href="tel:+393515118880">Prenota</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Prestazioni</p>
+      <h1>Di cosa si occupa lo studio</h1>
+      <p class="lead">
+        Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e
+        modalit&agrave; di pagamento chiama lo studio: te lo diciamo prima di fissare
+        l&rsquo;appuntamento, senza impegno.
+      </p>
+      <p><a class="btn" href="tel:+393515118880">Chiama 351 511 8880</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+
+      <!-- La ricerca cerca anche fra le parole comuni: "brufoli" trova l'acne. -->
+      <div class="search">
+        <label for="cerca">Cerca una prestazione o un disturbo</label>
+        <input type="search" id="cerca" placeholder="es. nei, brufoli, capelli, verruche" autocomplete="off">
+        <p class="search-esito" id="esitoRicerca" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Le schede arrivano da dati.js: per aggiungere, togliere o modificare
+           una prestazione si tocca SOLO quel file. -->
+      <div class="cards" id="elencoPrestazioni"></div>
+
+      <noscript>
+        <p class="section-intro">
+          Per l&rsquo;elenco completo delle prestazioni chiama lo studio al
+          <a href="tel:+393515118880">351 511 8880</a>.
+        </p>
+      </noscript>
+
+      <p class="note-legale">
+        Le descrizioni hanno finalit&agrave; informativa e non sostituiscono la visita
+        medica: sar&agrave; il medico, durante la visita, a indicare il percorso adatto
+        al singolo caso.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap cta-strip">
+      <div>
+        <h2>Prenotare &egrave; una telefonata</h2>
+        <p class="section-intro">
+          Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27,
+          28921 Verbania (VB).
+        </p>
+      </div>
+      <div class="cta-strip-actions">
+        <a class="btn" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn btn-ghost" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">Apri in Google Maps</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <strong>Dott.ssa Roberta Zanetta</strong><br>
+      Dermatologia e Venereologia
+    </div>
+    <div>
+      Piazza Castello 27<br>
+      28921 Verbania (VB)<br>
+      <a href="tel:+393515118880">351 511 8880</a>
+    </div>
+    <div class="footer-note">
+      <!-- DA COMPLETARE prima della pubblicazione: P. IVA e numero di iscrizione
+           all'Ordine sono obbligatori sul sito di un medico. -->
+      Le informazioni di questo sito hanno finalit&agrave; informativa e non sostituiscono
+      la visita medica. In caso di emergenza chiamare il 112.<br>
+      &copy; <span id="year">2026</span> Dott.ssa Roberta Zanetta
+    </div>
+  </div>
+</footer>
+
+<a class="call-fab" href="tel:+393515118880">Chiama 351 511 8880</a>
+
+<script src="dati.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>

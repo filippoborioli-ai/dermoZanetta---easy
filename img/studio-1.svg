@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 620" width="560" height="620" role="img">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eadbcb"/>
+      <stop offset="1" stop-color="#dcc5ae"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="620" fill="url(#g)"/>
+  <circle cx="280" cy="248" r="70" fill="#ffffff" opacity=".35"/>
+  <text x="280" y="387" font-family="Georgia,serif" font-size="31" fill="#5b463a" text-anchor="middle">Sala visite</text>
+  <text x="280" y="427" font-family="Segoe UI,Arial,sans-serif" font-size="20" fill="#7d6858" text-anchor="middle">sostituisci questo file con una foto</text>
+</svg>
