@@ -13,7 +13,8 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 [Orari](#modificare-gli-orari) · [Foto](#foto) ·
 [Prestazioni](#aggiungere-togliere-o-modificare-una-prestazione) ·
 [Domande frequenti](#modificare-le-domande-frequenti) · [Colori](#colori) ·
-[Checklist prima di pubblicare](#checklist-prima-di-pubblicare) · [Pubblicare](#pubblicare)
+[Checklist prima di pubblicare](#checklist-prima-di-pubblicare) · [Pubblicare](#pubblicare) ·
+[Dominio personalizzato](#dominio-personalizzato) · [Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania)
 
 ## File
 
@@ -230,4 +231,109 @@ e dettagli in tutto il sito.
 Sito statico: carica la cartella su un qualsiasi hosting, oppure attiva GitHub Pages
 (Settings del repository → Pages → Source: *Deploy from a branch* → branch `main`,
 cartella `/ (root)`). Dopo qualche minuto il sito è online all'indirizzo che GitHub
-mostra in quella stessa pagina di impostazioni.
+mostra in quella stessa pagina di impostazioni (del tipo
+`https://tuoutente.github.io/dermoZanetta---easy/`).
+
+## Dominio personalizzato
+
+L'indirizzo `github.io` funziona, ma un dominio vero (es. `www.robertazanetta.it`)
+è più professionale e aiuta anche la ricerca su Google. Due pezzi: comprare il
+dominio, poi collegarlo a GitHub Pages.
+
+**1. Comprare il dominio** — un registrar qualsiasi (Aruba, Register.it, Namecheap,
+Cloudflare...). Un `.it` costa in genere 10-15&nbsp;€/anno. Nessun hosting da comprare:
+il sito resta su GitHub Pages, il dominio serve solo a "puntare" lì.
+
+**2. Aggiungere il file `CNAME`** — nella cartella del sito (accanto a `index.html`)
+crea un file chiamato esattamente `CNAME` (senza estensione), con dentro una riga
+sola: il dominio scelto, senza `https://` né `www.` se lo usi come principale:
+
+```
+www.robertazanetta.it
+```
+
+**3. Configurare il DNS** — dal pannello del registrar, aggiungi questi record
+(i nomi esatti dei campi variano da un registrar all'altro, ma il contenuto è questo):
+
+| Tipo | Nome | Valore |
+|---|---|---|
+| CNAME | `www` | `tuoutente.github.io` |
+| A | `@` (dominio nudo) | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+
+I 4 indirizzi A servono per far funzionare anche `robertazanetta.it` senza `www`
+(GitHub consiglia di avere entrambi e reindirizzare l'uno sull'altro).
+
+**4. Attivare su GitHub** — Settings → Pages → campo "Custom domain": scrivi lo
+stesso dominio del file `CNAME` e salva. Il DNS impiega da qualche minuto a
+qualche ora a propagarsi. Quando GitHub conferma il dominio, spunta **Enforce
+HTTPS**: il certificato è gratuito e automatico, non serve comprarlo.
+
+**5. Aggiornare i file del sito** — cerca `[DOMINIO]` in `robots.txt`,
+`sitemap.xml`, `index.html` e `prestazioni.html` (nei tag `<link rel="canonical">`)
+e sostituiscilo ovunque col dominio vero, es. `www.robertazanetta.it`.
+
+## Farsi trovare su Google per "dermatologo Verbania"
+
+Per una ricerca locale come questa, Google mostra due cose separate: il **pacchetto
+locale** (la mappa con 3 studi in alto) e i **risultati organici** sotto. Per uno
+studio medico il pacchetto locale conta molto di più del sito in sé — ma il sito
+resta il punto che li lega assieme e li rende credibili.
+
+### 1. Scheda Google Business Profile — la parte che conta di più
+
+Il sito ha già il link a una scheda Google Maps (quella con `cid=...` nella sezione
+contatti): significa che una scheda esiste già. Verifica che sia **rivendicata**
+(gestita da voi, non solo esistente) su [business.google.com](https://business.google.com/):
+
+- **Nome, indirizzo, telefono devono essere identici, carattere per carattere**, fra
+  la scheda Google e il sito (quello che si chiama coerenza "NAP" — Name, Address,
+  Phone). Discrepanze anche piccole (es. "Piazza Castello 27" contro "P.zza Castello,
+  27") confondono Google e indeboliscono il posizionamento.
+- Categoria principale: "Dermatologo".
+- Orari identici a quelli sul sito.
+- Foto vere dello studio caricate sulla scheda (le stesse che metti nel sito vanno bene).
+- Sito web nel campo apposito della scheda → punta al dominio nuovo.
+- **Recensioni**: sono probabilmente il fattore singolo più pesante per il pacchetto
+  locale. Chiedi ai pazienti soddisfatti di lasciarne una — un link diretto alla
+  pagina delle recensioni si genera dalla scheda Google Business stessa.
+
+### 2. Google Search Console — perché Google trovi e legga il sito
+
+Su [search.google.com/search-console](https://search.google.com/search-console/):
+aggiungi la proprietà col dominio, verifica la proprietà (un record DNS TXT, o un
+tag HTML che Google fornisce), poi invia `sitemap.xml` da lì (menu Sitemap). Senza
+questo passo Google trova comunque il sito prima o poi, ma può volerci settimane;
+con Search Console è questione di giorni, e puoi vedere per quali ricerche il sito
+compare già.
+
+### 3. Cosa c'è già nel sito che aiuta
+
+- `<title>` e `<meta description>` con "dermatologa" e "Verbania" in entrambe le
+  pagine — è già fatto, non toccare la struttura, solo i dati quando cambiano.
+- Dati strutturati `schema.org/Physician` (il blocco JSON-LD in fondo a `index.html`)
+  con indirizzo e coordinate: aiuta Google a capire cos'è la pagina, non solo a
+  leggerla come testo.
+- `robots.txt` e `sitemap.xml`: creati, da compilare col dominio vero (vedi sopra).
+- Sito veloce e senza dipendenze esterne: Google misura la velocità di caricamento
+  come fattore di posizionamento, e un sito statico come questo parte già avvantaggiato.
+
+### 4. Citazioni locali (backlink) — da fare una volta, aiutano nel tempo
+
+Registrare lo studio, con **nome indirizzo e telefono identici** al sito, su:
+
+- Directory mediche: [MioDottore](https://www.miodottore.it), [Dottori.it](https://www.dottori.it)
+- Directory generiche: PagineGialle, PagineBianche
+- Sito dell'Ordine dei Medici Chirurghi e Odontoiatri della provincia (Verbano-Cusio-Ossola)
+
+Ognuno di questi è un segnale in più che lega nome-indirizzo-telefono allo studio,
+e alcuni generano visite dirette al sito.
+
+### Cosa NON serve
+
+Non serve un blog, non servono "parole chiave" nascoste nel testo, non serve pagare
+per pubblicità display generica. Per una ricerca locale come "dermatologo Verbania"
+contano quasi solo: scheda Google curata e con recensioni, dati coerenti ovunque, e
+un sito veloce che li conferma. Il sito attuale copre già l'ultimo punto.
