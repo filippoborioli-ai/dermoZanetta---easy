@@ -41,7 +41,7 @@ img{ max-width:100%; height:auto; display:block; }
 a{ color:var(--terracotta-scuro); }
 
 h1,h2,h3{ font-family:var(--font-t); font-weight:600; line-height:1.15; margin:0 0 .32em; text-wrap:balance; }
-h1{ font-size:clamp(1.9rem, 3.2vw, 2.6rem); letter-spacing:-.3px; }
+h1{ font-size:clamp(1.8rem, 2.9vw, 2.25rem); letter-spacing:-.3px; }
 h2{ font-size:clamp(1.35rem, 2.2vw, 1.75rem); }
 h3{ font-size:1.05rem; }
 p{ margin:0 0 .65em; }
@@ -136,7 +136,7 @@ p{ margin:0 0 .65em; }
    serve (niente colonna larga con testo corto e vuoto prima della foto),
    e la coppia si centra come unico blocco nello spazio disponibile. */
 .hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px; }
-.hero-text{ max-width:540px; text-align:center; }
+.hero-text{ max-width:470px; text-align:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0 8px; }
 
@@ -159,7 +159,7 @@ p{ margin:0 0 .65em; }
 .hero-facts strong{ font-size:1.02rem; font-weight:700; color:var(--terracotta); }
 .hero-facts span{ font-size:.85rem; color:var(--bruno-soft); }
 
-.hero-photo{ margin:0 auto; max-width:280px; }
+.hero-photo{ margin:0 auto; max-width:250px; }
 .hero-photo img{
   width:100%; border-radius:110px 110px var(--radius) var(--radius);
   box-shadow:var(--ombra-f);
