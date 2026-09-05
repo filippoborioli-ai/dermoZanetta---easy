@@ -252,15 +252,22 @@ p{ margin:0 0 .65em; }
 .cta-strip .section-intro{ margin:0; }
 .cta-strip-actions{ display:flex; flex-wrap:wrap; gap:12px; }
 
-/* ---------------- Collaborazioni ---------------- */
+/* ---------------- Collaborazioni ----------------
+   Riga a scorrimento laterale, non a capo: con pochi loghi (come ora)
+   restano centrati senza barra di scorrimento; se in futuro se ne
+   aggiungono altri oltre a quelli che stanno nella larghezza
+   disponibile, si scorre invece di andare a capo su piu' righe. */
 .logos{
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
+  overflow-x:auto;
   justify-content:center;
   align-items:stretch;
   gap:14px;
   margin-top:22px;
+  scroll-snap-type:x proximity;
 }
+.logo-card{ scroll-snap-align:center; flex:0 0 auto; }
 .logo-card{
   display:flex;
   align-items:center;
@@ -361,7 +368,17 @@ p{ margin:0 0 .65em; }
   .section{ padding:32px 0; }
   .hero-inner,
   .two-col{ grid-template-columns:1fr; gap:22px; }
-  .hero-photo{ order:-1; max-width:420px; margin:0 auto; }
+
+  /* Foto dello studio a scorrimento laterale invece che impilate:
+     una sezione impilata su tre foto intere sarebbe troppo lunga. */
+  .gallery{
+    display:flex; flex-wrap:nowrap; overflow-x:auto;
+    scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+  }
+  .gallery img{ flex:0 0 82%; width:82%; scroll-snap-align:center; }
+  /* Testo prima, foto dopo (piu' piccola) su mobile: ordine naturale del
+     documento, nessun order per invertirlo come su desktop. */
+  .hero-photo{ max-width:200px; margin:20px auto 0; }
   .col-photo{ max-width:520px; margin:0 auto; }
 
   .nav-toggle{ display:block; }
