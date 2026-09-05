@@ -61,7 +61,7 @@ p{ margin:0 0 .8em; }
   margin:0 0 .35em;
 }
 
-.section{ padding:42px 0 50px; }
+.section{ padding:42px 0 34px; }
 .section-alt{ background:var(--sabbia); }
 .section-intro{ color:var(--bruno-soft); max-width:62ch; margin-bottom:0; }
 .center.section-intro{ margin-left:auto; margin-right:auto; }
@@ -426,7 +426,7 @@ p{ margin:0 0 .8em; }
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px){
   body{ font-size:15.5px; }
-  .section{ padding:34px 0 40px; }
+  .section{ padding:34px 0 30px; }
   .hero-inner,
   .two-col{ grid-template-columns:1fr; gap:22px; }
 
