@@ -41,7 +41,7 @@ img{ max-width:100%; height:auto; display:block; }
 a{ color:var(--terracotta-scuro); }
 
 h1,h2,h3{ font-family:var(--font-t); font-weight:600; line-height:1.15; margin:0 0 .32em; text-wrap:balance; }
-h1{ font-size:clamp(1.5rem, 2.6vw, 2rem); letter-spacing:-.3px; }
+h1{ font-size:clamp(1.9rem, 3.2vw, 2.6rem); letter-spacing:-.3px; }
 h2{ font-size:clamp(1.35rem, 2.2vw, 1.75rem); }
 h3{ font-size:1.05rem; }
 p{ margin:0 0 .65em; }
@@ -135,12 +135,20 @@ p{ margin:0 0 .65em; }
 /* Flex, non grid a frazioni: ogni blocco prende solo lo spazio che gli
    serve (niente colonna larga con testo corto e vuoto prima della foto),
    e la coppia si centra come unico blocco nello spazio disponibile. */
-.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:18px; }
+.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px; }
 .hero-text{ max-width:540px; text-align:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0 8px; }
 
 .hero-note{ font-size:.82rem; color:var(--bruno-soft); margin:0 0 12px; }
+
+/* Sul layout affiancato del desktop la foto e' piu' alta del blocco di
+   testo: invece di lasciare vuoto sopra e sotto (il blocco resterebbe
+   centrato in mezzo alla riga), il testo cresce per occupare quello
+   spazio — titolo piu' grande, respiro maggiore fra gli elementi. */
+.hero-text .eyebrow{ margin-bottom:.6em; }
+.hero-text .lead{ font-size:1.05rem; margin-bottom:1.2em; }
+.hero-text .hero-cta{ margin:0 0 18px; }
 
 .hero-facts{
   list-style:none; margin:0; padding:10px 0 0;
@@ -387,6 +395,13 @@ p{ margin:0 0 .65em; }
      desktop: su mobile (gia' approvato) resta a sinistra. */
   .hero-text{ text-align:left; max-width:none; }
   .hero-cta{ justify-content:flex-start; }
+  /* Il titolo piu' grande e i margini piu' larghi del blocco testo sul
+     desktop servono solo a farlo crescere quanto la foto affiancata:
+     su mobile (foto sotto, non a fianco) non serve, resta come prima. */
+  .hero-text h1{ font-size:1.5rem; }
+  .hero-text .eyebrow{ margin-bottom:.35em; }
+  .hero-text .lead{ font-size:.96rem; margin-bottom:.65em; }
+  .hero-text .hero-cta{ margin:10px 0 8px; }
   .col-photo{ max-width:520px; margin:0 auto; }
 
   .nav-toggle{ display:block; }
