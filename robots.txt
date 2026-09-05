@@ -1,7 +1,4 @@
-# Sostituire [DOMINIO] con il dominio definitivo (es. www.robertazanetta.it),
-# oppure con l'indirizzo di GitHub Pages se non hai ancora un dominio.
-
 User-agent: *
 Allow: /
 
-Sitemap: https://[DOMINIO]/sitemap.xml
+Sitemap: https://dermozanetta.it/sitemap.xml
