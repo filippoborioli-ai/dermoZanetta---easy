@@ -149,9 +149,9 @@ p{ margin:0 0 .65em; }
 
 .hero-photo{ margin:0; }
 .hero-photo img{
-  width:100%; border-radius:var(--radius);
+  width:100%; border-radius:120px 120px var(--radius) var(--radius);
   box-shadow:var(--ombra-f);
-  object-fit:cover; aspect-ratio:16/9;
+  object-fit:cover; aspect-ratio:4/3;
 }
 
 /* ---------------- Due colonne ---------------- */
