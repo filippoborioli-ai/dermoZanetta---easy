@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
-<meta name="description" content="Le prestazioni dello studio dermatologico della Dott.ssa Roberta Zanetta a Verbania: visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia e altro.">
+<title>Domande frequenti — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
+<meta name="description" content="Cosa portare alla visita, se è convenzionata con il SSN, quanto dura: le domande frequenti sullo studio della Dott.ssa Roberta Zanetta a Verbania.">
 <meta name="theme-color" content="#c0764e">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-<link rel="canonical" href="https://dermozanetta.it/prestazioni.html">
+<link rel="canonical" href="https://dermozanetta.it/domande.html">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -30,9 +30,9 @@
 
     <nav id="nav" class="nav">
       <a href="index.html#chi-sono">Il medico</a>
-      <a href="prestazioni.html" aria-current="page">Prestazioni</a>
+      <a href="prestazioni.html">Prestazioni</a>
       <a href="index.html#studio">Lo studio</a>
-      <a href="domande.html">Domande</a>
+      <a href="domande.html" aria-current="page">Domande</a>
       <a href="index.html#contatti">Dove siamo</a>
       <a class="btn btn-sm" href="tel:+390323553555">Prenota</a>
     </nav>
@@ -43,43 +43,49 @@
 
   <section class="page-head">
     <div class="wrap">
-      <p class="eyebrow">Prestazioni</p>
-      <h1>Di cosa si occupa lo studio</h1>
+      <p class="eyebrow">Prima della visita</p>
+      <h1>Domande frequenti</h1>
       <p class="lead">
-        Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e
-        modalit&agrave; di pagamento chiama lo studio: te lo diciamo prima di fissare
-        l&rsquo;appuntamento, senza impegno.
+        Le domande che ci vengono fatte più spesso al telefono. Se la tua non è
+        qui, chiama pure: rispondiamo noi.
       </p>
       <p><a class="btn" href="tel:+390323553555">Chiama 0323 553555</a></p>
     </div>
   </section>
 
+  <!-- ===================== DOMANDE FREQUENTI =====================
+       Per aggiungere, modificare o togliere una domanda vedi il README,
+       sezione "Modificare le domande frequenti". -->
   <section class="section">
-    <div class="wrap">
+    <div class="wrap narrow">
 
-      <!-- La ricerca cerca anche fra le parole comuni: "brufoli" trova l'acne. -->
-      <div class="search">
-        <label for="cerca">Cerca una prestazione o un disturbo</label>
-        <input type="search" id="cerca" placeholder="es. nei, brufoli, capelli, verruche" autocomplete="off">
-        <p class="search-esito" id="esitoRicerca" role="status" aria-live="polite"></p>
-      </div>
-
-      <!-- Le schede arrivano da dati.js: per aggiungere, togliere o modificare
-           una prestazione si tocca SOLO quel file. -->
-      <div class="cards" id="elencoPrestazioni"></div>
-
-      <noscript>
-        <p class="section-intro">
-          Per l&rsquo;elenco completo delle prestazioni chiama lo studio al
-          <a href="tel:+390323553555">0323 553555</a>.
+      <details class="faq">
+        <summary>Cosa devo portare alla visita?</summary>
+        <p>
+          Un documento d&rsquo;identit&agrave; e la tessera sanitaria. Se hai referti di visite
+          precedenti, esami istologici o fotografie di lesioni cambiate nel tempo, portali
+          con te: aiutano il confronto. Se segui una terapia, porta l&rsquo;elenco dei farmaci.
         </p>
-      </noscript>
+      </details>
 
-      <p class="note-legale">
-        Le descrizioni hanno finalit&agrave; informativa e non sostituiscono la visita
-        medica: sar&agrave; il medico, durante la visita, a indicare il percorso adatto
-        al singolo caso.
-      </p>
+      <details class="faq">
+        <summary>La visita &egrave; convenzionata con il Servizio Sanitario Nazionale?</summary>
+        <p>
+          Per informazioni su costi e modalit&agrave; di pagamento chiama lo studio al
+          <a href="tel:+390323553555">0323 553555</a>: te lo diciamo prima di fissare
+          l&rsquo;appuntamento, senza impegno.
+        </p>
+      </details>
+
+      <details class="faq">
+        <summary>Quanto dura la visita dermatologica?</summary>
+        <p>
+          Gli appuntamenti sono fissati a intervalli di quindici minuti. Per una mappatura
+          completa dei nei, o per una visita che richiede pi&ugrave; tempo, viene riservato
+          pi&ugrave; spazio in agenda: se pensi di averne bisogno, segnalalo quando chiami.
+        </p>
+      </details>
+
     </div>
   </section>
 
@@ -124,7 +130,6 @@
 
 <a class="call-fab" href="tel:+390323553555">Chiama 0323 553555</a>
 
-<script src="dati.js" defer></script>
 <script src="script.js" defer></script>
 </body>
 </html>

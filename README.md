@@ -12,7 +12,8 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 [Cambiare telefono, indirizzo o nome](#cambiare-telefono-indirizzo-o-nome-dello-studio) ·
 [Orari](#modificare-gli-orari) · [Foto](#foto) ·
 [Prestazioni](#aggiungere-togliere-o-modificare-una-prestazione) ·
-[Domande frequenti](#modificare-le-domande-frequenti) · [Colori](#colori) ·
+[Domande frequenti](#modificare-le-domande-frequenti) ·
+[Loghi di collaborazione](#aggiungere-togliere-o-sostituire-un-logo-di-collaborazione) · [Colori](#colori) ·
 [Checklist prima di pubblicare](#checklist-prima-di-pubblicare) · [Pubblicare](#pubblicare) ·
 [Dominio personalizzato](#dominio-personalizzato) · [Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania)
 
@@ -20,8 +21,9 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 
 | File | Cosa contiene |
 |---|---|
-| `index.html` | home: medico, studio, domande, contatti |
-| `prestazioni.html` | pagina con l'elenco completo e la ricerca |
+| `index.html` | home: medico, prestazioni in evidenza, studio, collaborazioni, contatti |
+| `prestazioni.html` | pagina con l'elenco completo delle prestazioni e la ricerca |
+| `domande.html` | pagina con le domande frequenti |
 | `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
@@ -178,7 +180,7 @@ Dopo una modifica, ricarica la pagina nel browser con `Ctrl+F5` (svuota la cache
 
 ## Modificare le domande frequenti
 
-Sono in `index.html`, sezione `<section id="domande">`. Ogni domanda è un blocco:
+Sono in `domande.html` (pagina a sé, separata dalla home). Ogni domanda è un blocco:
 
 ```html
 <details class="faq">
@@ -197,6 +199,30 @@ Sono in `index.html`, sezione `<section id="domande">`. Ogni domanda è un blocc
 
 Si apre e chiude da sola al clic: non serve JavaScript, è una funzione nativa del
 browser (tag `<details>`).
+
+## Aggiungere, togliere o sostituire un logo di collaborazione
+
+La sezione "Collabora con" è in `index.html`, sezione `<section id="collaborazioni">`.
+A differenza delle prestazioni, qui **non basta l'immagine**: ogni logo è un blocco
+HTML da copiare a mano, perché sono pochi e cambiano raramente.
+
+```html
+<div class="logo-card">
+  <img src="img/loghi/nome-file.png" alt="Nome della struttura">
+</div>
+```
+
+- **aggiungere** → metti il file del logo in `img/loghi/`, poi copia un blocco
+  `<div class="logo-card">...</div>` intero e incollalo nella sezione, cambiando
+  `src` e `alt`;
+- **togliere** → cancella il blocco `<div class="logo-card">...</div>` intero
+  (e se vuoi anche il file immagine in `img/loghi/`, anche se lasciarlo non causa
+  danni: un file non referenziato in nessun HTML semplicemente non viene mai caricato);
+- **sostituire** → cambia solo `src` (e l'`alt`, se il nome della struttura cambia).
+
+Il logo si adatta da solo al riquadro (altezza massima 48px, larghezza massima
+180px, senza deformarsi). Funziona meglio uno sfondo bianco o trasparente: uno
+sfondo colorato pieno crea uno stacco netto col resto della fascia.
 
 ## Colori
 
