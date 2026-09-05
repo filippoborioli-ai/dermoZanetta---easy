@@ -113,33 +113,35 @@ pagina è corretta. Esempio per "lun-ven 9-18, escluso martedì pomeriggio":
 
 ## Foto
 
-Le immagini in `img/` sono segnaposto (nel progetto principale le foto stanno su
-Supabase, non nel repository). Si sostituiscono così:
+Le foto vere sono già inserite, in JPEG e ottimizzate (poche decine di KB l'una:
+è ciò che tiene il sito veloce anche con foto reali):
 
-1. Prepara le foto vere, ridimensionate a max ~1600&nbsp;px di lato e compresse
-   (va bene [squoosh.app](https://squoosh.app), gratuito, si usa dal browser).
-2. Dai alle foto **lo stesso nome** dei file segnaposto che vuoi sostituire, con
-   l'estensione vera (`.jpg` o `.png`), e mettile dentro `img/`:
+| File | Dove compare |
+|---|---|
+| `img/dottoressa.jpg` | ritratto in apertura (hero) |
+| `img/ingresso.jpg` | galleria "Lo studio" — ingresso |
+| `img/studio.jpg` | galleria "Lo studio" — sala visite |
+| `img/salaAttesa.jpg` | galleria "Lo studio" — sala d'attesa |
 
-   | Segnaposto attuale | Dove compare | Taglio consigliato |
-   |---|---|---|
-   | `img/dottoressa.svg` | ritratto in apertura (hero) | verticale 5:6 (es. 1000×1200 px) |
-   | `img/studio-2.svg` | galleria "Lo studio" — ingresso | orizzontale 3:2 (es. 1200×800 px) |
-   | `img/studio-1.svg` | galleria "Lo studio" — sala visite | orizzontale 3:2 |
-   | `img/studio-3.svg` | galleria "Lo studio" — sala d'attesa | orizzontale 3:2 |
+### Sostituire una foto in futuro
 
-3. Se usi un'estensione diversa da `.svg` (es. `dottoressa.jpg`), apri `index.html`
-   e cambia l'estensione nel `src` di quell'immagine — i punti esatti sono segnati
-   dai commenti `<!-- FOTO 1 -->`, `<!-- FOTO 2 -->` ecc. Cerca anche il testo
-   `alt="..."` accanto e aggiornalo se la foto mostra qualcosa di diverso dal
-   segnaposto (es. non più la sala visite ma lo studio dall'esterno).
+1. Ridimensiona la nuova foto a max ~1600&nbsp;px di lato e comprimila come JPEG,
+   qualità 75-85 (va bene [squoosh.app](https://squoosh.app), gratuito, dal browser:
+   scegli "MozJPEG" come formato d'uscita). Un file sopra i 150-200&nbsp;KB per una
+   foto è quasi sempre segno che la compressione non è stata fatta.
+2. Dalle **lo stesso nome** del file che sostituisci (uno della tabella sopra) e
+   mettila in `img/`, sovrascrivendo.
+3. Se invece cambi anche il nome del file, apri `index.html` e aggiorna il `src`
+   di quell'immagine — i punti esatti sono segnati dai commenti `<!-- FOTO 1 -->`,
+   `<!-- FOTO 2 -->` ecc. Aggiorna anche `alt="..."` se la foto mostra qualcosa di
+   diverso da prima (es. non più la sala visite ma lo studio dall'esterno).
 4. Salva, ricarica la pagina con `Ctrl+F5` (svuota la cache) e controlla che la
    foto appaia.
 
 Non serve toccare `style.css`: le foto si adattano da sole al riquadro (taglio
-automatico, senza deformarsi) qualunque sia la proporzione reale dello scatto —
-il "taglio consigliato" evita solo che venga tagliata via una parte importante
-dell'inquadratura.
+automatico, senza deformarsi) qualunque sia la proporzione reale dello scatto.
+Per il ritratto in apertura il riquadro è verticale (5:6): una foto già verticale
+e centrata sul viso rende meglio di una foto molto orizzontale ritagliata stretta.
 
 ## Aggiungere, togliere o modificare una prestazione
 
