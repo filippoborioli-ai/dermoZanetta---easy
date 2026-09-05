@@ -132,7 +132,11 @@ p{ margin:0 0 .65em; }
     linear-gradient(180deg, var(--sabbia) 0%, var(--crema) 100%);
   padding:22px 0 26px;
 }
-.hero-inner{ display:grid; grid-template-columns:1.35fr .65fr; gap:28px; align-items:center; }
+/* Flex, non grid a frazioni: ogni blocco prende solo lo spazio che gli
+   serve (niente colonna larga con testo corto e vuoto prima della foto),
+   e la coppia si centra come unico blocco nello spazio disponibile. */
+.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:32px; }
+.hero-text{ max-width:540px; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 8px; }
 
