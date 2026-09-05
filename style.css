@@ -212,43 +212,47 @@ p{ margin:0 0 .8em; }
 }
 
 /* ---------------- Carosello prestazioni (solo home) ----------------
-   Tre schede visibili e si scorre per le altre. La quarta scheda sbuca
-   di proposito sul bordo: senza quell'indizio (e senza le frecce) su
-   desktop nessuno si accorge che c'e' altro, perche' la rotellina del
-   mouse scorre in verticale.
-   Frecce sopra la pista, non ai lati: ai lati coprirebbero il testo
-   della prima scheda e verrebbero tagliate sugli schermi stretti. */
-.carosello{ margin-top:10px; }
-.carosello-comandi{
-  display:flex; justify-content:flex-end; gap:8px;
-  margin-bottom:8px;
-}
-.carosello-freccia{
-  width:38px; height:38px; padding:0;
-  display:grid; place-items:center;
-  font-size:1.4rem; line-height:1;
-  color:var(--bruno);
-  background:var(--bianco);
-  border:1px solid var(--sabbia-2);
-  border-radius:50%;
-  cursor:pointer;
-  transition:color .2s ease, border-color .2s ease, opacity .2s ease;
-}
-.carosello-freccia:hover:not(:disabled){ color:var(--terracotta); border-color:var(--terracotta); }
-/* Disabilitate, non nascoste: se sparissero, quella rimasta salterebbe
-   di posto a ogni scorrimento. */
-.carosello-freccia:disabled{ opacity:.3; cursor:default; }
+   Tre schede visibili e si scorre per le altre. Due indizi che c'e'
+   dell'altro, entrambi sotto o dentro la pista, cosi' non aggiungono
+   spazio fra il testo della sezione e le schede:
+   - la quarta scheda che sbuca sul bordo;
+   - la barra di scorrimento sottile, che si puo' anche trascinare.
+   Serve un indizio visibile perche' su desktop la rotellina del mouse
+   scorre in verticale, non in orizzontale. */
+.carosello{ margin-top:28px; }     /* stesso stacco di galleria e loghi */
 .carosello-pista{
   display:flex;
   flex-wrap:nowrap;
   overflow-x:auto;
   margin-top:0;
-  padding-bottom:6px;              /* spazio per l'ombra delle schede */
+  padding:6px 0 10px;              /* spazio per il sollevamento in hover e per l'ombra */
   scroll-snap-type:x mandatory;
   scroll-behavior:smooth;
-  scrollbar-width:none;            /* Firefox */
+  /* Barra nativa nascosta: al suo posto quella disegnata qui sotto, che
+     resta visibile anche dove le barre di sistema sono "a scomparsa". */
+  scrollbar-width:none;
 }
 .carosello-pista::-webkit-scrollbar{ display:none; }
+
+/* Linea di scorrimento */
+.carosello-barra{
+  position:relative;
+  height:5px;
+  margin:2px auto 0;
+  max-width:420px;
+  background:var(--sabbia-2);
+  border-radius:999px;
+  cursor:pointer;
+}
+.carosello-barra span{
+  position:absolute; top:0; bottom:0; left:0;
+  background:var(--terracotta);
+  border-radius:999px;
+  transition:left .12s linear;
+}
+.carosello-pista:focus-visible{
+  outline:2px solid var(--terracotta); outline-offset:4px;
+}
 .carosello-pista .card{
   flex:0 0 calc((100% - 2 * 18px) / 3.15);
   scroll-snap-align:start;
@@ -443,9 +447,8 @@ p{ margin:0 0 .8em; }
   .hero-text .eyebrow{ margin-bottom:.35em; }
   .hero-text .lead{ font-size:.96rem; margin-bottom:.65em; }
   .hero-text .hero-cta{ margin:10px 0 8px; }
-  /* Carosello prestazioni: si scorre col dito, le frecce non servono.
-     Una scheda quasi intera piu' l'accenno della successiva. */
-  .carosello-comandi{ display:none; }
+  /* Carosello prestazioni: una scheda quasi intera piu' l'accenno della
+     successiva, si scorre col dito. */
   .carosello-pista .card{ flex-basis:82%; }
 
   /* Loghi: ingranditi anche qui, ma quel tanto che basta perche' i due

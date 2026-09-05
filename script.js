@@ -55,34 +55,59 @@
   var lista = quante > 0 ? PRESTAZIONI.slice(0, quante) : PRESTAZIONI;
   disegna(box, lista);
 
-  /* ---------- Frecce del carosello (solo home) ----------
-     Una freccia si disabilita quando da quella parte non c'e' piu' nulla
-     da scorrere. */
-  var carosello = box.closest('.carosello');
-  if (carosello) {
-    var frecce = carosello.querySelectorAll('.carosello-freccia');
+  /* ---------- Linea di scorrimento del carosello (solo home) ----------
+     Indica quanto elenco resta e dove ci si trova; si puo' trascinare.
+     Serve un indizio visibile perche' su desktop la rotellina del mouse
+     scorre in verticale, non in orizzontale. */
+  var barra = document.querySelector('.carosello-barra');
+  if (barra) {
+    var pallino = barra.querySelector('span');
 
-    var aggiornaFrecce = function () {
-      // 1px di tolleranza: gli arrotondamenti dello scroll possono
-      // lasciare frazioni di pixel e far lampeggiare la freccia.
-      var restaASinistra = box.scrollLeft > 1;
-      var restaADestra = box.scrollLeft < box.scrollWidth - box.clientWidth - 1;
-      frecce.forEach(function (f) {
-        f.disabled = f.dataset.dir === '-1' ? !restaASinistra : !restaADestra;
-      });
+    var aggiornaBarra = function () {
+      var scorrimento = box.scrollWidth - box.clientWidth;
+      // Se le schede entrano tutte, la barra non serve.
+      barra.hidden = scorrimento <= 1;
+      if (barra.hidden) return;
+      var quota = box.clientWidth / box.scrollWidth;          // porzione visibile
+      pallino.style.width = (quota * 100) + '%';
+      pallino.style.left = ((box.scrollLeft / scorrimento) * (1 - quota) * 100) + '%';
     };
 
-    frecce.forEach(function (f) {
-      f.addEventListener('click', function () {
-        // Scorre di una "pagina" intera, meno una scheda gia' visibile.
-        var passo = Math.max(box.clientWidth * 0.8, 200);
-        box.scrollBy({ left: passo * Number(f.dataset.dir), behavior: 'smooth' });
-      });
+    // Trascinamento (e clic) sulla barra. I listener stanno sul
+    // documento: cosi' il trascinamento continua anche se il puntatore
+    // esce dalla barra, che e' alta pochi pixel.
+    var traina = false;
+
+    var trascina = function (e) {
+      var r = barra.getBoundingClientRect();
+      var quota = box.clientWidth / box.scrollWidth;
+      var utile = r.width * (1 - quota);                      // corsa del pallino
+      if (utile <= 0) return;
+      var pos = e.clientX - r.left - (r.width * quota) / 2;   // pallino centrato sul dito
+      var frazione = Math.min(Math.max(pos / utile, 0), 1);
+      box.scrollLeft = frazione * (box.scrollWidth - box.clientWidth);
+    };
+
+    barra.addEventListener('pointerdown', function (e) {
+      traina = true;
+      // Durante il trascinamento niente scorrimento morbido, altrimenti
+      // la barra insegue il dito con un ritardo.
+      box.style.scrollBehavior = 'auto';
+      trascina(e);
+      e.preventDefault();
+    });
+    document.addEventListener('pointermove', function (e) {
+      if (traina) trascina(e);
+    });
+    document.addEventListener('pointerup', function () {
+      if (!traina) return;
+      traina = false;
+      box.style.scrollBehavior = '';
     });
 
-    box.addEventListener('scroll', aggiornaFrecce, { passive: true });
-    window.addEventListener('resize', aggiornaFrecce);
-    aggiornaFrecce();
+    box.addEventListener('scroll', aggiornaBarra, { passive: true });
+    window.addEventListener('resize', aggiornaBarra);
+    aggiornaBarra();
   }
 
   /* ---------- Ricerca (solo in prestazioni.html) ---------- */
