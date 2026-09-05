@@ -104,7 +104,17 @@
         te lo diciamo prima di fissare l&rsquo;appuntamento, senza impegno.
       </p>
 
-      <div class="cards" id="elencoPrestazioni" data-quante="3"></div>
+      <!-- Carosello: 3 schede visibili, si scorre per vedere le altre.
+           data-quante = quante prestazioni entrano nel carosello (le prime
+           dell'elenco in dati.js); l'elenco completo con la ricerca resta
+           su prestazioni.html. -->
+      <div class="carosello">
+        <div class="carosello-comandi">
+          <button class="carosello-freccia" type="button" data-dir="-1" aria-label="Prestazioni precedenti" disabled>&lsaquo;</button>
+          <button class="carosello-freccia" type="button" data-dir="1" aria-label="Prestazioni successive">&rsaquo;</button>
+        </div>
+        <div class="cards carosello-pista" id="elencoPrestazioni" data-quante="9"></div>
+      </div>
       <noscript>
         <p class="section-intro center">
           <a href="prestazioni.html">Apri l&rsquo;elenco completo delle prestazioni</a>.

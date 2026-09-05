@@ -211,9 +211,47 @@ p{ margin:0 0 .8em; }
   margin-bottom:12px;
 }
 
-/* In home mostriamo 6 prestazioni: tre per riga, due righe piene. */
-@media (min-width: 920px){
-  #elencoPrestazioni[data-quante]{ grid-template-columns:repeat(3, 1fr); }
+/* ---------------- Carosello prestazioni (solo home) ----------------
+   Tre schede visibili e si scorre per le altre. La quarta scheda sbuca
+   di proposito sul bordo: senza quell'indizio (e senza le frecce) su
+   desktop nessuno si accorge che c'e' altro, perche' la rotellina del
+   mouse scorre in verticale.
+   Frecce sopra la pista, non ai lati: ai lati coprirebbero il testo
+   della prima scheda e verrebbero tagliate sugli schermi stretti. */
+.carosello{ margin-top:28px; }
+.carosello-comandi{
+  display:flex; justify-content:flex-end; gap:8px;
+  margin-bottom:12px;
+}
+.carosello-freccia{
+  width:38px; height:38px; padding:0;
+  display:grid; place-items:center;
+  font-size:1.4rem; line-height:1;
+  color:var(--bruno);
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:50%;
+  cursor:pointer;
+  transition:color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+.carosello-freccia:hover:not(:disabled){ color:var(--terracotta); border-color:var(--terracotta); }
+/* Disabilitate, non nascoste: se sparissero, quella rimasta salterebbe
+   di posto a ogni scorrimento. */
+.carosello-freccia:disabled{ opacity:.3; cursor:default; }
+.carosello-pista{
+  display:flex;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  margin-top:0;
+  padding-bottom:6px;              /* spazio per l'ombra delle schede */
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;            /* Firefox */
+}
+.carosello-pista::-webkit-scrollbar{ display:none; }
+.carosello-pista .card{
+  flex:0 0 calc((100% - 2 * 18px) / 3.15);
+  scroll-snap-align:start;
 }
 
 /* ---------------- Galleria ---------------- */
@@ -405,6 +443,11 @@ p{ margin:0 0 .8em; }
   .hero-text .eyebrow{ margin-bottom:.35em; }
   .hero-text .lead{ font-size:.96rem; margin-bottom:.65em; }
   .hero-text .hero-cta{ margin:10px 0 8px; }
+  /* Carosello prestazioni: si scorre col dito, le frecce non servono.
+     Una scheda quasi intera piu' l'accenno della successiva. */
+  .carosello-comandi{ display:none; }
+  .carosello-pista .card{ flex-basis:82%; }
+
   /* Loghi: ingranditi anche qui, ma quel tanto che basta perche' i due
      attuali restino affiancati senza far partire lo scorrimento. */
   .logo-card{ height:74px; padding:10px 20px; }

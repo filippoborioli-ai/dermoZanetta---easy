@@ -48,10 +48,42 @@
   var box = document.getElementById('elencoPrestazioni');
   if (!box || typeof PRESTAZIONI === 'undefined') return;
 
-  // Sulla home ne mostriamo solo alcune: data-quante="6".
+  // Sulla home ne mostriamo solo alcune: data-quante="9" (le prime
+  // dell'elenco in dati.js). In prestazioni.html l'attributo non c'e'
+  // e si disegnano tutte.
   var quante = parseInt(box.dataset.quante, 10);
   var lista = quante > 0 ? PRESTAZIONI.slice(0, quante) : PRESTAZIONI;
   disegna(box, lista);
+
+  /* ---------- Frecce del carosello (solo home) ----------
+     Una freccia si disabilita quando da quella parte non c'e' piu' nulla
+     da scorrere. */
+  var carosello = box.closest('.carosello');
+  if (carosello) {
+    var frecce = carosello.querySelectorAll('.carosello-freccia');
+
+    var aggiornaFrecce = function () {
+      // 1px di tolleranza: gli arrotondamenti dello scroll possono
+      // lasciare frazioni di pixel e far lampeggiare la freccia.
+      var restaASinistra = box.scrollLeft > 1;
+      var restaADestra = box.scrollLeft < box.scrollWidth - box.clientWidth - 1;
+      frecce.forEach(function (f) {
+        f.disabled = f.dataset.dir === '-1' ? !restaASinistra : !restaADestra;
+      });
+    };
+
+    frecce.forEach(function (f) {
+      f.addEventListener('click', function () {
+        // Scorre di una "pagina" intera, meno una scheda gia' visibile.
+        var passo = Math.max(box.clientWidth * 0.8, 200);
+        box.scrollBy({ left: passo * Number(f.dataset.dir), behavior: 'smooth' });
+      });
+    });
+
+    box.addEventListener('scroll', aggiornaFrecce, { passive: true });
+    window.addEventListener('resize', aggiornaFrecce);
+    aggiornaFrecce();
+  }
 
   /* ---------- Ricerca (solo in prestazioni.html) ---------- */
   var campo = document.getElementById('cerca');
