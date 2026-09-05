@@ -105,11 +105,13 @@
       </p>
 
       <!-- Carosello: 3 schede visibili, si scorre per vedere le altre.
-           data-quante = quante prestazioni entrano nel carosello (le prime
-           dell'elenco in dati.js); l'elenco completo con la ricerca resta
-           su prestazioni.html. -->
+           Ci sono tutte le prestazioni di dati.js, nello stesso ordine:
+           aggiungendone una li', entra qui da sola. Per mostrarne solo
+           le prime N, aggiungere l'attributo data-quante="N" al div qui
+           sotto. L'elenco completo con la ricerca resta su
+           prestazioni.html. -->
       <div class="carosello">
-        <div class="cards carosello-pista" id="elencoPrestazioni" data-quante="9"
+        <div class="cards carosello-pista" id="elencoPrestazioni"
              tabindex="0" role="group" aria-label="Prestazioni, scorrevoli lateralmente"></div>
         <!-- Linea di scorrimento: indica che c'e' altro e dove ci si trova.
              Si puo' anche trascinare. La riempie lo script. -->

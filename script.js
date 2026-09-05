@@ -48,9 +48,9 @@
   var box = document.getElementById('elencoPrestazioni');
   if (!box || typeof PRESTAZIONI === 'undefined') return;
 
-  // Sulla home ne mostriamo solo alcune: data-quante="9" (le prime
-  // dell'elenco in dati.js). In prestazioni.html l'attributo non c'e'
-  // e si disegnano tutte.
+  // Senza l'attributo data-quante si disegnano tutte le prestazioni
+  // (e' il caso sia della home sia di prestazioni.html); con
+  // data-quante="N" solo le prime N dell'elenco in dati.js.
   var quante = parseInt(box.dataset.quante, 10);
   var lista = quante > 0 ? PRESTAZIONI.slice(0, quante) : PRESTAZIONI;
   disegna(box, lista);

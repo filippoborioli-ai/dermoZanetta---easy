@@ -27,7 +27,7 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 | `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
-| `img/` | immagini (ora segnaposto `.svg`) |
+| `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
 
 ## Provare il sito in locale
 
@@ -47,11 +47,12 @@ file**, con un editor di testo (es. VS Code, notepad++) o da riga di comando:
 - numero mostrato a video: `351 511 8880`
 - nome: `Roberta Zanetta` (attenzione: compare sia come `Dott.ssa Roberta Zanetta`
   sia da sola dentro ad altri testi)
-- indirizzo: `Piazza Castello 27` / `Piazza Castello, 27` (due formati, uno per il
-  testo normale e uno per i dati strutturati JSON-LD) e `Verbania`
-- link Google Maps: `https://maps.google.com/?cid=15553148866995770811` — questo è
-  legato alla scheda Google reale dello studio, per cambiarlo serve il link della
-  scheda giusta (si trova su Google Maps → Condividi, sulla scheda dello studio)
+- indirizzo: `Via Castello 27` / `Via Castello, 27` (due formati, uno per il
+  testo normale e uno per i dati strutturati JSON-LD), più `28900` e `Verbania`
+- link Google Maps: è una ricerca sull'indirizzo testuale
+  (`google.com/maps/search/?api=1&query=Via+Castello+27...`), così resta corretto
+  finché l'indirizzo è giusto. Se hai il link diretto della scheda Google Business
+  dello studio è meglio: porta dritto a recensioni, foto e indicazioni
 
 Dopo aver sostituito, apri le pagine e verifica che i bottoni "Chiama" e i link a
 Google Maps puntino ancora al posto giusto.
@@ -62,8 +63,7 @@ Presi dal progetto principale (`assets/js/config.js` e `assets/js/prestazioni.js
 
 - Dott.ssa Roberta Zanetta — Dermatologia e Venereologia
 - Telefono **351 511 8880** (`tel:+393515118880`)
-- Piazza Castello 27, 28921 Verbania (VB)
-- Scheda Google Maps con `cid=15553148866995770811` (apre la scheda esatta, non una ricerca)
+- Via Castello 27, 28900 Verbania (VB)
 - 15 prestazioni con i testi già scritti
 - Dati strutturati `schema.org/Physician` in fondo alla pagina (utili per Google)
 
@@ -74,8 +74,8 @@ Presi dal progetto principale (`assets/js/config.js` e `assets/js/prestazioni.js
    secondo commento nella sezione "Chi ti visita" per la riga dell'Ordine.
 2. **Email** — nel progetto principale è ancora vuota. Quando c'è, togli il commento
    dalla riga già pronta nella sezione contatti.
-3. **Orari** — ora riportano `9:00–18:00` tutti i giorni feriali (dai dati
-   strutturati del sito principale). Se gli orari reali sono diversi, vedi sotto
+3. **Orari** — già inseriti quelli reali (lun 14:30–19, mar 10–17, mer 14–18,
+   gio 14:30–19, ven 10–17, sabato e domenica chiuso). Per cambiarli vedi sotto
    "Modificare gli orari".
 
 ## Modificare gli orari
@@ -107,11 +107,11 @@ del tutto la sua riga invece di scrivere "chiuso".
 
 **Attenzione al JSON-LD** — in fondo alla pagina c'è un blocco
 `<script type="application/ld+json">` che Google legge per mostrare gli orari nei
-risultati di ricerca. Contiene una riga `"openingHours":["Mo-Fr 09:00-18:00"]`
-scritta in inglese abbreviato (Mo, Tu, We, Th, Fr, Sa, Su). Se cambi gli orari reali
-aggiorna anche questa riga, altrimenti Google mostra orari sbagliati anche se la
-pagina è corretta. Esempio per "lun-ven 9-18, escluso martedì pomeriggio":
-`"openingHours":["Mo,We-Fr 09:00-18:00","Tu 09:00-13:00"]`.
+risultati di ricerca. Contiene una riga `"openingHours"` scritta in inglese
+abbreviato (Mo, Tu, We, Th, Fr, Sa, Su), che oggi rispecchia gli orari veri:
+`["Mo 14:30-19:00","Tu 10:00-17:00","We 14:00-18:00","Th 14:30-19:00","Fr 10:00-17:00"]`.
+Se cambi la tabella aggiorna anche questa riga, altrimenti Google mostra orari
+sbagliati anche se la pagina è corretta.
 
 ## Foto
 
@@ -142,13 +142,15 @@ Le foto vere sono già inserite, in JPEG e ottimizzate (poche decine di KB l'una
 
 Non serve toccare `style.css`: le foto si adattano da sole al riquadro (taglio
 automatico, senza deformarsi) qualunque sia la proporzione reale dello scatto.
-Per il ritratto in apertura il riquadro è verticale (5:6): una foto già verticale
-e centrata sul viso rende meglio di una foto molto orizzontale ritagliata stretta.
+Per il ritratto in apertura il riquadro è verticale (3:4, con la cima ad arco):
+una foto già verticale e centrata sul viso rende meglio di una foto molto
+orizzontale ritagliata stretta.
 
 ## Aggiungere, togliere o modificare una prestazione
 
 Si tocca **solo `dati.js`**. Non serve aprire l'HTML: le schede compaiono da sole
-sia sulla home (le prime 6) sia in `prestazioni.html` (tutte, con la ricerca).
+sia sulla home (nel carosello a scorrimento laterale) sia in `prestazioni.html`
+(griglia con la ricerca). Ci sono tutte in tutti e due i posti.
 
 Ogni prestazione è un blocco così:
 
@@ -162,7 +164,8 @@ Ogni prestazione è un blocco così:
 
 - **modificare** → cambia il testo fra apici, lasciando apici e virgola dove sono;
 - **aggiungere** → copia un blocco intero da `{` a `},` e incollalo dove vuoi che
-  compaia: l'ordine dell'elenco è l'ordine sulla pagina (le prime 6 finiscono in home);
+  compaia: l'ordine dell'elenco è l'ordine sulla pagina, e in home è anche
+  l'ordine in cui si incontrano scorrendo il carosello;
 - **togliere** → cancella il blocco da `{` a `},`.
 
 `chiavi` sono le parole con cui i pazienti cercano davvero — chi ha l'acne scrive
@@ -318,7 +321,7 @@ contatti): significa che una scheda esiste già. Verifica che sia **rivendicata*
 
 - **Nome, indirizzo, telefono devono essere identici, carattere per carattere**, fra
   la scheda Google e il sito (quello che si chiama coerenza "NAP" — Name, Address,
-  Phone). Discrepanze anche piccole (es. "Piazza Castello 27" contro "P.zza Castello,
+  Phone). Discrepanze anche piccole (es. "Via Castello 27" contro "V.le Castello,
   27") confondono Google e indeboliscono il posizionamento.
 - Categoria principale: "Dermatologo".
 - Orari identici a quelli sul sito.
