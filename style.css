@@ -132,7 +132,7 @@ p{ margin:0 0 .65em; }
     linear-gradient(180deg, var(--sabbia) 0%, var(--crema) 100%);
   padding:22px 0 26px;
 }
-.hero-inner{ display:grid; grid-template-columns:1.4fr .6fr; gap:28px; align-items:center; }
+.hero-inner{ display:grid; grid-template-columns:1.35fr .65fr; gap:28px; align-items:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 8px; }
 
@@ -147,11 +147,11 @@ p{ margin:0 0 .65em; }
 .hero-facts strong{ font-size:1.02rem; font-weight:700; color:var(--terracotta); }
 .hero-facts span{ font-size:.85rem; color:var(--bruno-soft); }
 
-.hero-photo{ margin:0 auto; max-width:340px; }
+.hero-photo{ margin:0 auto; max-width:280px; }
 .hero-photo img{
-  width:100%; border-radius:120px 120px var(--radius) var(--radius);
+  width:100%; border-radius:110px 110px var(--radius) var(--radius);
   box-shadow:var(--ombra-f);
-  object-fit:cover; aspect-ratio:4/3;
+  object-fit:cover; aspect-ratio:3/4;
 }
 
 /* ---------------- Due colonne ---------------- */
