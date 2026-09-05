@@ -135,7 +135,7 @@ p{ margin:0 0 .65em; }
 /* Flex, non grid a frazioni: ogni blocco prende solo lo spazio che gli
    serve (niente colonna larga con testo corto e vuoto prima della foto),
    e la coppia si centra come unico blocco nello spazio disponibile. */
-.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px; }
+.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:24px; }
 .hero-text{ max-width:470px; text-align:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0 8px; }
@@ -159,7 +159,7 @@ p{ margin:0 0 .65em; }
 .hero-facts strong{ font-size:1.02rem; font-weight:700; color:var(--terracotta); }
 .hero-facts span{ font-size:.85rem; color:var(--bruno-soft); }
 
-.hero-photo{ margin:0 auto; max-width:250px; }
+.hero-photo{ margin:0; max-width:250px; }
 .hero-photo img{
   width:100%; border-radius:110px 110px var(--radius) var(--radius);
   box-shadow:var(--ombra-f);
