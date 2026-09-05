@@ -135,10 +135,10 @@ p{ margin:0 0 .65em; }
 /* Flex, non grid a frazioni: ogni blocco prende solo lo spazio che gli
    serve (niente colonna larga con testo corto e vuoto prima della foto),
    e la coppia si centra come unico blocco nello spazio disponibile. */
-.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:32px; }
-.hero-text{ max-width:540px; }
+.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:18px; }
+.hero-text{ max-width:540px; text-align:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
-.hero-cta{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 8px; }
+.hero-cta{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0 8px; }
 
 .hero-note{ font-size:.82rem; color:var(--bruno-soft); margin:0 0 12px; }
 
@@ -383,6 +383,10 @@ p{ margin:0 0 .65em; }
   /* Testo prima, foto dopo (piu' piccola) su mobile: ordine naturale del
      documento, nessun order per invertirlo come su desktop. */
   .hero-photo{ max-width:200px; margin:20px auto 0; }
+  /* Il testo centrato e' una scelta solo per il layout affiancato del
+     desktop: su mobile (gia' approvato) resta a sinistra. */
+  .hero-text{ text-align:left; max-width:none; }
+  .hero-cta{ justify-content:flex-start; }
   .col-photo{ max-width:520px; margin:0 auto; }
 
   .nav-toggle{ display:block; }
