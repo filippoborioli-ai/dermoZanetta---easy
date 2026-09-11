@@ -239,9 +239,15 @@ HTML da copiare a mano, perché sono pochi e cambiano raramente.
   danni: un file non referenziato in nessun HTML semplicemente non viene mai caricato);
 - **sostituire** → cambia solo `src` (e l'`alt`, se il nome della struttura cambia).
 
-Il logo si adatta da solo al riquadro (altezza massima 48px, larghezza massima
-180px, senza deformarsi). Funziona meglio uno sfondo bianco o trasparente: uno
+Il logo si adatta da solo al riquadro (altezza massima 58px, larghezza massima
+215px, senza deformarsi). Funziona meglio uno sfondo bianco o trasparente: uno
 sfondo colorato pieno crea uno stacco netto col resto della fascia.
+
+I loghi presenti oggi sono tre: ProMater, ASL VCO e Biochemical. **Da tre in su la
+fascia scorre lateralmente su telefono**: l'ultimo logo si vede a meta', ed e' voluto
+— e' il segnale che ce n'e' dell'altro, lo stesso meccanismo del carosello delle
+prestazioni. Su desktop ci stanno comodi. Se un domani ne aggiungi un quarto o un
+quinto, non serve toccare niente: la fascia continua a scorrere.
 
 ## Colori
 
