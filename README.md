@@ -71,16 +71,26 @@ Presi dal progetto principale (`assets/js/config.js` e `assets/js/prestazioni.js
 - 15 prestazioni con i testi già scritti
 - Dati strutturati `schema.org/Physician` in fondo alla pagina (utili per Google)
 
-## Da completare prima di pubblicare
+## Dati obbligatori per legge
 
-1. **P. IVA e numero di iscrizione all'Ordine** — obbligatori per legge sul sito di un
-   medico (pubblicità sanitaria). Nel footer c'è un commento HTML nel punto esatto, e un
-   secondo commento nella sezione "Chi ti visita" per la riga dell'Ordine.
-2. **Email** — nel progetto principale è ancora vuota. Quando c'è, togli il commento
-   dalla riga già pronta nella sezione contatti.
-3. **Orari** — già inseriti quelli reali (lun 14:30–19, mar 10–17, mer 14–18,
-   gio 14:30–19, ven 10–17, sabato e domenica chiuso). Per cambiarli vedi sotto
-   "Modificare gli orari".
+Sul sito di un medico la **P. IVA** e il **numero di iscrizione all'Ordine** sono
+obbligatori (pubblicità sanitaria, L. 175/1992 e DL 145/2007). Sono inseriti:
+
+- **P. IVA 01367340039** — nel footer di tutte e quattro le pagine;
+- **Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola, n. 604** —
+  nel footer di tutte le pagine e, in forma estesa, nell'elenco della sezione
+  "Chi ti visita" della home.
+
+Vanno tenuti su **ogni** pagina, non solo in home: se un domani ne aggiungi una,
+copia il blocco `<div class="footer-note">` da una pagina esistente e non toccarlo.
+
+L'**email** `zanettaroberta@yahoo.it` è nei contatti della home, nei dati
+strutturati JSON-LD e nell'informativa privacy come recapito del titolare. Se
+un giorno lo studio avrà una casella propria, va cambiata in tre punti: cerca
+l'indirizzo con una ricerca su tutta la cartella, non a memoria.
+
+Gli **orari** sono quelli reali (lun 14:30–19, mar 10–17, mer 14–18, gio 14:30–19,
+ven 10–17, sabato e domenica chiuso). Per cambiarli vedi qui sotto.
 
 ## Modificare gli orari
 
@@ -246,15 +256,14 @@ e dettagli in tutto il sito.
 
 ## Checklist prima di pubblicare
 
-- [ ] Telefono, indirizzo e nome corretti ovunque (vedi sezione sopra)
-- [ ] **P. IVA** e **numero di iscrizione all'Ordine dei Medici** inseriti — sono
-  obbligatori per legge sul sito di un medico (pubblicità sanitaria). Cerca i
-  commenti `DA COMPLETARE` in `index.html` e `prestazioni.html`: segnano il punto
-  esatto in cui va tolto il commento e scritto il dato vero
-- [ ] Email dello studio, se attiva (riga già pronta e commentata nella sezione
-  contatti di `index.html`)
-- [ ] Orari reali nella tabella **e** nel blocco JSON-LD (vedi sopra: due punti,
+- [x] Telefono, indirizzo e nome corretti ovunque (vedi sezione sopra)
+- [x] **P. IVA** e **numero di iscrizione all'Ordine dei Medici** inseriti nel footer
+  di tutte le pagine
+- [x] Email dello studio nei contatti, nel JSON-LD e nella privacy
+- [x] Orari reali nella tabella **e** nel blocco JSON-LD (sono due punti diversi:
   se aggiorni solo uno Google mostra orari sbagliati)
+- [ ] **Record DNS inseriti dal registrar** e *Enforce HTTPS* attivo su GitHub
+  (vedi "Dominio personalizzato"): è l'ultimo passo che manca
 - [x] Foto vere al posto dei segnaposto `.svg` in `img/`
 - [ ] Aperto `index.html` e `prestazioni.html` nel browser e cliccato su tutti i
   bottoni "Chiama" e sul link Google Maps, per controllare che portino al posto giusto
