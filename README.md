@@ -51,12 +51,13 @@ file**, con un editor di testo (es. VS Code, notepad++) o da riga di comando:
 - numero mostrato a video: `351 511 8880`
 - nome: `Roberta Zanetta` (attenzione: compare sia come `Dott.ssa Roberta Zanetta`
   sia da sola dentro ad altri testi)
-- indirizzo: `Via Castello 27` / `Via Castello, 27` (due formati, uno per il
-  testo normale e uno per i dati strutturati JSON-LD), più `28900` e `Verbania`
-- link Google Maps: è una ricerca sull'indirizzo testuale
-  (`google.com/maps/search/?api=1&query=Via+Castello+27...`), così resta corretto
-  finché l'indirizzo è giusto. Se hai il link diretto della scheda Google Business
-  dello studio è meglio: porta dritto a recensioni, foto e indicazioni
+- indirizzo: `Piazza Castello 27` / `Piazza Castello, 27` (due formati, uno per il
+  testo normale e uno per i dati strutturati JSON-LD), più `28921` e `Verbania`
+- link Google Maps: `https://maps.google.com/?cid=15553148866995770811`. Quel numero
+  è l'identificativo della scheda Google dello studio: il link porta sempre a quella,
+  con recensioni, foto e indicazioni, **anche se un domani l'indirizzo cambia**.
+  Prima era una ricerca per testo sull'indirizzo, che bastava un refuso a mandare
+  nel posto sbagliato
 
 Dopo aver sostituito, apri le pagine e verifica che i bottoni "Chiama" e i link a
 Google Maps puntino ancora al posto giusto.
@@ -67,7 +68,8 @@ Presi dal progetto principale (`assets/js/config.js` e `assets/js/prestazioni.js
 
 - Dott.ssa Roberta Zanetta — Dermatologia e Venereologia
 - Telefono **351 511 8880** (`tel:+393515118880`)
-- Via Castello 27, 28900 Verbania (VB)
+- Piazza Castello 27, 28921 Verbania (VB) — **Verbania Intra**, non il CAP
+  generico 28900: è l'indirizzo della scheda Google, quella che usano i pazienti
 - 15 prestazioni con i testi già scritti
 - Dati strutturati `schema.org/Physician` in fondo alla pagina (utili per Google)
 
@@ -372,12 +374,18 @@ contatti): significa che una scheda esiste già. Verifica che sia **rivendicata*
 
 - **Nome, indirizzo, telefono devono essere identici, carattere per carattere**, fra
   la scheda Google e il sito (quello che si chiama coerenza "NAP" — Name, Address,
-  Phone). Discrepanze anche piccole (es. "Via Castello 27" contro "V.le Castello,
-  27") confondono Google e indeboliscono il posizionamento.
+  Phone). Discrepanze anche piccole confondono Google e indeboliscono il
+  posizionamento. **È già successo**: il sito diceva "Via Castello 27, 28900" mentre
+  la scheda Google dice "Piazza Castello 27, 28921". Ha vinto la scheda Google,
+  perché è quella gestita dalla dottoressa e quella che i pazienti seguono per
+  arrivare. Se correggi un indirizzo, correggilo in tutti e due i posti lo stesso
+  giorno.
 - Categoria principale: "Dermatologo".
 - Orari identici a quelli sul sito.
 - Foto vere dello studio caricate sulla scheda (le stesse che metti nel sito vanno bene).
-- Sito web nel campo apposito della scheda → punta al dominio nuovo.
+- Sito web nel campo apposito della scheda → punta a `https://dermozanetta.it`.
+  Il sito gia' punta alla scheda (campo `sameAs` nel JSON-LD): fatti i due
+  collegamenti, Google capisce che sito e scheda sono la stessa attivita'.
 - **Recensioni**: sono probabilmente il fattore singolo più pesante per il pacchetto
   locale. Chiedi ai pazienti soddisfatti di lasciarne una — un link diretto alla
   pagina delle recensioni si genera dalla scheda Google Business stessa.
