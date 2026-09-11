@@ -138,10 +138,13 @@ p{ margin:0 0 .8em; }
 /* Flex, non grid a frazioni: ogni blocco prende solo lo spazio che gli
    serve (niente colonna larga con testo corto e vuoto prima della foto),
    e la coppia si centra come unico blocco nello spazio disponibile. */
-.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:24px; }
+.hero-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:32px; }
 .hero-text{ max-width:600px; text-align:center; }
 .lead{ font-size:.96rem; color:var(--bruno-soft); max-width:54ch; }
 .hero-cta{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0 8px; }
+/* Tre bottoni di misura piena occupavano troppo sotto al titolo: qui
+   scendono di un filo. Il bottone standard resta invariato altrove. */
+.hero-cta .btn{ padding:12px 22px; font-size:.95rem; }
 
 .hero-note{ font-size:.82rem; color:var(--bruno-soft); margin:0 0 12px; }
 
