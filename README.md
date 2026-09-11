@@ -24,10 +24,14 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 | `index.html` | home: medico, prestazioni in evidenza, studio, collaborazioni, contatti |
 | `prestazioni.html` | pagina con l'elenco completo delle prestazioni e la ricerca |
 | `domande.html` | pagina con le domande frequenti |
+| `privacy.html` | informativa privacy del sito, collegata dal footer |
 | `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
+| `CNAME` | una riga sola: il dominio `dermozanetta.it`. Serve a GitHub Pages |
+| `sitemap.xml` | elenco delle pagine per Google. Una voce per pagina |
+| `robots.txt` | dice ai motori di ricerca che possono indicizzare tutto |
 
 ## Provare il sito in locale
 
@@ -251,7 +255,7 @@ e dettagli in tutto il sito.
   contatti di `index.html`)
 - [ ] Orari reali nella tabella **e** nel blocco JSON-LD (vedi sopra: due punti,
   se aggiorni solo uno Google mostra orari sbagliati)
-- [ ] Foto vere al posto dei segnaposto `.svg` in `img/`
+- [x] Foto vere al posto dei segnaposto `.svg` in `img/`
 - [ ] Aperto `index.html` e `prestazioni.html` nel browser e cliccato su tutti i
   bottoni "Chiama" e sul link Google Maps, per controllare che portino al posto giusto
 - [ ] Provato il sito anche da telefono (o restringendo la finestra del browser):
@@ -267,44 +271,82 @@ mostra in quella stessa pagina di impostazioni (del tipo
 
 ## Dominio personalizzato
 
-L'indirizzo `github.io` funziona, ma un dominio vero (es. `www.robertazanetta.it`)
-è più professionale e aiuta anche la ricerca su Google. Due pezzi: comprare il
-dominio, poi collegarlo a GitHub Pages.
+Il dominio **`dermozanetta.it`** e' stato registrato l'11 settembre 2026 ed e' gia'
+scritto dentro il sito: i tag `<link rel="canonical">` di tutte le pagine, la
+`sitemap.xml`, il `robots.txt` e i tag `og:` puntano li'. Il file `CNAME` accanto a
+`index.html` contiene la riga `dermozanetta.it`.
 
-**1. Comprare il dominio** — un registrar qualsiasi (Aruba, Register.it, Namecheap,
-Cloudflare...). Un `.it` costa in genere 10-15&nbsp;€/anno. Nessun hosting da comprare:
-il sito resta su GitHub Pages, il dominio serve solo a "puntare" lì.
+Il dominio **senza `www`** e' quello principale: e' la forma usata nei canonical, e
+cambiarla ora vorrebbe dire rimettere mano a tutti i file. `www.dermozanetta.it`
+viene comunque fatto funzionare dal record CNAME qui sotto, e GitHub lo reindirizza
+da solo sul dominio nudo.
 
-**2. Aggiungere il file `CNAME`** — nella cartella del sito (accanto a `index.html`)
-crea un file chiamato esattamente `CNAME` (senza estensione), con dentro una riga
-sola: il dominio scelto, senza `https://` né `www.` se lo usi come principale:
+### Cosa resta da fare (una volta sola)
 
-```
-www.robertazanetta.it
-```
-
-**3. Configurare il DNS** — dal pannello del registrar, aggiungi questi record
-(i nomi esatti dei campi variano da un registrar all'altro, ma il contenuto è questo):
+**1. DNS — dal pannello del registrar.** Sono cinque record. I nomi esatti dei campi
+cambiano da un registrar all'altro, ma il contenuto e' questo:
 
 | Tipo | Nome | Valore |
 |---|---|---|
-| CNAME | `www` | `tuoutente.github.io` |
 | A | `@` (dominio nudo) | `185.199.108.153` |
 | A | `@` | `185.199.109.153` |
 | A | `@` | `185.199.110.153` |
 | A | `@` | `185.199.111.153` |
+| CNAME | `www` | `filippoborioli-ai.github.io` |
 
-I 4 indirizzi A servono per far funzionare anche `robertazanetta.it` senza `www`
-(GitHub consiglia di avere entrambi e reindirizzare l'uno sull'altro).
+I quattro record A sono gli indirizzi ufficiali di GitHub Pages: servono tutti e
+quattro, sono quattro server diversi. Il valore del CNAME finisce con un punto in
+alcuni pannelli (`filippoborioli-ai.github.io.`): e' normale, lascia come propone il
+pannello.
 
-**4. Attivare su GitHub** — Settings → Pages → campo "Custom domain": scrivi lo
-stesso dominio del file `CNAME` e salva. Il DNS impiega da qualche minuto a
-qualche ora a propagarsi. Quando GitHub conferma il dominio, spunta **Enforce
-HTTPS**: il certificato è gratuito e automatico, non serve comprarlo.
+**2. GitHub.** Settings del repository → Pages → campo *Custom domain*: scrivi
+`dermozanetta.it` e salva. Il file `CNAME` c'e' gia', quindi di solito il campo
+risulta compilato da solo dopo il primo push.
 
-**5. Aggiornare i file del sito** — cerca `[DOMINIO]` in `robots.txt`,
-`sitemap.xml`, `index.html` e `prestazioni.html` (nei tag `<link rel="canonical">`)
-e sostituiscilo ovunque col dominio vero, es. `www.robertazanetta.it`.
+**3. Aspettare il DNS.** Da qualche minuto a qualche ora. Finche' non e' propagato
+GitHub scrive *"Domain's DNS record could not be verified"*: non e' un errore da
+correggere, e' solo da aspettare.
+
+**4. Enforce HTTPS.** Nella stessa pagina, quando la spunta diventa cliccabile,
+attivala. Il certificato e' gratuito e si rinnova da solo: non c'e' niente da
+comprare. Prima di quel momento il sito risponde in `http://` e il browser lo segna
+come "non sicuro" — e' una fase di passaggio, non un problema del sito.
+
+### Controllare che sia andato a buon fine
+
+Dal terminale:
+
+```bash
+nslookup dermozanetta.it        # deve rispondere i quattro 185.199.x.153
+curl -I https://dermozanetta.it # deve rispondere HTTP/2 200
+```
+
+Nel browser: `https://dermozanetta.it` mostra la home con il lucchetto chiuso.
+
+### Il rinnovo
+
+Il dominio va rinnovato ogni anno presso il registrar. Se scade, il sito sparisce:
+resta raggiungibile solo l'indirizzo `github.io`. Conviene attivare il rinnovo
+automatico e controllare che l'email del registrante
+(`zanettaroberta@yahoo.it`) sia una casella letta davvero — gli avvisi di scadenza
+arrivano li'.
+
+## Privacy
+
+`privacy.html` e' l'informativa del sito, collegata dal footer di tutte le pagine.
+
+Dice quello che oggi e' vero: **nessun cookie, nessun modulo, nessuna statistica**.
+Per questo il sito non ha (e non deve avere) il banner dei cookie: non c'e' niente
+da far accettare.
+
+> Se un domani si aggiunge **Google Analytics**, una **mappa Google incorporata**
+> (`<iframe>`), un **modulo di contatto**, il **pulsante WhatsApp** o i **font di
+> Google caricati da internet**, l'informativa diventa falsa e serve anche il banner
+> dei cookie. In quel caso `privacy.html` va riscritta: nel file c'e' un commento
+> HTML che lo ricorda, proprio sopra il testo.
+
+L'informativa del sito e' cosa diversa da quella firmata in studio, che riguarda i
+dati sanitari del paziente: la pagina lo dice fin dalla prima riga.
 
 ## Farsi trovare su Google per "dermatologo Verbania"
 
@@ -347,7 +389,9 @@ compare già.
 - Dati strutturati `schema.org/Physician` (il blocco JSON-LD in fondo a `index.html`)
   con indirizzo e coordinate: aiuta Google a capire cos'è la pagina, non solo a
   leggerla come testo.
-- `robots.txt` e `sitemap.xml`: creati, da compilare col dominio vero (vedi sopra).
+- `robots.txt` e `sitemap.xml`: già compilati con `dermozanetta.it`. Quando
+  aggiungi o togli una pagina, aggiorna `sitemap.xml` di conseguenza e cambia il
+  `<lastmod>` delle pagine modificate.
 - Sito veloce e senza dipendenze esterne: Google misura la velocità di caricamento
   come fattore di posizionamento, e un sito statico come questo parte già avvantaggiato.
 
