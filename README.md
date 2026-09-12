@@ -147,7 +147,7 @@ raggiunge solo scrivendo l'indirizzo.
 | **Sezione contatti** | le scritte intorno a telefono, indirizzo ed email |
 | **Domande frequenti** | aggiungi, togli, riordina, riscrivi |
 | **Google** | titolo e descrizione che compaiono nei risultati di ricerca, pagina per pagina |
-| **Pubblicazione** | il codice di pubblicazione (vedi sotto) |
+| **Collegamento al sito** | si usa una volta sola, all'inizio (vedi sotto) |
 
 Due scorciatoie utili dentro i testi:
 
@@ -188,25 +188,42 @@ ricaricare il sito con `Ctrl+F5`.
 Se si chiude il pannello senza pubblicare, le modifiche **non si perdono**: restano
 sul dispositivo e al rientro il pannello chiede se riprenderle.
 
-### La serratura: password e codice di pubblicazione
+### Chi deve aprire GitHub: nessuno, dopo il primo giorno
+
+Questo è il punto che si fraintende più facilmente. **Chi scrive i testi non apre
+mai GitHub.** Il suo giro è tutto qui:
+
+> apre `dermozanetta.it/admin.html` → password → modifica → **Salva e pubblica**
+
+Il collegamento a GitHub lo fa **chi gestisce il sito**, una volta sola, e da quel
+momento sparisce dalla vista.
+
+### La serratura: password e codice di collegamento
 
 Sono due cose diverse, ed è importante capire perché.
 
 - La **password** apre il pannello. È una comodità: `admin.html` è una pagina
   pubblica come le altre, quindi la password può essere provata da chiunque abbia
   tempo. In `admin.js` non c'è la password, c'è la sua impronta.
-- Il **codice di pubblicazione** (un token GitHub) è la serratura vera. Senza,
-  il pannello mostra il modulo e può scaricare un file — **non può toccare il
-  sito**. Si inserisce una volta sola per dispositivo, resta cifrato nel browser
-  e si apre con la password.
+- Il **codice di collegamento** (un token GitHub) è la serratura vera. Senza, il
+  pannello mostra il modulo e può scaricare un file — **non può toccare il sito**.
 
 Un sito statico non ha un server dove nascondere un segreto: è per questo che la
 vera barriera è il token, e non la password. Per togliere l'accesso a qualcuno si
 revoca il token su GitHub, non si cambia la password.
 
-I passi per creare il token sono dentro il pannello (sezione "Pubblicazione") e in
+Il token va incollato **dal dispositivo che userà chi scrive i testi**, perché è
+lì che resta cifrato. In pratica lo si crea sul proprio account e lo si incolla
+una volta sul computer di chi userà il pannello. Se userà anche il telefono, si
+ripete lì: stesso codice, una volta per dispositivo.
+
+I passi stanno dentro il pannello (sezione "Collegamento al sito") e in
 `CREDENZIALI.md`. In breve: GitHub → Settings → Developer settings → Personal
 access tokens → Fine-grained → solo questo deposito → **Contents: Read and write**.
+
+Il token **scade**: quando succede, il pannello lo dice, le modifiche non si
+perdono e si rifà il collegamento con un token nuovo. Vale la pena segnarsi la
+data di scadenza in `CREDENZIALI.md`.
 
 ### Cambiare la password
 
@@ -218,12 +235,13 @@ node cambia-password.mjs "la-nuova-password" nuova@email.it   # anche l'email
 Poi push, e aggiorna `CREDENZIALI.md`. La password vecchia non serve: non è
 salvata da nessuna parte e non è recuperabile.
 
-### Se il pannello non basta: la via lunga
+### Se il pannello non può pubblicare: la via di scorta
 
-Dalla sezione "Pubblicazione" si può **scaricare il file delle modifiche**
-(`contenuti.json`) e caricarlo a mano su GitHub, trascinandolo nella cartella del
-sito. Il risultato è identico, servono solo due passaggi in più. È la via di
-scorta quando il token è scaduto e non c'è tempo di rifarlo.
+Dalla sezione "Collegamento al sito" si può **scaricare il file delle modifiche**
+(`contenuti.json`) e mandarlo a chi gestisce il sito, che lo carica su GitHub
+trascinandolo nella cartella. Il risultato è identico. Serve quando il token è
+scaduto e non c'è tempo di rifarlo: le modifiche non vanno perse comunque, perché
+restano salvate sul dispositivo fino alla prossima pubblicazione.
 
 ---
 
@@ -340,7 +358,7 @@ bottoni e dettagli in tutto il sito. Il pannello usa la stessa palette
 | Sintomo | Cosa succede davvero |
 |---|---|
 | Il pannello dice **"Non trovo il file dei contenuti"** | è stato aperto con doppio clic invece che dal sito. Va aperto da `https://dermozanetta.it/admin.html` |
-| **"Il codice di pubblicazione non è valido o è scaduto"** | il token GitHub è scaduto o è stato revocato. Se ne crea uno nuovo: sezione "Pubblicazione" |
+| **"Il codice di collegamento non è valido o è scaduto"** | il token GitHub è scaduto o è stato revocato. Se ne crea uno nuovo e si rifà il collegamento. Le modifiche già fatte restano salvate sul dispositivo |
 | Ho pubblicato ma **il sito è uguale** | aspetta due minuti e ricarica con `Ctrl+F5`. Se dopo cinque minuti è ancora uguale, guarda la scheda **Actions** su GitHub: se c'è una crocetta rossa, il generatore si è fermato e il messaggio dice perché |
 | **"Qualcun altro ha modificato il sito nel frattempo"** | il file è cambiato da un altro dispositivo. Ricarica il pannello e rifai la modifica: è la protezione che impedisce di cancellare il lavoro altrui |
 | `genera.mjs` dice **"chiave assente in contenuti.json"** | in una pagina c'è un segnaposto `<!--T:...-->` che punta a una voce che non esiste. O si aggiunge la voce, o si toglie il segnaposto |

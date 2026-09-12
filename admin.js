@@ -17,7 +17,7 @@
 
    La serratura
        la password apre questa pagina. Ma la pagina, da sola, non puo'
-       pubblicare niente: per farlo serve un "codice di pubblicazione"
+       pubblicare niente: per farlo serve un "codice di collegamento"
        (un token GitHub) che sta cifrato nel browser della dottoressa e
        si apre con la stessa password. Chi apre admin.html senza quel
        codice vede il modulo e puo' scaricare il file, non puo' toccare
@@ -113,7 +113,7 @@
   }
 
   /* -------------------------------------------------------------------
-     Cifratura — serve solo a tenere il codice di pubblicazione al
+     Cifratura — serve solo a tenere il codice di collegamento al
      riparo nel browser: senza la password non si apre.
      ---------------------------------------------------------------- */
   function daEsadecimale(hex) {
@@ -225,8 +225,8 @@
   async function messaggioErrore(risposta) {
     var dettaglio = ''
     try { dettaglio = (await risposta.json()).message || '' } catch (e) { /* risposta senza corpo */ }
-    if (risposta.status === 401) return 'Il codice di pubblicazione non è valido o è scaduto. Rifallo dalla sezione "Pubblicazione".'
-    if (risposta.status === 403) return 'Il codice di pubblicazione non ha il permesso di scrivere su questo sito.'
+    if (risposta.status === 401) return 'Il codice di collegamento non è più valido, di solito perché è scaduto. Le tue modifiche restano salvate: chiedi a chi gestisce il sito di rifare il collegamento.'
+    if (risposta.status === 403) return 'Il codice di collegamento non ha il permesso di scrivere su questo sito. Va rifatto scegliendo "Contents: Read and write".'
     if (risposta.status === 409) return 'Qualcun altro ha modificato il sito nel frattempo. Ricarica la pagina e riprova.'
     return 'GitHub ha risposto ' + risposta.status + (dettaglio ? ': ' + dettaglio : '')
   }
@@ -812,9 +812,9 @@
 
     {
       id: 'pubblicazione',
-      nome: 'Pubblicazione',
-      titolo: 'Il codice di pubblicazione',
-      guida: 'Serve una volta sola, per dispositivo. È il permesso che autorizza questa pagina a modificare il sito: senza, si può guardare e scaricare, non pubblicare.',
+      nome: 'Collegamento al sito',
+      titolo: 'Collegamento al sito',
+      guida: 'Da qui il pannello è collegato al sito vero. È una cosa da fare una volta sola, da chi gestisce il sito: dopo, per pubblicare basta il bottone “Salva e pubblica” in alto.',
       disegna: disegnaPubblicazione
     }
   ]
@@ -834,47 +834,71 @@
   }
 
   function disegnaPubblicazione(box) {
-    var stato = creaElemento('p', 'avviso ' + (codice ? 'avviso-ok' : 'avviso-info'),
-      codice
-        ? 'Questo dispositivo può pubblicare: il codice è salvato e funziona.'
-        : 'Questo dispositivo non può ancora pubblicare. Segui i passi qui sotto, una volta sola.')
-    box.appendChild(stato)
+    /* Questa sezione non e' per chi scrive i testi: e' il collegamento
+       fra il pannello e il sito, e si fa una volta sola per dispositivo,
+       da chi gestisce il sito. Quando e' a posto deve sparire dai
+       piedi, non spaventare con una procedura tecnica ogni volta. */
+    if (codice) {
+      box.appendChild(creaElemento('p', 'avviso avviso-ok',
+        'Tutto collegato. Le modifiche vanno online da sole quando premi “Salva e pubblica”: non serve fare altro, né aprire nient’altro.'))
+    } else {
+      box.appendChild(creaElemento('p', 'avviso avviso-info',
+        'Questo dispositivo non è ancora collegato al sito: si possono fare modifiche, ma non pubblicarle. Il collegamento lo fa chi gestisce il sito, una volta sola. Poi non si tocca più.'))
+    }
+
+    /* Le istruzioni stanno chiuse: servono a chi fa il collegamento,
+       una volta, non a chi scrive i testi tutti i giorni. */
+    var istruzioni = document.createElement('details')
+    istruzioni.open = !codice
+    istruzioni.style.margin = '0 0 20px'
+    var titolo = document.createElement('summary')
+    titolo.textContent = codice
+      ? 'Rifare il collegamento (se il codice scade o si cambia computer)'
+      : 'Come si collega — per chi gestisce il sito'
+    titolo.style.cursor = 'pointer'
+    titolo.style.fontWeight = '600'
+    titolo.style.marginBottom = '10px'
+    istruzioni.appendChild(titolo)
+
+    istruzioni.appendChild(creaElemento('p', 'aiuto',
+      'Si fa dal computer di chi userà il pannello, una volta sola. Il codice resta cifrato in quel browser: da lì in avanti si preme solo “Salva e pubblica”.'))
 
     var passi = creaElemento('ol', 'passi')
     var testi = [
-      'Apri github.com ed entra con l’account del sito.',
-      'Vai su Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.',
-      'Nome: "Modifica sito". Scadenza: scegli la più lunga possibile.',
-      'In "Repository access" scegli "Only select repositories" e seleziona ' + DEPOSITO.nome + '.',
-      'In "Repository permissions" metti Contents su "Read and write". Non serve altro.',
-      'Premi "Generate token" e copia il codice che compare: si vede una volta sola.',
-      'Incollalo qui sotto e premi "Salva su questo dispositivo".'
+      'Su github.com, entra con l’account che possiede il sito.',
+      'Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.',
+      'Nome: "Modifica sito". Scadenza: la più lunga possibile (quando scade va rifatto).',
+      'Repository access → "Only select repositories" → ' + DEPOSITO.nome + '.',
+      'Repository permissions → Contents: "Read and write". Nient’altro.',
+      'Generate token, e copia il codice: si vede una volta sola.',
+      'Incollalo qui sotto e premi "Collega questo dispositivo".'
     ]
     testi.forEach(function (t) { passi.appendChild(creaElemento('li', null, t)) })
-    box.appendChild(passi)
+    istruzioni.appendChild(passi)
 
     var apri = creaElemento('a', 'btn btn-ghost', 'Apri la pagina dei codici su GitHub')
     apri.href = 'https://github.com/settings/personal-access-tokens/new'
     apri.target = '_blank'
     apri.rel = 'noopener'
-    box.appendChild(apri)
+    istruzioni.appendChild(apri)
+    box.appendChild(istruzioni)
 
     var campo = creaElemento('div', 'campo')
     campo.style.marginTop = '22px'
-    var etichetta = creaElemento('label', null, 'Codice di pubblicazione')
+    var etichetta = creaElemento('label', null, 'Codice di collegamento')
     etichetta.htmlFor = 'campoCodice'
     campo.appendChild(etichetta)
-    campo.appendChild(creaElemento('p', 'aiuto', 'Viene cifrato con la tua password e resta su questo dispositivo. Non viene mandato a nessuno tranne che a GitHub.'))
+    campo.appendChild(creaElemento('p', 'aiuto', 'Viene cifrato con la password del pannello e resta su questo dispositivo. Non va a nessuno tranne che a GitHub.'))
     var input = document.createElement('input')
     input.type = 'password'
     input.id = 'campoCodice'
-    input.placeholder = codice ? '(già salvato)' : 'github_pat_...'
+    input.placeholder = codice ? '(già collegato)' : 'github_pat_...'
     campo.appendChild(input)
     box.appendChild(campo)
 
     var esito = creaElemento('p', 'aiuto')
 
-    var salva = creaElemento('button', 'btn', 'Salva su questo dispositivo')
+    var salva = creaElemento('button', 'btn', 'Collega questo dispositivo')
     salva.type = 'button'
     salva.addEventListener('click', async function () {
       var valore = input.value.trim()
@@ -887,7 +911,7 @@
         if (!prova) throw new Error('Il codice funziona ma non trova il sito. Controlla di aver scelto il deposito giusto.')
         localStorage.setItem(CHIAVE_CODICE, await cifra(valore))
         versione = prova.versione
-        esito.textContent = 'Fatto: da adesso questo dispositivo può pubblicare.'
+        esito.textContent = 'Collegato. Da adesso basta premere “Salva e pubblica”.'
         esito.className = 'nuova'
         input.value = ''
         apriSezione('pubblicazione')
@@ -900,11 +924,11 @@
     box.appendChild(salva)
 
     if (codice) {
-      var togli = creaElemento('button', 'btn btn-rosso', 'Togli il codice da questo dispositivo')
+      var togli = creaElemento('button', 'btn btn-rosso', 'Scollega questo dispositivo')
       togli.type = 'button'
       togli.style.marginLeft = '8px'
       togli.addEventListener('click', function () {
-        if (!confirm('Dopo, da questo dispositivo, non si potrà più pubblicare finché non lo reinserisci. Procedo?')) return
+        if (!confirm('Da questo dispositivo non si potrà più pubblicare finché non lo ricolleghi. Procedo?')) return
         localStorage.removeItem(CHIAVE_CODICE)
         codice = null
         apriSezione('pubblicazione')
@@ -913,10 +937,18 @@
     }
     box.appendChild(esito)
 
-    /* --- Via di scorta: scaricare il file e caricarlo a mano --- */
-    box.appendChild(creaElemento('h3', null, 'Senza codice: la via lunga'))
-    box.appendChild(creaElemento('p', null,
-      'Se il codice non c’è o non funziona, si può comunque scaricare il file delle modifiche e caricarlo a mano su GitHub, trascinandolo nella cartella del sito. Il risultato è lo stesso, ci vogliono solo due passaggi in più.'))
+    /* --- Via di scorta: salvare le modifiche in un file --- */
+    var scorta = document.createElement('details')
+    scorta.style.margin = '24px 0 0'
+    var titoloScorta = document.createElement('summary')
+    titoloScorta.textContent = 'Via di scorta: salvare le modifiche in un file'
+    titoloScorta.style.cursor = 'pointer'
+    titoloScorta.style.fontWeight = '600'
+    titoloScorta.style.marginBottom = '10px'
+    scorta.appendChild(titoloScorta)
+    scorta.appendChild(creaElemento('p', null,
+      'Se il collegamento non c’è o è scaduto, le modifiche si possono scaricare in un file e mandarlo a chi gestisce il sito, che lo mette online. Il risultato è lo stesso.'))
+    box.appendChild(scorta)
 
     var scarica = creaElemento('button', 'btn btn-ghost', 'Scarica il file delle modifiche')
     scarica.type = 'button'
@@ -928,11 +960,11 @@
       link.click()
       URL.revokeObjectURL(link.href)
     })
-    box.appendChild(scarica)
+    scorta.appendChild(scarica)
 
     if (codaImmagini.length) {
-      box.appendChild(creaElemento('p', 'avviso avviso-info',
-        'Attenzione: hai scelto ' + codaImmagini.length + ' immagine/i nuove. Quelle non stanno dentro il file: senza codice di pubblicazione vanno caricate a mano nella cartella img/.'))
+      scorta.appendChild(creaElemento('p', 'avviso avviso-info',
+        'Attenzione: hai scelto ' + codaImmagini.length + ' immagine/i nuove. Quelle non stanno dentro il file e vanno mandate a parte.'))
     }
   }
 
@@ -1157,7 +1189,12 @@
      ---------------------------------------------------------------- */
   async function pubblica() {
     if (!codice) {
-      alert('Questo dispositivo non può ancora pubblicare.\n\nVai nella sezione "Pubblicazione": si fa una volta sola.')
+      alert([
+        'Questo dispositivo non è collegato al sito, quindi non può pubblicare.',
+        '',
+        'Le modifiche che hai fatto restano salvate qui e non si perdono.',
+        'Chiedi a chi gestisce il sito di fare il collegamento: si fa una volta sola.'
+      ].join('\n'))
       apriSezione('pubblicazione')
       return
     }
@@ -1234,7 +1271,7 @@
 
       chiaveCifratura = await derivaChiave(password)
 
-      // Codice di pubblicazione salvato in precedenza su questo dispositivo.
+      // Codice di collegamento salvato in precedenza su questo dispositivo.
       var salvato = null
       try { salvato = localStorage.getItem(CHIAVE_CODICE) } catch (e2) { /* niente */ }
       if (salvato) {
