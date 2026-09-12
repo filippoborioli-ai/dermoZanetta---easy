@@ -131,6 +131,7 @@ a{ color:var(--terracotta-scuro); }
 
 input[type=text], input[type=email], input[type=password], input[type=url], input[type=number], textarea, select{
   width:100%;
+  min-width:0;   /* altrimenti non scendono sotto la loro larghezza naturale */
   padding:10px 12px;
   border:1px solid var(--sabbia-2);
   border-radius:var(--radius-s);
@@ -187,8 +188,12 @@ input:focus, textarea:focus{ outline:2px solid var(--terracotta); outline-offset
 .orari input{ max-width:280px; }
 
 /* ---------- Foto ---------- */
+/* Flex e non griglia: con l'anteprima aperta la colonna si stringe, e
+   una griglia a due colonne fisse terrebbe la seconda piu' larga dello
+   spazio disponibile facendo uscire i campi dalla scheda. Cosi' invece,
+   quando non ci sta, la parte destra va a capo sotto la foto. */
 .foto-riga{
-  display:grid; grid-template-columns:160px 1fr; gap:16px;
+  display:flex; flex-wrap:wrap; gap:16px;
   background:var(--bianco);
   border:1px solid var(--sabbia-2);
   border-radius:var(--radius);
@@ -196,11 +201,17 @@ input:focus, textarea:focus{ outline:2px solid var(--terracotta); outline-offset
   margin-bottom:14px;
 }
 .foto-riga img{
-  width:100%; border-radius:var(--radius-s);
+  flex:0 0 150px; width:150px;
+  border-radius:var(--radius-s);
   background:var(--sabbia); display:block;
   aspect-ratio:4/3; object-fit:cover;
 }
+/* min-width:0 e' la parte che conta: senza, un elemento flessibile si
+   rifiuta di scendere sotto la larghezza naturale di cio' che contiene
+   (una casella di testo vuota "vuole" una ventina di caratteri). */
+.foto-riga > div{ flex:1 1 250px; min-width:0; }
 .foto-riga.logo img{ aspect-ratio:3/2; object-fit:contain; padding:8px; }
+.foto-riga input[type=file]{ max-width:100%; }
 .nuova{ font-size:.85rem; color:var(--verde); font-weight:600; }
 
 input[type=file]{ font:inherit; font-size:.9rem; max-width:100%; }
@@ -303,6 +314,5 @@ code{
   }
   .menu button{ width:auto; white-space:nowrap; }
   .contenuto{ padding:20px 16px 80px; }
-  .foto-riga{ grid-template-columns:1fr; }
-  .foto-riga img{ max-width:220px; }
+  .foto-riga img{ flex-basis:120px; width:120px; }
 }
