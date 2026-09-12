@@ -26,6 +26,13 @@
 
 *,*::before,*::after{ box-sizing:border-box; }
 
+/* Il browser nasconde da solo cio' che ha l'attributo hidden, ma solo
+   finche' nessuno gli assegna un display: una riga come
+   ".accesso{ display:grid }" qui sotto lo rimetterebbe a schermo. Questa
+   regola chiude la questione una volta per tutte: e' cosi' che il
+   pannello fa sparire la schermata di accesso dopo il login. */
+[hidden]{ display:none !important; }
+
 body{
   margin:0;
   font-family:var(--font);
