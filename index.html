@@ -3,22 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dott.ssa Roberta Zanetta — Dermatologa a Verbania</title>
-<meta name="description" content="Dott.ssa Roberta Zanetta, dermatologa a Verbania in Piazza Castello. Visite dermatologiche e controllo dei nei su appuntamento. Tel. 351 511 8880.">
+<!-- I testi segnati con T: e B: arrivano da contenuti.json e li riscrive
+     genera.mjs: si modificano da admin.html, non a mano. -->
+<title data-t="seo.home.titolo">Dott.ssa Roberta Zanetta — Dermatologa a Verbania</title>
+<meta name="description" data-c="seo.home.descrizione" content="Dott.ssa Roberta Zanetta, dermatologa a Verbania in Piazza Castello. Visite dermatologiche e controllo dei nei su appuntamento. Tel. 351 511 8880.">
 <meta name="theme-color" content="#c0764e">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="Dott.ssa Roberta Zanetta — Dermatologa a Verbania">
-<meta property="og:description" content="Visite dermatologiche e controllo dei nei su appuntamento, a Verbania in Piazza Castello.">
+<meta property="og:title" data-c="seo.home.ogTitolo" content="Dott.ssa Roberta Zanetta — Dermatologa a Verbania">
+<meta property="og:description" data-c="seo.home.ogDescrizione" content="Visite dermatologiche e controllo dei nei su appuntamento, a Verbania in Piazza Castello.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="it_IT">
-<meta property="og:site_name" content="Dott.ssa Roberta Zanetta — Dermatologa">
+<meta property="og:site_name" data-c="seo.sitoNome" content="Dott.ssa Roberta Zanetta — Dermatologa">
 <meta property="og:url" content="https://dermozanetta.it/">
 <!-- Anteprima quando il link viene condiviso (WhatsApp, Facebook, LinkedIn).
      Deve essere un indirizzo completo con https://, non un percorso relativo. -->
-<meta property="og:image" content="https://dermozanetta.it/img/dottoressa.jpg">
+<meta property="og:image" data-c="foto.ritrattoOg" content="https://dermozanetta.it/img/dottoressa.jpg">
 <meta property="og:image:width" content="596">
 <meta property="og:image:height" content="335">
-<meta property="og:image:alt" content="Dott.ssa Roberta Zanetta, dermatologa a Verbania">
+<meta property="og:image:alt" data-c="foto.ritrattoOgAlt" content="Ritratto della Dott.ssa Roberta Zanetta">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dermozanetta.it/">
 <link rel="stylesheet" href="style.css">
@@ -30,11 +32,13 @@
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="#top">
+      <!--B:marchio-->
       <span class="brand-mark">Z</span>
       <span class="brand-text">
         <strong>Dott.ssa Roberta Zanetta</strong>
         <small>Dermatologia e Venereologia</small>
       </span>
+      <!--/B-->
     </a>
 
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
@@ -47,7 +51,9 @@
       <a href="#studio">Lo studio</a>
       <a href="domande.html">Domande</a>
       <a href="#contatti">Dove siamo</a>
-      <a class="btn btn-sm" href="tel:+393515118880">Prenota</a>
+      <!--B:bottoneChiamaPiccolo-->
+      <a class="btn btn-sm" data-c="tel" href="tel:+393515118880">Prenota</a>
+      <!--/B-->
     </nav>
   </div>
 </header>
@@ -58,25 +64,26 @@
   <section class="hero">
     <div class="wrap hero-inner">
       <div class="hero-text">
-        <p class="eyebrow">Dermatologia e Venereologia &mdash; Verbania</p>
-        <h1>Visite dermatologiche e controllo dei nei a Verbania, su appuntamento.</h1>
+        <p class="eyebrow"><!--T:home.eyebrow-->Dermatologia e Venereologia — Verbania<!--/T--></p>
+        <h1><!--T:home.titolo-->Visite dermatologiche e controllo dei nei a Verbania, su appuntamento.<!--/T--></h1>
         <p class="lead">
-          La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania,
-          in Piazza Castello. Ogni visita ha il tempo che serve.
+          <!--T:home.lead-->La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania, in Piazza Castello. Ogni visita ha il tempo che serve.<!--/T-->
         </p>
         <div class="hero-cta">
-          <a class="btn" href="tel:+393515118880">Chiama 351 511 8880</a>
-          <a class="btn btn-ghost" href="#prestazioni">Vedi le prestazioni</a>
+          <!--B:bottoneChiama-->
+          <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+          <!--/B-->
+          <a class="btn btn-ghost" href="#prestazioni"><!--T:home.bottonePrestazioni-->Vedi le prestazioni<!--/T--></a>
           <!-- Porta alla scheda Google dello studio: mappa, indicazioni stradali
                e recensioni. Stesso link della sezione contatti. -->
-          <a class="btn btn-ghost" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">Dove si trova</a>
+          <a class="btn btn-ghost" data-c="mappa" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener"><!--T:home.bottoneMappa-->Dove si trova<!--/T--></a>
         </div>
-        <p class="hero-note">Stesso numero per prenotazioni e informazioni.</p>
+        <p class="hero-note"><!--T:home.nota-->Stesso numero per prenotazioni e informazioni.<!--/T--></p>
       </div>
 
       <figure class="hero-photo">
-        <!-- FOTO 1 — ritratto della dottoressa -->
-        <img src="img/dottoressa.jpg" alt="Ritratto della Dott.ssa Roberta Zanetta" width="520" height="620">
+        <!-- FOTO 1 — ritratto della dottoressa. Si sostituisce da admin.html. -->
+        <img data-c="foto.dottoressa" src="img/dottoressa.jpg" alt="Ritratto della Dott.ssa Roberta Zanetta" width="520" height="620">
       </figure>
     </div>
   </section>
@@ -85,46 +92,41 @@
        Foto della dottoressa: solo nell'hero, non ripetuta qui. -->
   <section id="chi-sono" class="section section-alt">
     <div class="wrap narrow">
-      <p class="eyebrow">Il medico</p>
-      <h2>Chi ti visita</h2>
-      <p>
-        Specialista in Dermatologia e Venereologia, la Dott.ssa Roberta Zanetta riceve
-        su appuntamento nel suo studio di Verbania, in Piazza Castello.
-      </p>
-      <p>
-        La visita comprende la valutazione della pelle, delle mucose, dei capelli e
-        delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio.
-      </p>
+      <p class="eyebrow"><!--T:chiSono.eyebrow-->Il medico<!--/T--></p>
+      <h2><!--T:chiSono.titolo-->Chi ti visita<!--/T--></h2>
+      <!--B:paragrafiChiSono-->
+      <p>Specialista in Dermatologia e Venereologia, la Dott.ssa Roberta Zanetta riceve su appuntamento nel suo studio di Verbania, in Piazza Castello.</p>
+      <p>La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio.</p>
+      <!--/B-->
       <ul class="check-list">
+        <!--B:puntiChiSono-->
         <li>Visite e controlli su appuntamento, in orari concordati</li>
         <li>Dermatoscopia digitale con archiviazione delle immagini</li>
-        <li>Iscritta all&rsquo;Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604</li>
+        <li>Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604</li>
+        <!--/B-->
       </ul>
     </div>
   </section>
 
   <!-- ===================== PRESTAZIONI (in evidenza) =====================
-       Le schede sono generate da dati.js: per aggiungere, togliere o
-       modificare una prestazione si tocca SOLO quel file. -->
+       Le schede arrivano da contenuti.json: per aggiungere, togliere o
+       modificare una prestazione si usa admin.html. -->
   <section id="prestazioni" class="section">
     <div class="wrap">
-      <p class="eyebrow center">Prestazioni</p>
-      <h2 class="center">Di cosa si occupa lo studio</h2>
+      <p class="eyebrow center"><!--T:sezionePrestazioni.eyebrow-->Prestazioni<!--/T--></p>
+      <h2 class="center"><!--T:sezionePrestazioni.titolo-->Di cosa si occupa lo studio<!--/T--></h2>
       <p class="section-intro center">
-        Per informazioni su costi e modalit&agrave; di pagamento chiama lo studio:
-        te lo diciamo prima di fissare l&rsquo;appuntamento, senza impegno.
+        <!--T:sezionePrestazioni.intro-->Per informazioni su costi e modalità di pagamento chiama lo studio: te lo diciamo prima di fissare l’appuntamento, senza impegno.<!--/T-->
       </p>
 
       <!-- Carosello: 3 schede visibili, si scorre per vedere le altre.
-           Ci sono tutte le prestazioni di dati.js, nello stesso ordine:
-           aggiungendone una li', entra qui da sola. Per mostrarne solo
-           le prime N, aggiungere l'attributo data-quante="N" al div qui
-           sotto. L'elenco completo con la ricerca resta su
+           Ci sono tutte le prestazioni, nello stesso ordine in cui stanno
+           in admin.html. L'elenco completo con la ricerca resta su
            prestazioni.html. -->
       <div class="carosello">
         <div class="cards carosello-pista" id="elencoPrestazioni"
              tabindex="0" role="group" aria-label="Prestazioni, scorrevoli lateralmente">
-        <!-- PRESTAZIONI:INIZIO — generato da genera.mjs, non modificare a mano -->
+        <!--B:prestazioni-->
         <article class="card" data-cerca="visita dermatologica valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico. generale prima visita controllo pelle cute derma">
           <h3>Visita dermatologica</h3>
           <p>Valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico.</p>
@@ -185,7 +187,7 @@
           <h3>Dermatologia pediatrica</h3>
           <p>Valutazione dei problemi della pelle in bambini e ragazzi.</p>
         </article>
-        <!-- PRESTAZIONI:FINE -->
+        <!--/B-->
         </div>
         <!-- Linea di scorrimento: indica che c'e' altro e dove ci si trova.
              Si puo' anche trascinare. La riempie lo script. -->
@@ -198,7 +200,7 @@
       </noscript>
 
       <p class="center" style="margin-top:34px">
-        <a class="btn btn-ghost" href="prestazioni.html">Vedi tutte le prestazioni &rarr;</a>
+        <a class="btn btn-ghost" href="prestazioni.html"><!--T:sezionePrestazioni.bottone-->Vedi tutte le prestazioni →<!--/T--></a>
       </p>
     </div>
   </section>
@@ -206,50 +208,47 @@
   <!-- ===================== LO STUDIO ===================== -->
   <section id="studio" class="section section-alt">
     <div class="wrap">
-      <p class="eyebrow center">Dove ti ricevo</p>
-      <h2 class="center">Lo studio</h2>
+      <p class="eyebrow center"><!--T:sezioneStudio.eyebrow-->Dove ti ricevo<!--/T--></p>
+      <h2 class="center"><!--T:sezioneStudio.titolo-->Lo studio<!--/T--></h2>
       <p class="section-intro center">
-        Lo studio &egrave; in Piazza Castello 27, a Verbania Intra.
-        Le visite sono su appuntamento, cos&igrave; da ridurre l&rsquo;attesa in sala.
+        <!--T:sezioneStudio.intro-->Lo studio è in Piazza Castello 27, a Verbania Intra. Le visite sono su appuntamento, così da ridurre l’attesa in sala.<!--/T-->
       </p>
 
       <div class="gallery">
-        <!-- FOTO 2 -->
+        <!-- FOTO 2, 3, 4 — si sostituiscono da admin.html. -->
+        <!--B:galleria-->
         <img src="img/ingresso.jpg" alt="Ingresso dello studio" width="600" height="450" loading="lazy">
-        <!-- FOTO 3 -->
         <img src="img/studio.jpg" alt="Sala visite" width="600" height="450" loading="lazy">
-        <!-- FOTO 4 -->
-        <img src="img/salaAttesa.jpg" alt="Sala d&rsquo;attesa" width="600" height="450" loading="lazy">
+        <img src="img/salaAttesa.jpg" alt="Sala d’attesa" width="600" height="450" loading="lazy">
+        <!--/B-->
       </div>
     </div>
   </section>
 
   <!-- ===================== COLLABORAZIONI =====================
-       Loghi delle strutture con cui lo studio collabora. Per aggiungere,
-       togliere o sostituire un logo vedi il README, sezione Collaborazioni. -->
+       Loghi delle strutture con cui lo studio collabora. Si aggiungono
+       e si tolgono da admin.html. -->
   <section id="collaborazioni" class="section">
     <div class="wrap">
       <!-- Titolo unico: l'occhiello fa anche da intestazione (h2), cosi'
            la sezione resta navigabile dai lettori di schermo pur avendo
            una riga sola sopra i loghi. -->
-      <h2 class="eyebrow center">Collaborazioni</h2>
+      <h2 class="eyebrow center"><!--T:sezioneCollaborazioni.titolo-->Collaborazioni<!--/T--></h2>
       <div class="logos">
+        <!--B:loghi-->
         <div class="logo-card">
-          <!-- LOGO 1 -->
-          <img src="img/loghi/proMater.png" alt="ProMater — Ambulatorio Medico Polispecialistico">
+          <img src="img/loghi/proMater.png" alt="ProMater — Ambulatorio Medico Polispecialistico" loading="lazy">
         </div>
         <div class="logo-card">
-          <!-- LOGO 2 -->
-          <img src="img/loghi/asl-vco.png" alt="ASL VCO — Azienda Sanitaria Locale Verbano Cusio Ossola">
+          <img src="img/loghi/asl-vco.png" alt="ASL VCO — Azienda Sanitaria Locale Verbano Cusio Ossola" loading="lazy">
         </div>
         <div class="logo-card">
-          <!-- LOGO 3 -->
-          <img src="img/loghi/biochemical.png" alt="Biochemical — Centro Medico Multidisciplinare, Domodossola">
+          <img src="img/loghi/biochemical.png" alt="Biochemical — Centro Medico Multidisciplinare, Domodossola" loading="lazy">
         </div>
         <div class="logo-card">
-          <!-- LOGO 4 -->
-          <img src="img/loghi/laveno.png" alt="Centro Medico Major — Laveno">
+          <img src="img/loghi/laveno.png" alt="Centro Medico Major — Laveno" loading="lazy">
         </div>
+        <!--/B-->
       </div>
     </div>
   </section>
@@ -258,49 +257,49 @@
   <section id="contatti" class="section section-alt">
     <div class="wrap two-col">
       <div>
-        <p class="eyebrow">Prenotazioni</p>
-        <h2>Dove siamo e come prenotare</h2>
+        <p class="eyebrow"><!--T:contatti.eyebrow-->Prenotazioni<!--/T--></p>
+        <h2><!--T:contatti.titolo-->Dove siamo e come prenotare<!--/T--></h2>
         <p class="section-intro">
-          Le visite sono su appuntamento. Chiama lo studio: &egrave; lo stesso numero
-          per prenotazioni e informazioni.
+          <!--T:contatti.intro-->Le visite sono su appuntamento. Chiama lo studio: è lo stesso numero per prenotazioni e informazioni.<!--/T-->
         </p>
 
         <div class="contact-list">
-          <a class="contact-row" href="tel:+393515118880">
+          <!--B:contatti-->
+          <a class="contact-row" data-c="tel" href="tel:+393515118880">
             <span class="contact-icon" aria-hidden="true">&#9990;</span>
             <span><strong>351 511 8880</strong><small>Prenotazioni e informazioni</small></span>
           </a>
-          <!-- Link di ricerca: sempre corretto perché usa l'indirizzo testuale,
-               non un id di scheda. Se poi hai il link diretto della scheda Google
-               Business (più preciso: porta dritto a recensioni e foto), sostituiscilo qui. -->
-          <a class="contact-row" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">
+          <a class="contact-row" data-c="mappa" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">
             <span class="contact-icon" aria-hidden="true">&#9906;</span>
             <span><strong>Piazza Castello 27, 28921 Verbania (VB)</strong><small>Apri in Google Maps</small></span>
           </a>
-          <!-- Per prenotare resta il telefono: la mail e' per le cose che possono
-               aspettare, cosi' nessuno la usa per un appuntamento urgente. -->
-          <a class="contact-row" href="mailto:dermozanetta@gmail.com">
+          <a class="contact-row" data-c="mail" href="mailto:dermozanetta@gmail.com">
             <span class="contact-icon" aria-hidden="true">&#64;</span>
             <span><strong>dermozanetta@gmail.com</strong><small>Per informazioni non urgenti</small></span>
           </a>
+          <!--/B-->
         </div>
       </div>
 
       <div class="hours-card">
-        <h3>Orari</h3>
+        <h3><!--T:contatti.titoloOrari-->Orari<!--/T--></h3>
         <table class="hours">
           <tbody>
-            <tr><th>Luned&igrave;</th><td>14:30 – 19:00</td></tr>
-            <tr><th>Marted&igrave;</th><td>10:00 – 17:00</td></tr>
-            <tr><th>Mercoled&igrave;</th><td>14:00 – 18:00</td></tr>
-            <tr><th>Gioved&igrave;</th><td>14:30 – 19:00</td></tr>
-            <tr><th>Venerd&igrave;</th><td>10:00 – 17:00</td></tr>
+            <!--B:orari-->
+            <tr><th>Lunedì</th><td>14:30 – 19:00</td></tr>
+            <tr><th>Martedì</th><td>10:00 – 17:00</td></tr>
+            <tr><th>Mercoledì</th><td>14:00 – 18:00</td></tr>
+            <tr><th>Giovedì</th><td>14:30 – 19:00</td></tr>
+            <tr><th>Venerdì</th><td>10:00 – 17:00</td></tr>
             <tr><th>Sabato</th><td>chiuso</td></tr>
             <tr><th>Domenica</th><td>chiuso</td></tr>
+            <!--/B-->
           </tbody>
         </table>
-        <a class="btn btn-block" href="tel:+393515118880">Chiama per prenotare</a>
-        <p class="note">Le visite si svolgono solo su appuntamento.</p>
+        <!--B:bottoneOrari-->
+        <a class="btn btn-block" data-c="tel" href="tel:+393515118880">Chiama per prenotare</a>
+        <!--/B-->
+        <p class="note"><!--T:contatti.notaOrari-->Le visite si svolgono solo su appuntamento.<!--/T--></p>
       </div>
     </div>
   </section>
@@ -309,6 +308,7 @@
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
+    <!--B:footer-->
     <div>
       <strong>Dott.ssa Roberta Zanetta</strong><br>
       Dermatologia e Venereologia
@@ -316,50 +316,59 @@
     <div>
       Piazza Castello 27<br>
       28921 Verbania (VB)<br>
-      <a href="tel:+393515118880">351 511 8880</a>
+      <a data-c="tel" href="tel:+393515118880">351 511 8880</a>
     </div>
     <div class="footer-note">
-      <!-- Dati obbligatori per legge sul sito di un medico (pubblicit&agrave;
+      <!-- Dati obbligatori per legge sul sito di un medico (pubblicita'
            sanitaria): vanno tenuti su tutte le pagine, non solo in home. -->
       P. IVA 01367340039<br>
-      Iscritta all&rsquo;Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604<br>
-      Le informazioni di questo sito hanno finalit&agrave; informativa e non sostituiscono
-      la visita medica. In caso di emergenza chiamare il 112.<br>
+      Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604<br>
+      Le informazioni di questo sito hanno finalità informativa e non sostituiscono la visita medica. In caso di emergenza chiamare il 112.<br>
       &copy; <span id="year">2026</span> Dott.ssa Roberta Zanetta &middot;
       <a href="privacy.html">Privacy</a>
     </div>
+    <!--/B-->
   </div>
 </footer>
 
-<a class="call-fab" href="tel:+393515118880">Chiama 351 511 8880</a>
+<!--B:bottoneChiamaFisso-->
+<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+<!--/B-->
 
+<!--B:datiStrutturatiHome-->
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"Physician",
-  "name":"Dott.ssa Roberta Zanetta — Dermatologa",
-  "medicalSpecialty":"Dermatology",
-  "telephone":"+393515118880",
-  "email":"dermozanetta@gmail.com",
-  "address":{
-    "@type":"PostalAddress",
-    "streetAddress":"Piazza Castello, 27",
-    "addressLocality":"Verbania",
-    "addressRegion":"VB",
-    "postalCode":"28921",
-    "addressCountry":"IT"
+  "@context": "https://schema.org",
+  "@type": "Physician",
+  "name": "Dott.ssa Roberta Zanetta — Dermatologa",
+  "medicalSpecialty": "Dermatology",
+  "telephone": "+393515118880",
+  "email": "dermozanetta@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Piazza Castello, 27",
+    "addressLocality": "Verbania",
+    "addressRegion": "VB",
+    "postalCode": "28921",
+    "addressCountry": "IT"
   },
-  "geo":{
-    "@type":"GeoCoordinates",
-    "latitude":45.9347213,
-    "longitude":8.572854
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 45.9347213,
+    "longitude": 8.572854
   },
-  "image":"https://dermozanetta.it/img/dottoressa.jpg",
-  "areaServed":[
-    {"@type":"City","name":"Verbania"},
-    {"@type":"AdministrativeArea","name":"Provincia del Verbano-Cusio-Ossola"}
+  "image": "https://dermozanetta.it/img/dottoressa.jpg",
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Verbania"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Provincia del Verbano-Cusio-Ossola"
+    }
   ],
-  "availableService":[
+  "availableService": [
     {
       "@type": "MedicalProcedure",
       "name": "Visita dermatologica",
@@ -436,12 +445,21 @@
       "description": "Valutazione dei problemi della pelle in bambini e ragazzi."
     }
   ],
-  "hasMap":"https://maps.google.com/?cid=15553148866995770811",
-  "url":"https://dermozanetta.it/",
-  "sameAs":["https://maps.google.com/?cid=15553148866995770811"],
-  "openingHours":["Mo 14:30-19:00","Tu 10:00-17:00","We 14:00-18:00","Th 14:30-19:00","Fr 10:00-17:00"]
+  "hasMap": "https://maps.google.com/?cid=15553148866995770811",
+  "url": "https://dermozanetta.it/",
+  "sameAs": [
+    "https://maps.google.com/?cid=15553148866995770811"
+  ],
+  "openingHours": [
+    "Mo 14:30-19:00",
+    "Tu 10:00-17:00",
+    "We 14:00-18:00",
+    "Th 14:30-19:00",
+    "Fr 10:00-17:00"
+  ]
 }
 </script>
+<!--/B-->
 
 <script src="script.js" defer></script>
 </body>

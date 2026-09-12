@@ -1,0 +1,230 @@
+/* =========================================================
+   Pannello di modifica del sito — foglio di stile
+   Stessi colori del sito, ma pensato per lavorarci dentro:
+   testo grande, campi larghi, tutto leggibile anche da telefono.
+   ========================================================= */
+
+:root{
+  --crema:      #fdf8f3;
+  --sabbia:     #f4e9de;
+  --sabbia-2:   #eadbcb;
+  --terracotta: #c0764e;
+  --terracotta-scuro: #a45f3b;
+  --salvia:     #7f8f7a;
+  --bruno:      #3b2e27;
+  --bruno-soft: #6d5c50;
+  --bianco:     #fffdfb;
+  --rosso:      #b3402e;
+  --verde:      #4f7a52;
+
+  --radius:   16px;
+  --radius-s: 10px;
+  --ombra:    0 10px 30px rgba(59,46,39,.08);
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-t: Georgia, "Times New Roman", serif;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:var(--font);
+  font-size:16px;
+  line-height:1.55;
+  color:var(--bruno);
+  background:var(--crema);
+}
+
+h1,h2,h3{ font-family:var(--font-t); font-weight:600; line-height:1.2; margin:0 0 .3em; }
+h1{ font-size:1.6rem; }
+h2{ font-size:1.3rem; }
+h3{ font-size:1.05rem; }
+p{ margin:0 0 .7em; }
+a{ color:var(--terracotta-scuro); }
+
+/* ---------- Schermata di accesso ---------- */
+.accesso{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.accesso-box{
+  width:100%;
+  max-width:420px;
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius);
+  box-shadow:var(--ombra);
+  padding:32px 28px;
+}
+.accesso-box .marchio{
+  display:inline-grid;
+  place-items:center;
+  width:46px; height:46px;
+  border-radius:50%;
+  background:var(--terracotta);
+  color:#fff;
+  font-family:var(--font-t);
+  font-size:1.3rem;
+  margin-bottom:14px;
+}
+
+/* ---------- Impalcatura ---------- */
+.barra{
+  position:sticky; top:0; z-index:10;
+  display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+  padding:12px 20px;
+  background:var(--bianco);
+  border-bottom:1px solid var(--sabbia-2);
+}
+.barra .titolo{ font-family:var(--font-t); font-size:1.1rem; margin-right:auto; }
+.barra .stato{ font-size:.85rem; color:var(--bruno-soft); }
+.barra .stato.ok{ color:var(--verde); }
+.barra .stato.errore{ color:var(--rosso); }
+
+.impalcatura{ display:grid; grid-template-columns:230px 1fr; gap:0; align-items:start; }
+
+.menu{
+  position:sticky; top:59px;
+  padding:18px 12px;
+  border-right:1px solid var(--sabbia-2);
+  min-height:calc(100vh - 59px);
+}
+.menu button{
+  display:block; width:100%; text-align:left;
+  padding:9px 12px; margin-bottom:2px;
+  border:0; border-radius:var(--radius-s);
+  background:transparent; color:var(--bruno);
+  font:inherit; font-size:.95rem; cursor:pointer;
+}
+.menu button:hover{ background:var(--sabbia); }
+.menu button[aria-current="true"]{ background:var(--terracotta); color:#fff; }
+
+.contenuto{ padding:26px 28px 90px; max-width:820px; }
+
+.sezione[hidden]{ display:none; }
+.sezione > p.guida{
+  background:var(--sabbia);
+  border-left:4px solid var(--salvia);
+  border-radius:0 var(--radius-s) var(--radius-s) 0;
+  padding:12px 14px;
+  font-size:.92rem;
+  color:var(--bruno-soft);
+}
+
+/* ---------- Campi ---------- */
+.campo{ margin:0 0 20px; }
+.campo > label{ display:block; font-weight:600; font-size:.95rem; margin-bottom:4px; }
+.campo .aiuto{ font-size:.85rem; color:var(--bruno-soft); margin:0 0 6px; }
+
+input[type=text], input[type=email], input[type=password], input[type=url], input[type=number], textarea, select{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius-s);
+  background:var(--bianco);
+  font:inherit;
+  color:var(--bruno);
+}
+textarea{ min-height:92px; resize:vertical; line-height:1.5; }
+input:focus, textarea:focus{ outline:2px solid var(--terracotta); outline-offset:1px; }
+
+.conteggio{ font-size:.8rem; color:var(--bruno-soft); margin-top:3px; }
+.conteggio.lungo{ color:var(--rosso); }
+
+/* ---------- Bottoni ---------- */
+.btn{
+  display:inline-block;
+  padding:10px 18px;
+  border:0; border-radius:999px;
+  background:var(--terracotta); color:#fff;
+  font:inherit; font-weight:600; cursor:pointer;
+  text-decoration:none;
+}
+.btn:hover{ background:var(--terracotta-scuro); }
+.btn:disabled{ opacity:.5; cursor:default; }
+.btn-ghost{ background:transparent; color:var(--terracotta-scuro); border:1px solid var(--sabbia-2); }
+.btn-ghost:hover{ background:var(--sabbia); color:var(--terracotta-scuro); }
+.btn-sm{ padding:6px 12px; font-size:.85rem; }
+.btn-rosso{ background:transparent; color:var(--rosso); border:1px solid var(--sabbia-2); }
+.btn-rosso:hover{ background:#f7e7e3; color:var(--rosso); }
+
+/* ---------- Elementi di un elenco (prestazioni, domande, loghi...) ---------- */
+.voce{
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:14px;
+}
+.voce-testa{
+  display:flex; gap:8px; align-items:center;
+  margin-bottom:10px;
+}
+.voce-testa .numero{
+  font-size:.8rem; font-weight:700; color:var(--salvia);
+  text-transform:uppercase; letter-spacing:.1em;
+  margin-right:auto;
+}
+.voce .campo:last-child{ margin-bottom:0; }
+
+/* ---------- Orari ---------- */
+.orari{ width:100%; border-collapse:collapse; }
+.orari th{ text-align:left; padding:6px 10px 6px 0; font-weight:600; width:130px; }
+.orari td{ padding:4px 0; }
+.orari input{ max-width:280px; }
+
+/* ---------- Foto ---------- */
+.foto-riga{
+  display:grid; grid-template-columns:160px 1fr; gap:16px;
+  background:var(--bianco);
+  border:1px solid var(--sabbia-2);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:14px;
+}
+.foto-riga img{
+  width:100%; border-radius:var(--radius-s);
+  background:var(--sabbia); display:block;
+  aspect-ratio:4/3; object-fit:cover;
+}
+.foto-riga.logo img{ aspect-ratio:3/2; object-fit:contain; padding:8px; }
+.nuova{ font-size:.85rem; color:var(--verde); font-weight:600; }
+
+input[type=file]{ font:inherit; font-size:.9rem; max-width:100%; }
+
+/* ---------- Avvisi ---------- */
+.avviso{
+  border-radius:var(--radius-s);
+  padding:12px 14px;
+  margin:0 0 18px;
+  font-size:.92rem;
+}
+.avviso-info{ background:var(--sabbia); color:var(--bruno-soft); }
+.avviso-errore{ background:#f7e7e3; color:var(--rosso); }
+.avviso-ok{ background:#e8f0e6; color:var(--verde); }
+
+.passi{ padding-left:20px; }
+.passi li{ margin-bottom:8px; }
+
+code{
+  background:var(--sabbia);
+  padding:1px 5px;
+  border-radius:5px;
+  font-size:.9em;
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width:760px){
+  .impalcatura{ grid-template-columns:1fr; }
+  .menu{
+    position:static; min-height:0;
+    border-right:0; border-bottom:1px solid var(--sabbia-2);
+    display:flex; gap:6px; overflow-x:auto; padding:10px;
+  }
+  .menu button{ width:auto; white-space:nowrap; }
+  .contenuto{ padding:20px 16px 80px; }
+  .foto-riga{ grid-template-columns:1fr; }
+  .foto-riga img{ max-width:220px; }
+}

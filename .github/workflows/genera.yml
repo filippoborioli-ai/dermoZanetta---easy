@@ -1,17 +1,19 @@
-# Rigenera le schede delle prestazioni quando cambia dati.js.
+# Riscrive le pagine del sito quando cambiano i contenuti.
 #
-# Serve perche' le schede stanno scritte dentro index.html e
-# prestazioni.html (Google legge l'HTML, non aspetta il JavaScript), ma
-# la sorgente resta dati.js: si continua a modificare solo quello. Al
-# push ci pensa questa azione a riscrivere le due pagine.
-name: Rigenera le schede
+# Serve perche' i testi stanno scritti dentro le pagine HTML (Google
+# legge l'HTML, non aspetta il JavaScript), ma la sorgente unica resta
+# contenuti.json: e' quello che modifica il pannello admin.html. Al push
+# ci pensa questa azione a riscrivere le pagine e la sitemap.
+name: Rigenera le pagine
 
 on:
   push:
     branches: [main]
     paths:
-      - dati.js
+      - contenuti.json
       - genera.mjs
+  # Si puo' anche lanciare a mano, dalla scheda Actions di GitHub.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -29,12 +31,12 @@ jobs:
 
       - name: Salva le pagine, se sono cambiate
         run: |
-          if [ -z "$(git status --porcelain index.html prestazioni.html)" ]; then
-            echo "Niente da fare: le pagine erano gia' allineate a dati.js."
+          if [ -z "$(git status --porcelain index.html prestazioni.html domande.html privacy.html sitemap.xml)" ]; then
+            echo "Niente da fare: le pagine erano gia' allineate a contenuti.json."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html prestazioni.html
-          git commit -m "Rigenerate le schede delle prestazioni da dati.js"
+          git add index.html prestazioni.html domande.html privacy.html sitemap.xml
+          git commit -m "Rigenerate le pagine da contenuti.json"
           git push

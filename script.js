@@ -1,6 +1,7 @@
 /* Menu mobile, anno nel footer, elenco prestazioni e ricerca.
    Niente librerie: il sito resta leggero e funziona anche aperto
-   con doppio clic, senza server. L'elenco sta in dati.js. */
+   con doppio clic, senza server. I testi stanno in contenuti.json
+   e li scrive nelle pagine genera.mjs. */
 (function () {
 
   /* ---------- Menu mobile ---------- */
@@ -28,7 +29,7 @@
 
   /* ---------- Prestazioni ----------
      Le schede NON le disegna piu' il browser: stanno gia' scritte
-     nell'HTML, generate da dati.js con `node genera.mjs`. Il motivo e'
+     nell'HTML, generate da contenuti.json con `node genera.mjs`. Il motivo e'
      Google: quello che appare solo dopo il JavaScript rischia di non
      finire nell'indice, e le prestazioni sono le parole con cui i
      pazienti cercano. Qui restano solo le parti che il browser deve
@@ -104,7 +105,7 @@
   // Le schede ci sono tutte: la ricerca nasconde quelle che non
   // corrispondono, invece di ridisegnare l'elenco. Il testo su cui
   // cerca sta in data-cerca, gia' senza accenti, e comprende le chiavi
-  // di dati.js (chi ha l'acne scrive "brufoli").
+  // scritte nel pannello (chi ha l'acne scrive "brufoli").
   var schede = box.querySelectorAll('.card');
 
   campo.addEventListener('input', function () {

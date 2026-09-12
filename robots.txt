@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Pagina di servizio per chi gestisce il sito: non e' contenuto da indicizzare.
+Disallow: /admin.html
+
 Sitemap: https://dermozanetta.it/sitemap.xml

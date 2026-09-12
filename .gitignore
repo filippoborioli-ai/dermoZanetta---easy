@@ -1,0 +1,9 @@
+# Le credenziali del pannello NON vanno su GitHub: il deposito e' pubblico.
+# Il file resta sul computer di chi gestisce il sito e si consegna a mano
+# (di persona, o con un messaggio, non con un commit).
+CREDENZIALI.md
+
+# Roba di sistema
+node_modules/
+.DS_Store
+Thumbs.db

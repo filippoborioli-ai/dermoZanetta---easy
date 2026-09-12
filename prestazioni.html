@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
-<meta name="description" content="Le prestazioni dello studio dermatologico della Dott.ssa Roberta Zanetta a Verbania: visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia e altro.">
+<title data-t="seo.prestazioni.titolo">Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
+<meta name="description" data-c="seo.prestazioni.descrizione" content="Le prestazioni dello studio dermatologico della Dott.ssa Roberta Zanetta a Verbania: visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia e altro.">
 <meta name="theme-color" content="#c0764e">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://dermozanetta.it/prestazioni.html">
-<meta property="og:title" content="Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania">
-<meta property="og:description" content="Visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia: le prestazioni dello studio di Verbania.">
+<meta property="og:title" data-c="seo.prestazioni.ogTitolo" content="Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania">
+<meta property="og:description" data-c="seo.prestazioni.ogDescrizione" content="Visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia: le prestazioni dello studio di Verbania.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="it_IT">
-<meta property="og:site_name" content="Dott.ssa Roberta Zanetta — Dermatologa">
+<meta property="og:site_name" data-c="seo.sitoNome" content="Dott.ssa Roberta Zanetta — Dermatologa">
 <meta property="og:url" content="https://dermozanetta.it/prestazioni.html">
-<meta property="og:image" content="https://dermozanetta.it/img/dottoressa.jpg">
+<meta property="og:image" data-c="foto.ritrattoOg" content="https://dermozanetta.it/img/dottoressa.jpg">
 <meta property="og:image:width" content="596">
 <meta property="og:image:height" content="335">
-<meta property="og:image:alt" content="Dott.ssa Roberta Zanetta, dermatologa a Verbania">
+<meta property="og:image:alt" data-c="foto.ritrattoOgAlt" content="Ritratto della Dott.ssa Roberta Zanetta">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -28,11 +28,13 @@
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="index.html">
+      <!--B:marchio-->
       <span class="brand-mark">Z</span>
       <span class="brand-text">
         <strong>Dott.ssa Roberta Zanetta</strong>
         <small>Dermatologia e Venereologia</small>
       </span>
+      <!--/B-->
     </a>
 
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
@@ -45,7 +47,9 @@
       <a href="index.html#studio">Lo studio</a>
       <a href="domande.html">Domande</a>
       <a href="index.html#contatti">Dove siamo</a>
-      <a class="btn btn-sm" href="tel:+393515118880">Prenota</a>
+      <!--B:bottoneChiamaPiccolo-->
+      <a class="btn btn-sm" data-c="tel" href="tel:+393515118880">Prenota</a>
+      <!--/B-->
     </nav>
   </div>
 </header>
@@ -54,14 +58,16 @@
 
   <section class="page-head">
     <div class="wrap">
-      <p class="eyebrow">Prestazioni</p>
-      <h1>Di cosa si occupa lo studio</h1>
+      <p class="eyebrow"><!--T:paginaPrestazioni.eyebrow-->Prestazioni<!--/T--></p>
+      <h1><!--T:paginaPrestazioni.titolo-->Di cosa si occupa lo studio<!--/T--></h1>
       <p class="lead">
-        Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e
-        modalit&agrave; di pagamento chiama lo studio: te lo diciamo prima di fissare
-        l&rsquo;appuntamento, senza impegno.
+        <!--T:paginaPrestazioni.lead-->Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e modalità di pagamento chiama lo studio: te lo diciamo prima di fissare l’appuntamento, senza impegno.<!--/T-->
       </p>
-      <p><a class="btn" href="tel:+393515118880">Chiama 351 511 8880</a></p>
+      <p>
+        <!--B:bottoneChiama-->
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <!--/B-->
+      </p>
     </div>
   </section>
 
@@ -70,18 +76,15 @@
 
       <!-- La ricerca cerca anche fra le parole comuni: "brufoli" trova l'acne. -->
       <div class="search">
-        <label for="cerca">Cerca una prestazione o un disturbo</label>
-        <input type="search" id="cerca" placeholder="es. nei, brufoli, capelli, verruche" autocomplete="off">
+        <label for="cerca"><!--T:paginaPrestazioni.etichettaRicerca-->Cerca una prestazione o un disturbo<!--/T--></label>
+        <input type="search" id="cerca" data-c="ricerca.suggerimento" placeholder="es. nei, brufoli, capelli, verruche" autocomplete="off">
         <p class="search-esito" id="esitoRicerca" role="status" aria-live="polite"></p>
       </div>
 
-      <!-- Le schede arrivano da dati.js: per aggiungere, togliere o modificare
-           una prestazione si tocca SOLO quel file, poi si lancia
-           `node genera.mjs` (o si fa il push: ci pensa l'azione di GitHub).
-           Stanno scritte qui e non disegnate dal browser perche' Google
-           legge l'HTML: se le schede non ci sono, per lui la pagina e' vuota. -->
+      <!-- Le schede arrivano da contenuti.json: per aggiungere, togliere o
+           modificare una prestazione si usa admin.html. -->
       <div class="cards" id="elencoPrestazioni">
-        <!-- PRESTAZIONI:INIZIO — generato da genera.mjs, non modificare a mano -->
+        <!--B:prestazioni-->
         <article class="card" data-cerca="visita dermatologica valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico. generale prima visita controllo pelle cute derma">
           <h3>Visita dermatologica</h3>
           <p>Valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico.</p>
@@ -142,37 +145,33 @@
           <h3>Dermatologia pediatrica</h3>
           <p>Valutazione dei problemi della pelle in bambini e ragazzi.</p>
         </article>
-        <!-- PRESTAZIONI:FINE -->
+        <!--/B-->
       </div>
 
       <noscript>
         <p class="section-intro">
-          Per l&rsquo;elenco completo delle prestazioni chiama lo studio al
-          <a href="tel:+393515118880">351 511 8880</a>.
+          Per l&rsquo;elenco completo delle prestazioni chiama lo studio.
         </p>
       </noscript>
 
       <p class="note-legale">
-        Le descrizioni hanno finalit&agrave; informativa e non sostituiscono la visita
-        medica: sar&agrave; il medico, durante la visita, a indicare il percorso adatto
-        al singolo caso.
+        <!--T:paginaPrestazioni.notaLegale-->Le descrizioni hanno finalità informativa e non sostituiscono la visita medica: sarà il medico, durante la visita, a indicare il percorso adatto al singolo caso.<!--/T-->
       </p>
     </div>
   </section>
 
   <section class="section section-alt">
     <div class="wrap cta-strip">
+      <!--B:ctaFinale-->
       <div>
-        <h2>Prenotare &egrave; una telefonata</h2>
-        <p class="section-intro">
-          Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27,
-          28921 Verbania (VB).
-        </p>
+        <h2>Prenotare è una telefonata</h2>
+        <p class="section-intro">Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27, 28921 Verbania (VB).</p>
       </div>
       <div class="cta-strip-actions">
-        <a class="btn" href="tel:+393515118880">Chiama 351 511 8880</a>
-        <a class="btn btn-ghost" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">Apri in Google Maps</a>
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn btn-ghost" data-c="mappa" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">Apri in Google Maps</a>
       </div>
+      <!--/B-->
     </div>
   </section>
 
@@ -180,6 +179,7 @@
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
+    <!--B:footer-->
     <div>
       <strong>Dott.ssa Roberta Zanetta</strong><br>
       Dermatologia e Venereologia
@@ -187,22 +187,24 @@
     <div>
       Piazza Castello 27<br>
       28921 Verbania (VB)<br>
-      <a href="tel:+393515118880">351 511 8880</a>
+      <a data-c="tel" href="tel:+393515118880">351 511 8880</a>
     </div>
     <div class="footer-note">
-      <!-- Dati obbligatori per legge sul sito di un medico (pubblicit&agrave;
+      <!-- Dati obbligatori per legge sul sito di un medico (pubblicita'
            sanitaria): vanno tenuti su tutte le pagine, non solo in home. -->
       P. IVA 01367340039<br>
-      Iscritta all&rsquo;Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604<br>
-      Le informazioni di questo sito hanno finalit&agrave; informativa e non sostituiscono
-      la visita medica. In caso di emergenza chiamare il 112.<br>
+      Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604<br>
+      Le informazioni di questo sito hanno finalità informativa e non sostituiscono la visita medica. In caso di emergenza chiamare il 112.<br>
       &copy; <span id="year">2026</span> Dott.ssa Roberta Zanetta &middot;
       <a href="privacy.html">Privacy</a>
     </div>
+    <!--/B-->
   </div>
 </footer>
 
-<a class="call-fab" href="tel:+393515118880">Chiama 351 511 8880</a>
+<!--B:bottoneChiamaFisso-->
+<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+<!--/B-->
 
 <script src="script.js" defer></script>
 </body>

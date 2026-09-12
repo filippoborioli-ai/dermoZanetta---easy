@@ -1,0 +1,274 @@
+{
+  "_leggimi": "Tutti i testi del sito stanno qui. Si modificano dalla pagina di amministrazione (admin.html), non a mano. A ogni salvataggio 'node genera.mjs' riscrive le pagine HTML.",
+  "studio": {
+    "nomeMedico": "Dott.ssa Roberta Zanetta",
+    "specialita": "Dermatologia e Venereologia",
+    "iniziale": "Z",
+    "telefonoLink": "+393515118880",
+    "telefonoVisibile": "351 511 8880",
+    "email": "dermozanetta@gmail.com",
+    "via": "Piazza Castello 27",
+    "viaDatiStrutturati": "Piazza Castello, 27",
+    "cap": "28921",
+    "citta": "Verbania",
+    "provincia": "VB",
+    "mappaUrl": "https://maps.google.com/?cid=15553148866995770811",
+    "latitudine": 45.9347213,
+    "longitudine": 8.572854,
+    "partitaIva": "01367340039",
+    "ordine": "Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604",
+    "sito": "https://dermozanetta.it/"
+  },
+  "home": {
+    "eyebrow": "Dermatologia e Venereologia — Verbania",
+    "titolo": "Visite dermatologiche e controllo dei nei a Verbania, su appuntamento.",
+    "lead": "La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania, in Piazza Castello. Ogni visita ha il tempo che serve.",
+    "bottonePrestazioni": "Vedi le prestazioni",
+    "bottoneMappa": "Dove si trova",
+    "nota": "Stesso numero per prenotazioni e informazioni."
+  },
+  "chiSono": {
+    "eyebrow": "Il medico",
+    "titolo": "Chi ti visita",
+    "paragrafi": [
+      "Specialista in Dermatologia e Venereologia, la Dott.ssa Roberta Zanetta riceve su appuntamento nel suo studio di Verbania, in Piazza Castello.",
+      "La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio."
+    ],
+    "punti": [
+      "Visite e controlli su appuntamento, in orari concordati",
+      "Dermatoscopia digitale con archiviazione delle immagini",
+      "Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604"
+    ]
+  },
+  "sezionePrestazioni": {
+    "eyebrow": "Prestazioni",
+    "titolo": "Di cosa si occupa lo studio",
+    "intro": "Per informazioni su costi e modalità di pagamento chiama lo studio: te lo diciamo prima di fissare l’appuntamento, senza impegno.",
+    "bottone": "Vedi tutte le prestazioni →"
+  },
+  "sezioneStudio": {
+    "eyebrow": "Dove ti ricevo",
+    "titolo": "Lo studio",
+    "intro": "Lo studio è in Piazza Castello 27, a Verbania Intra. Le visite sono su appuntamento, così da ridurre l’attesa in sala."
+  },
+  "sezioneCollaborazioni": {
+    "titolo": "Collaborazioni"
+  },
+  "contatti": {
+    "eyebrow": "Prenotazioni",
+    "titolo": "Dove siamo e come prenotare",
+    "intro": "Le visite sono su appuntamento. Chiama lo studio: è lo stesso numero per prenotazioni e informazioni.",
+    "sottoTelefono": "Prenotazioni e informazioni",
+    "sottoMappa": "Apri in Google Maps",
+    "sottoEmail": "Per informazioni non urgenti",
+    "titoloOrari": "Orari",
+    "bottoneOrari": "Chiama per prenotare",
+    "notaOrari": "Le visite si svolgono solo su appuntamento."
+  },
+  "orari": [
+    {
+      "giorno": "Lunedì",
+      "codice": "Mo",
+      "orario": "14:30 – 19:00"
+    },
+    {
+      "giorno": "Martedì",
+      "codice": "Tu",
+      "orario": "10:00 – 17:00"
+    },
+    {
+      "giorno": "Mercoledì",
+      "codice": "We",
+      "orario": "14:00 – 18:00"
+    },
+    {
+      "giorno": "Giovedì",
+      "codice": "Th",
+      "orario": "14:30 – 19:00"
+    },
+    {
+      "giorno": "Venerdì",
+      "codice": "Fr",
+      "orario": "10:00 – 17:00"
+    },
+    {
+      "giorno": "Sabato",
+      "codice": "Sa",
+      "orario": "chiuso"
+    },
+    {
+      "giorno": "Domenica",
+      "codice": "Su",
+      "orario": "chiuso"
+    }
+  ],
+  "foto": {
+    "dottoressa": {
+      "file": "img/dottoressa.jpg",
+      "alt": "Ritratto della Dott.ssa Roberta Zanetta"
+    },
+    "ingresso": {
+      "file": "img/ingresso.jpg",
+      "alt": "Ingresso dello studio"
+    },
+    "studio": {
+      "file": "img/studio.jpg",
+      "alt": "Sala visite"
+    },
+    "salaAttesa": {
+      "file": "img/salaAttesa.jpg",
+      "alt": "Sala d’attesa"
+    }
+  },
+  "loghi": [
+    {
+      "file": "img/loghi/proMater.png",
+      "alt": "ProMater — Ambulatorio Medico Polispecialistico"
+    },
+    {
+      "file": "img/loghi/asl-vco.png",
+      "alt": "ASL VCO — Azienda Sanitaria Locale Verbano Cusio Ossola"
+    },
+    {
+      "file": "img/loghi/biochemical.png",
+      "alt": "Biochemical — Centro Medico Multidisciplinare, Domodossola"
+    },
+    {
+      "file": "img/loghi/laveno.png",
+      "alt": "Centro Medico Major — Laveno"
+    }
+  ],
+  "paginaPrestazioni": {
+    "eyebrow": "Prestazioni",
+    "titolo": "Di cosa si occupa lo studio",
+    "lead": "Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e modalità di pagamento chiama lo studio: te lo diciamo prima di fissare l’appuntamento, senza impegno.",
+    "etichettaRicerca": "Cerca una prestazione o un disturbo",
+    "suggerimentoRicerca": "es. nei, brufoli, capelli, verruche",
+    "notaLegale": "Le descrizioni hanno finalità informativa e non sostituiscono la visita medica: sarà il medico, durante la visita, a indicare il percorso adatto al singolo caso."
+  },
+  "paginaDomande": {
+    "eyebrow": "Prima della visita",
+    "titolo": "Domande frequenti",
+    "lead": "Le domande che ci vengono fatte più spesso al telefono. Se la tua non è qui, chiama pure: rispondiamo noi."
+  },
+  "ctaFinale": {
+    "titolo": "Prenotare è una telefonata",
+    "testo": "Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27, 28921 Verbania (VB).",
+    "bottoneMappa": "Apri in Google Maps"
+  },
+  "footer": {
+    "avviso": "Le informazioni di questo sito hanno finalità informativa e non sostituiscono la visita medica. In caso di emergenza chiamare il 112."
+  },
+  "domande": [
+    {
+      "domanda": "Cosa devo portare alla visita?",
+      "risposta": "Un documento d’identità e la tessera sanitaria. Se hai referti di visite precedenti, esami istologici o fotografie di lesioni cambiate nel tempo, portali con te: aiutano il confronto. Se segui una terapia, porta l’elenco dei farmaci."
+    },
+    {
+      "domanda": "La visita è convenzionata con il Servizio Sanitario Nazionale?",
+      "risposta": "Per informazioni su costi e modalità di pagamento chiama lo studio al {telefono}: te lo diciamo prima di fissare l’appuntamento, senza impegno."
+    },
+    {
+      "domanda": "Quanto dura la visita dermatologica?",
+      "risposta": "Gli appuntamenti sono fissati a intervalli di quindici minuti. Per una mappatura completa dei nei, o per una visita che richiede più tempo, viene riservato più spazio in agenda: se pensi di averne bisogno, segnalalo quando chiami."
+    }
+  ],
+  "prestazioni": [
+    {
+      "nome": "Visita dermatologica",
+      "testo": "Valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico.",
+      "chiavi": "generale prima visita controllo pelle cute derma"
+    },
+    {
+      "nome": "Mappatura dei nei (dermatoscopia digitale)",
+      "testo": "Esame dei nei con dermatoscopio e archiviazione delle immagini, per confrontarle nei controlli successivi.",
+      "chiavi": "nei neo nevi mappatura melanoma epiluminescenza controllo macchie"
+    },
+    {
+      "nome": "Controllo di un singolo neo",
+      "testo": "Valutazione mirata di una lesione comparsa da poco o cambiata di forma, colore o dimensione.",
+      "chiavi": "neo cambiato cresciuto sanguina prude macchia scura"
+    },
+    {
+      "nome": "Acne e cicatrici da acne",
+      "testo": "Inquadramento della forma di acne e impostazione della terapia, con controlli nel tempo.",
+      "chiavi": "acne brufoli foruncoli punti neri comedoni pelle grassa adolescenti cicatrici"
+    },
+    {
+      "nome": "Psoriasi",
+      "testo": "Diagnosi e gestione della psoriasi cutanea, con valutazione delle terapie disponibili.",
+      "chiavi": "psoriasi placche squame chiazze rosse gomiti ginocchia cuoio capelluto"
+    },
+    {
+      "nome": "Dermatite atopica ed eczemi",
+      "testo": "Valutazione delle dermatiti, individuazione dei fattori scatenanti e terapia.",
+      "chiavi": "dermatite eczema atopica seborroica da contatto prurito pelle secca irritazione arrossamento"
+    },
+    {
+      "nome": "Orticaria e reazioni allergiche cutanee",
+      "testo": "Inquadramento delle manifestazioni orticarioidi e delle reazioni cutanee di natura allergica.",
+      "chiavi": "orticaria pomfi allergia gonfiore prurito reazione punture"
+    },
+    {
+      "nome": "Micosi di pelle e unghie",
+      "testo": "Diagnosi delle infezioni da funghi di cute e unghie e impostazione del trattamento.",
+      "chiavi": "micosi funghi unghie onicomicosi piede atleta candida macchie bianche"
+    },
+    {
+      "nome": "Verruche, condilomi e mollusco contagioso",
+      "testo": "Valutazione e trattamento delle lesioni di origine virale della cute e delle mucose.",
+      "chiavi": "verruche porri condilomi papilloma hpv mollusco contagioso"
+    },
+    {
+      "nome": "Caduta dei capelli e malattie del cuoio capelluto",
+      "testo": "Valutazione tricologica della caduta dei capelli e delle patologie del cuoio capelluto.",
+      "chiavi": "capelli caduta calvizie alopecia diradamento forfora tricologia cuoio capelluto"
+    },
+    {
+      "nome": "Malattie sessualmente trasmissibili (venereologia)",
+      "testo": "Valutazione e gestione delle infezioni a trasmissione sessuale con manifestazioni cutanee o mucose.",
+      "chiavi": "venereologia mst ist infezioni genitali herpes sifilide"
+    },
+    {
+      "nome": "Cheratosi attiniche e tumori della pelle",
+      "testo": "Valutazione delle lesioni legate all’esposizione solare e dei tumori cutanei, con indicazioni sul percorso da seguire.",
+      "chiavi": "cheratosi attiniche sole tumore carcinoma basalioma melanoma lesioni precancerose"
+    },
+    {
+      "nome": "Crioterapia",
+      "testo": "Trattamento ambulatoriale di alcune lesioni cutanee mediante applicazione di azoto liquido.",
+      "chiavi": "crioterapia azoto liquido verruche cheratosi lesioni"
+    },
+    {
+      "nome": "Asportazione e biopsia di lesioni cutanee",
+      "testo": "Piccoli interventi ambulatoriali con eventuale invio del prelievo all’esame istologico.",
+      "chiavi": "asportazione biopsia rimozione neo cisti chirurgia ambulatoriale istologico punti"
+    },
+    {
+      "nome": "Dermatologia pediatrica",
+      "testo": "Valutazione dei problemi della pelle in bambini e ragazzi.",
+      "chiavi": "bambini pediatrica neonato ragazzi angiomi crosta lattea dermatite pannolino"
+    }
+  ],
+  "seo": {
+    "home": {
+      "titolo": "Dott.ssa Roberta Zanetta — Dermatologa a Verbania",
+      "descrizione": "Dott.ssa Roberta Zanetta, dermatologa a Verbania in Piazza Castello. Visite dermatologiche e controllo dei nei su appuntamento. Tel. 351 511 8880.",
+      "ogDescrizione": "Visite dermatologiche e controllo dei nei su appuntamento, a Verbania in Piazza Castello."
+    },
+    "prestazioni": {
+      "titolo": "Prestazioni — Dott.ssa Roberta Zanetta, dermatologa a Verbania",
+      "descrizione": "Le prestazioni dello studio dermatologico della Dott.ssa Roberta Zanetta a Verbania: visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia e altro.",
+      "ogDescrizione": "Visita dermatologica, mappatura dei nei, acne, psoriasi, micosi, crioterapia: le prestazioni dello studio di Verbania."
+    },
+    "domande": {
+      "titolo": "Domande frequenti — Dott.ssa Roberta Zanetta, dermatologa a Verbania",
+      "descrizione": "Cosa portare alla visita, se è convenzionata con il SSN, quanto dura: le domande frequenti sullo studio della Dott.ssa Roberta Zanetta a Verbania.",
+      "ogDescrizione": "Cosa portare alla visita, quanto dura, se è convenzionata con il SSN: le domande frequenti sullo studio di Verbania."
+    },
+    "privacy": {
+      "titolo": "Privacy — Dott.ssa Roberta Zanetta, dermatologa a Verbania",
+      "descrizione": "Informativa privacy del sito della Dott.ssa Roberta Zanetta, dermatologa a Verbania. Il sito non usa cookie e non raccoglie dati tramite moduli."
+    }
+  }
+}

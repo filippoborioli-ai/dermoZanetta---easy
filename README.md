@@ -4,284 +4,283 @@ Sito di presentazione dello studio della **Dott.ssa Roberta Zanetta**, dermatolo
 Verbania: il medico, le prestazioni, le foto dello studio, domande frequenti e numero
 per le prenotazioni.
 
-Versione "easy" del progetto [dermoZanetta](../dermoZanetta): stessi dati e stessi testi,
-ma senza database, prenotazione online e area riservata. Solo HTML + CSS + 20 righe di JS:
-si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
+Versione "easy" del progetto [dermoZanetta](../dermoZanetta): stessi dati e stessi
+testi, ma senza database, prenotazione online e area riservata. HTML + CSS + poco
+JavaScript, nessuna libreria, nessun server.
 
-**Indice** — [File](#file) · [Provare il sito](#provare-il-sito-in-locale) ·
-[Cambiare telefono, indirizzo o nome](#cambiare-telefono-indirizzo-o-nome-dello-studio) ·
-[Orari](#modificare-gli-orari) · [Foto](#foto) ·
-[Prestazioni](#aggiungere-togliere-o-modificare-una-prestazione) ·
-[Domande frequenti](#modificare-le-domande-frequenti) ·
-[Loghi di collaborazione](#aggiungere-togliere-o-sostituire-un-logo-di-collaborazione) · [Colori](#colori) ·
-[Checklist prima di pubblicare](#checklist-prima-di-pubblicare) · [Pubblicare](#pubblicare) ·
-[Dominio personalizzato](#dominio-personalizzato) · [Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania)
+---
 
-## File
+## In due righe: chi cambia cosa
+
+| Vuoi cambiare… | Si fa da… |
+|---|---|
+| testi, orari, foto, prestazioni, domande, dati dello studio | **[il pannello](#il-pannello-di-modifica)**, `admin.html` — nessun codice |
+| colori, tipografia, layout, pagine nuove | il codice: `style.css` e i file `.html` |
+
+La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la seconda.
+
+**Indice** — [Come è fatto](#come-è-fatto-il-progetto) · [File](#i-file) ·
+[Il pannello](#il-pannello-di-modifica) · [Cosa non si cambia dal pannello](#cosa-il-pannello-non-cambia) ·
+[Provarlo in locale](#provare-il-sito-in-locale) · [Aggiungere un campo modificabile](#aggiungere-un-campo-modificabile) ·
+[Dati obbligatori per legge](#dati-obbligatori-per-legge) · [Colori](#colori) ·
+[Se qualcosa va storto](#se-qualcosa-va-storto) · [Pubblicare](#pubblicare) ·
+[Dominio](#dominio-personalizzato) · [Privacy](#privacy) ·
+[Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania)
+
+---
+
+## Come è fatto il progetto
+
+C'è una sola idea da tenere a mente, il resto discende da quella:
+
+> **Tutti i testi del sito stanno in un unico file, `contenuti.json`.
+> Le pagine HTML non si scrivono a mano: le riscrive `genera.mjs` leggendo quel file.**
+
+Il giro completo:
+
+```
+  admin.html            la dottoressa modifica un modulo
+       │
+       ▼
+  contenuti.json        il file dei testi, salvato su GitHub
+       │
+       ▼  (azione automatica di GitHub, .github/workflows/genera.yml)
+  node genera.mjs       riscrive le pagine e la data nella sitemap
+       │
+       ▼
+  index.html  prestazioni.html  domande.html  privacy.html
+       │
+       ▼
+  GitHub Pages          il sito online, aggiornato in un paio di minuti
+```
+
+### Perché non è più semplice far disegnare le pagine al JavaScript
+
+Perché Google. Se le prestazioni le disegnasse il browser, un motore di ricerca
+vedrebbe una pagina quasi vuota: le parole "acne", "psoriasi", "mappatura dei nei"
+non sarebbero nell'HTML, e sono esattamente le ricerche da intercettare. Scrivendole
+nel file, il testo c'è già quando Google arriva. È lo stesso motivo per cui il
+generatore scrive anche i dati strutturati (JSON-LD) e non li lascia al browser.
+
+### I tre segnaposto nell'HTML
+
+Aprendo `index.html` si trovano dei commenti che sembrano strani. Sono i punti in
+cui il generatore scrive. Sono solo tre tipi:
+
+| Nella pagina si legge | Vuol dire |
+|---|---|
+| `<!--T:home.titolo-->…<!--/T-->` | qui va il **testo** che in `contenuti.json` sta alla voce `home.titolo` |
+| `<!--B:orari-->…<!--/B-->` | qui va un **blocco** disegnato da una funzione di `genera.mjs` (le righe degli orari, le schede, i loghi…) |
+| `<img data-c="foto.studio" …>` | dentro un tag non si può mettere un commento: `data-c` dice al generatore **quali attributi riscrivere** (`src`, `alt`, `href`, `content`) |
+
+Tutto ciò che sta fra `<!--B:` e `<!--/B-->` **viene buttato e riscritto a ogni
+generazione**: modificarlo a mano è tempo perso.
+
+---
+
+## I file
 
 | File | Cosa contiene |
 |---|---|
+| `contenuti.json` | **tutti i testi del sito.** È la sorgente di tutto |
+| `admin.html` · `admin.js` · `admin.css` | il pannello di modifica: modulo, accesso, pubblicazione |
+| `genera.mjs` | riscrive le pagine leggendo `contenuti.json` |
+| `cambia-password.mjs` | cambia la password del pannello |
 | `index.html` | home: medico, prestazioni in evidenza, studio, collaborazioni, contatti |
-| `prestazioni.html` | pagina con l'elenco completo delle prestazioni e la ricerca |
-| `domande.html` | pagina con le domande frequenti |
+| `prestazioni.html` | elenco completo delle prestazioni, con la ricerca |
+| `domande.html` | domande frequenti |
 | `privacy.html` | informativa privacy del sito, collegata dal footer |
-| `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
-| `genera.mjs` | riscrive le schede dentro le pagine leggendo `dati.js` |
-| `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
-| `style.css` | colori, tipografia, layout |
-| `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
+| `style.css` | colori, tipografia, layout del sito |
+| `script.js` | menu mobile, barra del carosello, ricerca delle prestazioni |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
+| `sitemap.xml` · `robots.txt` | elenco delle pagine per i motori di ricerca |
+| `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
 | `CNAME` | una riga sola: il dominio `dermozanetta.it`. Serve a GitHub Pages |
-| `sitemap.xml` | elenco delle pagine per Google. Una voce per pagina |
-| `robots.txt` | dice ai motori di ricerca che possono indicizzare tutto |
+| `CREDENZIALI.md` | email e password del pannello. **Non è su GitHub**, sta in `.gitignore` |
+| `.github/workflows/genera.yml` | rilancia `genera.mjs` a ogni modifica dei contenuti |
+
+Il vecchio `dati.js` non c'è più: le prestazioni sono dentro `contenuti.json`
+insieme a tutto il resto.
+
+---
+
+## Il pannello di modifica
+
+### Come si entra
+
+**https://dermozanetta.it/admin.html** — email e password stanno in `CREDENZIALI.md`.
+
+Va aperta **dal sito vero**, non con doppio clic sul file: aperta da disco il
+browser non le lascia leggere i contenuti (è una regola di sicurezza dei browser,
+non un difetto della pagina).
+
+Non è collegata da nessun menu e `robots.txt` la tiene fuori da Google: la si
+raggiunge solo scrivendo l'indirizzo.
+
+### Che cosa si può cambiare
+
+| Sezione del pannello | Comanda |
+|---|---|
+| **Studio e contatti** | nome, telefono, email, indirizzo, P. IVA, Ordine, link a Google Maps. Cambiati qui, cambiano **ovunque**: footer di tutte le pagine, bottoni "Chiama", privacy, dati per Google |
+| **Prima schermata** | la frase grande della home, quella sotto, i bottoni |
+| **Il medico** | la sezione "Chi ti visita": paragrafi ed elenco con la spunta |
+| **Prestazioni** | aggiungi, togli, riordina, riscrivi. Compaiono da sole sia nel carosello della home sia nella pagina Prestazioni |
+| **Foto** | le quattro foto del sito. Si scelgono dal telefono o dal computer: vengono rimpicciolite e compresse dal pannello, non serve preparare niente |
+| **Collaborazioni** | i loghi delle strutture: aggiungi, sostituisci, togli |
+| **Orari** | i sette giorni. "chiuso" oppure un orario |
+| **Sezione contatti** | le scritte intorno a telefono, indirizzo ed email |
+| **Domande frequenti** | aggiungi, togli, riordina, riscrivi |
+| **Google** | titolo e descrizione che compaiono nei risultati di ricerca, pagina per pagina |
+| **Pubblicazione** | il codice di pubblicazione (vedi sotto) |
+
+Due scorciatoie utili dentro i testi:
+
+- scrivendo **`{telefono}`** compare il numero dello studio, cliccabile. Funziona
+  nelle risposte alle domande e nei testi lunghi;
+- le **parole per la ricerca** di una prestazione non si vedono in pagina: servono
+  solo alla casella di ricerca. Chi ha l'acne cerca "brufoli", non "acne volgare".
+
+### Come funziona la pubblicazione
+
+Si preme **Salva e pubblica**. Il pannello manda `contenuti.json` (e le eventuali
+foto nuove) a GitHub; lì un'azione automatica rilancia `genera.mjs`, che riscrive
+le pagine; GitHub Pages le rimette online. Passano **un paio di minuti**, poi basta
+ricaricare il sito con `Ctrl+F5`.
+
+Se si chiude il pannello senza pubblicare, le modifiche **non si perdono**: restano
+sul dispositivo e al rientro il pannello chiede se riprenderle.
+
+### La serratura: password e codice di pubblicazione
+
+Sono due cose diverse, ed è importante capire perché.
+
+- La **password** apre il pannello. È una comodità: `admin.html` è una pagina
+  pubblica come le altre, quindi la password può essere provata da chiunque abbia
+  tempo. In `admin.js` non c'è la password, c'è la sua impronta.
+- Il **codice di pubblicazione** (un token GitHub) è la serratura vera. Senza,
+  il pannello mostra il modulo e può scaricare un file — **non può toccare il
+  sito**. Si inserisce una volta sola per dispositivo, resta cifrato nel browser
+  e si apre con la password.
+
+Un sito statico non ha un server dove nascondere un segreto: è per questo che la
+vera barriera è il token, e non la password. Per togliere l'accesso a qualcuno si
+revoca il token su GitHub, non si cambia la password.
+
+I passi per creare il token sono dentro il pannello (sezione "Pubblicazione") e in
+`CREDENZIALI.md`. In breve: GitHub → Settings → Developer settings → Personal
+access tokens → Fine-grained → solo questo deposito → **Contents: Read and write**.
+
+### Cambiare la password
+
+```bash
+node cambia-password.mjs "la-nuova-password"
+node cambia-password.mjs "la-nuova-password" nuova@email.it   # anche l'email
+```
+
+Poi push, e aggiorna `CREDENZIALI.md`. La password vecchia non serve: non è
+salvata da nessuna parte e non è recuperabile.
+
+### Se il pannello non basta: la via lunga
+
+Dalla sezione "Pubblicazione" si può **scaricare il file delle modifiche**
+(`contenuti.json`) e caricarlo a mano su GitHub, trascinandolo nella cartella del
+sito. Il risultato è identico, servono solo due passaggi in più. È la via di
+scorta quando il token è scaduto e non c'è tempo di rifarlo.
+
+---
+
+## Cosa il pannello non cambia
+
+Di proposito. Sono cose che si toccano di rado e che, sbagliate, rompono il sito
+o lo mettono fuori legge:
+
+- **colori, tipografia, layout** → `style.css`;
+- **struttura delle pagine** (aggiungere una sezione, spostarne una) → i file `.html`;
+- **testo dell'informativa privacy** → `privacy.html`. Dal pannello si aggiornano
+  solo i dati del titolare (nome, indirizzo, telefono, email), che devono restare
+  identici a quelli del footer;
+- **pagine nuove** → si crea il file, si aggiunge la voce in `sitemap.xml` e il
+  link nel menu di tutte le pagine;
+- **P. IVA e numero d'Ordine** si cambiano dal pannello, ma **non si tolgono**: sono
+  obbligatori per legge (vedi sotto).
+
+---
 
 ## Provare il sito in locale
 
-Doppio clic su `index.html` (o `prestazioni.html`): si apre nel browser predefinito,
-niente server necessario. Dopo ogni modifica salva il file e ricarica la pagina con
-`Ctrl+F5` (ricarica "forzata", ignora la cache — con `F5` normale a volte non si vede
-subito il cambiamento).
+Le pagine si aprono con doppio clic su `index.html`: sono HTML normale, non serve
+un server.
 
-## Cambiare telefono, indirizzo o nome dello studio
+Il **pannello**, invece, un server lo richiede, perché deve leggere `contenuti.json`:
 
-Non c'è un solo punto: il numero di telefono compare **~25 volte** fra `index.html` e
-`prestazioni.html` (bottoni "Chiama", link `tel:`, testo nel footer, dati strutturati
-per Google). Il modo sicuro per cambiarlo ovunque è **cerca e sostituisci su tutti i
-file**, con un editor di testo (es. VS Code, notepad++) o da riga di comando:
+```bash
+node genera.mjs        # dopo aver modificato contenuti.json a mano
+npx serve .            # oppure: python -m http.server 8000
+```
 
-- numero da chiamare (formato link): `+393515118880`
-- numero mostrato a video: `351 511 8880`
-- nome: `Roberta Zanetta` (attenzione: compare sia come `Dott.ssa Roberta Zanetta`
-  sia da sola dentro ad altri testi)
-- indirizzo: `Piazza Castello 27` / `Piazza Castello, 27` (due formati, uno per il
-  testo normale e uno per i dati strutturati JSON-LD), più `28921` e `Verbania`
-- link Google Maps: `https://maps.google.com/?cid=15553148866995770811`. Quel numero
-  è l'identificativo della scheda Google dello studio: il link porta sempre a quella,
-  con recensioni, foto e indicazioni, **anche se un domani l'indirizzo cambia**.
-  Prima era una ricerca per testo sull'indirizzo, che bastava un refuso a mandare
-  nel posto sbagliato
+poi `http://localhost:3000/admin.html` (o la porta che stampa il comando).
 
-Dopo aver sostituito, apri le pagine e verifica che i bottoni "Chiama" e i link a
-Google Maps puntino ancora al posto giusto.
+Dopo ogni modifica ricarica con `Ctrl+F5` (ricarica forzata: con `F5` normale a
+volte si vede ancora la versione vecchia).
 
-## Dati già inseriti
+---
 
-Presi dal progetto principale (`assets/js/config.js` e `assets/js/prestazioni.js`):
+## Aggiungere un campo modificabile
 
-- Dott.ssa Roberta Zanetta — Dermatologia e Venereologia
-- Telefono **351 511 8880** (`tel:+393515118880`)
-- Piazza Castello 27, 28921 Verbania (VB) — **Verbania Intra**, non il CAP
-  generico 28900: è l'indirizzo della scheda Google, quella che usano i pazienti
-- 15 prestazioni con i testi già scritti
-- Dati strutturati `schema.org/Physician` in fondo alla pagina (utili per Google)
+Serve quando si vuole rendere modificabile dal pannello un testo che oggi è
+scritto nell'HTML. Tre passi, sempre gli stessi:
+
+1. **`contenuti.json`** — aggiungi la voce, per esempio `"home": { "nuovaFrase": "..." }`.
+2. **HTML** — metti il segnaposto dove deve comparire:
+   `<p><!--T:home.nuovaFrase-->testo di partenza<!--/T--></p>`.
+   Se il testo sta dentro un attributo, usa `data-c="home.nuovaFrase"` sul tag e
+   aggiungi la riga corrispondente alla tabella `ATTRIBUTI` di `genera.mjs`.
+3. **`admin.js`** — nella sezione giusta dell'elenco `SEZIONI`, aggiungi una riga:
+   ```js
+   box.appendChild(campoTesto('home.nuovaFrase', { etichetta: 'Nuova frase' }))
+   ```
+
+Poi `node genera.mjs` e controlla. Se una chiave non esiste in `contenuti.json` il
+generatore si ferma con un errore chiaro invece di lasciare un buco nella pagina.
+
+Per un **elenco** (più voci ripetute) ci sono già gli attrezzi in `admin.js`:
+`elencoTesti` per liste di frasi, `elencoSchede` per liste di schede con più campi.
+Il blocco corrispondente si aggiunge a `BLOCCHI`, in `genera.mjs`.
+
+---
 
 ## Dati obbligatori per legge
 
 Sul sito di un medico la **P. IVA** e il **numero di iscrizione all'Ordine** sono
-obbligatori (pubblicità sanitaria, L. 175/1992 e DL 145/2007). Sono inseriti:
+obbligatori (pubblicità sanitaria, L. 175/1992 e DL 145/2007). Stanno nel footer di
+tutte e quattro le pagine, generato da un unico blocco: si cambiano dal pannello,
+sezione "Studio e contatti", e si aggiornano ovunque insieme.
 
-- **P. IVA 01367340039** — nel footer di tutte e quattro le pagine;
-- **Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola, n. 604** —
-  nel footer di tutte le pagine e, in forma estesa, nell'elenco della sezione
-  "Chi ti visita" della home.
+- **P. IVA 01367340039**
+- **Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola, n. 604**
 
-Vanno tenuti su **ogni** pagina, non solo in home: se un domani ne aggiungi una,
-copia il blocco `<div class="footer-note">` da una pagina esistente e non toccarlo.
+Va tenuto anche l'**avviso** in fondo ("le informazioni hanno finalità informativa
+e non sostituiscono la visita medica"): nel pannello sta in fondo alla sezione
+"Domande frequenti".
 
-L'**email** `dermozanetta@gmail.com` è nei contatti della home, nei dati
-strutturati JSON-LD e nell'informativa privacy come recapito del titolare. Se
-un giorno lo studio avrà una casella propria, va cambiata in tre punti: cerca
-l'indirizzo con una ricerca su tutta la cartella, non a memoria.
+**Il tono dei testi** deve restare informativo, mai promozionale: la pubblicità
+sanitaria in Italia vieta formule come "i migliori risultati", "eccellenza",
+"risolviamo" (art. 9 legge 145/2018). Si scrive che cos'è e a cosa serve.
 
-Gli **orari** sono quelli reali (lun 14:30–19, mar 10–17, mer 14–18, gio 14:30–19,
-ven 10–17, sabato e domenica chiuso). Per cambiarli vedi qui sotto.
+I dati di oggi, per riferimento: Dott.ssa Roberta Zanetta, Dermatologia e
+Venereologia, telefono **351 511 8880** (`tel:+393515118880`), **Piazza Castello 27,
+28921 Verbania (VB)** — Verbania Intra, non il CAP generico 28900: è l'indirizzo
+della scheda Google, quella che i pazienti seguono per arrivare. Email
+`dermozanetta@gmail.com`. Orari lun 14:30–19, mar 10–17, mer 14–18, gio 14:30–19,
+ven 10–17, sabato e domenica chiuso.
 
-## Modificare gli orari
-
-La tabella è in `index.html`, sezione `<section id="contatti">`, dentro
-`<table class="hours">`: una riga per giorno.
-
-```html
-<tr><th>Luned&igrave;</th><td>9:00 – 18:00</td></tr>
-<tr><th>Marted&igrave;</th><td>chiuso</td></tr>
-```
-
-- **giorno chiuso** → scrivi `chiuso` al posto dell'orario;
-- **solo mattina o solo pomeriggio** → scrivi un solo intervallo, es. `9:00 – 13:00`;
-- **mattina e pomeriggio separati** (con pausa pranzo) → scrivi i due intervalli uniti
-  da ` · `, es. `9:00 – 13:00 · 15:00 – 18:00`. È lo stesso separatore già usato nelle
-  domande frequenti, quindi lo stile resta coerente.
-
-Esempio "lunedì aperto, martedì solo pomeriggio":
-
-```html
-<tr><th>Luned&igrave;</th><td>9:00 – 18:00</td></tr>
-<tr><th>Marted&igrave;</th><td>14:00 – 18:00</td></tr>
-```
-
-Le righe non si aggiungono o tolgono da sole: se un giorno manca, aggiungi una riga
-copiandone una esistente; se un giorno non c'è mai visita, puoi anche cancellare
-del tutto la sua riga invece di scrivere "chiuso".
-
-**Attenzione al JSON-LD** — in fondo alla pagina c'è un blocco
-`<script type="application/ld+json">` che Google legge per mostrare gli orari nei
-risultati di ricerca. Contiene una riga `"openingHours"` scritta in inglese
-abbreviato (Mo, Tu, We, Th, Fr, Sa, Su), che oggi rispecchia gli orari veri:
-`["Mo 14:30-19:00","Tu 10:00-17:00","We 14:00-18:00","Th 14:30-19:00","Fr 10:00-17:00"]`.
-Se cambi la tabella aggiorna anche questa riga, altrimenti Google mostra orari
-sbagliati anche se la pagina è corretta.
-
-## Foto
-
-Le foto vere sono già inserite, in JPEG e ottimizzate (poche decine di KB l'una:
-è ciò che tiene il sito veloce anche con foto reali):
-
-| File | Dove compare |
-|---|---|
-| `img/dottoressa.jpg` | ritratto in apertura (hero) |
-| `img/ingresso.jpg` | galleria "Lo studio" — ingresso |
-| `img/studio.jpg` | galleria "Lo studio" — sala visite |
-| `img/salaAttesa.jpg` | galleria "Lo studio" — sala d'attesa |
-
-### Sostituire una foto in futuro
-
-1. Ridimensiona la nuova foto a max ~1600&nbsp;px di lato e comprimila come JPEG,
-   qualità 75-85 (va bene [squoosh.app](https://squoosh.app), gratuito, dal browser:
-   scegli "MozJPEG" come formato d'uscita). Un file sopra i 150-200&nbsp;KB per una
-   foto è quasi sempre segno che la compressione non è stata fatta.
-2. Dalle **lo stesso nome** del file che sostituisci (uno della tabella sopra) e
-   mettila in `img/`, sovrascrivendo.
-3. Se invece cambi anche il nome del file, apri `index.html` e aggiorna il `src`
-   di quell'immagine — i punti esatti sono segnati dai commenti `<!-- FOTO 1 -->`,
-   `<!-- FOTO 2 -->` ecc. Aggiorna anche `alt="..."` se la foto mostra qualcosa di
-   diverso da prima (es. non più la sala visite ma lo studio dall'esterno).
-4. Salva, ricarica la pagina con `Ctrl+F5` (svuota la cache) e controlla che la
-   foto appaia.
-
-Non serve toccare `style.css`: le foto si adattano da sole al riquadro (taglio
-automatico, senza deformarsi) qualunque sia la proporzione reale dello scatto.
-Per il ritratto in apertura il riquadro è verticale (3:4, con la cima ad arco):
-una foto già verticale e centrata sul viso rende meglio di una foto molto
-orizzontale ritagliata stretta.
-
-## Come finiscono in pagina le prestazioni
-
-Si scrivono in `dati.js` e basta: quello resta l'unico file da modificare. Ma le
-schede **non vengono disegnate dal browser**: stanno scritte dentro `index.html` e
-`prestazioni.html`, fra i due commenti `PRESTAZIONI:INIZIO` e `PRESTAZIONI:FINE`.
-
-Il motivo e' Google. Quando le disegnava il JavaScript, un motore di ricerca vedeva
-una pagina quasi vuota: le parole "acne", "psoriasi", "mappatura dei nei" non erano
-nell'HTML, quindi non finivano nell'indice. Erano proprio le ricerche da
-intercettare. Ora `prestazioni.html` passa da 1.176 a 3.018 caratteri di testo vero.
-
-**Non modificare a mano quello che sta fra i due marcatori**: viene riscritto.
-
-Dopo aver toccato `dati.js`:
-
-```bash
-node genera.mjs
-```
-
-Se te ne dimentichi non succede niente di grave: al push ci pensa GitHub da solo
-(`.github/workflows/genera.yml` rilancia il generatore e salva le pagine). Lanciarlo
-a mano serve solo a vedere subito il risultato in locale.
-
-La casella di ricerca continua a funzionare: non ridisegna piu' l'elenco, nasconde
-le schede che non corrispondono. Il testo su cui cerca (nome, descrizione e
-`chiavi`) e' nell'attributo `data-cerca` di ogni scheda, scritto dal generatore.
-
-## Aggiungere, togliere o modificare una prestazione
-
-Si tocca **solo `dati.js`**. Non serve aprire l'HTML: le schede compaiono da sole
-sia sulla home (nel carosello a scorrimento laterale) sia in `prestazioni.html`
-(griglia con la ricerca). Ci sono tutte in tutti e due i posti.
-
-Ogni prestazione è un blocco così:
-
-```js
-  {
-    nome: 'Psoriasi',
-    testo: 'Diagnosi e gestione della psoriasi cutanea, con valutazione delle terapie disponibili.',
-    chiavi: 'psoriasi placche squame chiazze rosse gomiti ginocchia cuoio capelluto',
-  },
-```
-
-- **modificare** → cambia il testo fra apici, lasciando apici e virgola dove sono;
-- **aggiungere** → copia un blocco intero da `{` a `},` e incollalo dove vuoi che
-  compaia: l'ordine dell'elenco è l'ordine sulla pagina, e in home è anche
-  l'ordine in cui si incontrano scorrendo il carosello;
-- **togliere** → cancella il blocco da `{` a `},`.
-
-`chiavi` sono le parole con cui i pazienti cercano davvero — chi ha l'acne scrive
-"brufoli", non "acne volgare". Non si vedono sulla pagina: servono solo alla casella
-di ricerca di `prestazioni.html`. Possono restare vuote.
-
-Se dentro un testo serve un apostrofo, usa quello tipografico `’` oppure scrivilo
-come `dell'esame` (con la barra rovesciata).
-
-**Tono dei testi:** volutamente non promozionale, come nel progetto principale. La
-pubblicità sanitaria in Italia vieta formule tipo "i migliori risultati" o
-"risolviamo" (art. 9 legge 145/2018): scrivi cos'è e a cosa serve, niente di più.
-
-Dopo una modifica, ricarica la pagina nel browser con `Ctrl+F5` (svuota la cache).
-
-## Modificare le domande frequenti
-
-Sono in `domande.html` (pagina a sé, separata dalla home). Ogni domanda è un blocco:
-
-```html
-<details class="faq">
-  <summary>Quanto dura la visita dermatologica?</summary>
-  <p>
-    Gli appuntamenti sono fissati a intervalli di quindici minuti...
-  </p>
-</details>
-```
-
-- **modificare** → cambia il testo dentro `<summary>` (la domanda) o dentro `<p>`
-  (la risposta);
-- **aggiungere** → copia un blocco intero da `<details` a `</details>` e incollalo
-  dove vuoi che compaia;
-- **togliere** → cancella il blocco.
-
-Si apre e chiude da sola al clic: non serve JavaScript, è una funzione nativa del
-browser (tag `<details>`).
-
-## Aggiungere, togliere o sostituire un logo di collaborazione
-
-La sezione "Collabora con" è in `index.html`, sezione `<section id="collaborazioni">`.
-A differenza delle prestazioni, qui **non basta l'immagine**: ogni logo è un blocco
-HTML da copiare a mano, perché sono pochi e cambiano raramente.
-
-```html
-<div class="logo-card">
-  <img src="img/loghi/nome-file.png" alt="Nome della struttura">
-</div>
-```
-
-- **aggiungere** → metti il file del logo in `img/loghi/`, poi copia un blocco
-  `<div class="logo-card">...</div>` intero e incollalo nella sezione, cambiando
-  `src` e `alt`;
-- **togliere** → cancella il blocco `<div class="logo-card">...</div>` intero
-  (e se vuoi anche il file immagine in `img/loghi/`, anche se lasciarlo non causa
-  danni: un file non referenziato in nessun HTML semplicemente non viene mai caricato);
-- **sostituire** → cambia solo `src` (e l'`alt`, se il nome della struttura cambia).
-
-Il logo si adatta da solo al riquadro (altezza massima 58px, larghezza massima
-215px, senza deformarsi). Funziona meglio uno sfondo bianco o trasparente: uno
-sfondo colorato pieno crea uno stacco netto col resto della fascia.
-
-I loghi presenti oggi sono quattro: ProMater, ASL VCO, Biochemical e Centro Medico Major. **Da tre in su la
-fascia scorre lateralmente su telefono**: l'ultimo logo si vede a meta', ed e' voluto
-— e' il segnale che ce n'e' dell'altro, lo stesso meccanismo del carosello delle
-prestazioni. Su desktop ci stanno comodi. Se un domani ne aggiungi un quarto o un
-quinto, non serve toccare niente: la fascia continua a scorrere.
+---
 
 ## Colori
 
-Tutti in cima a `style.css`, nel blocco `:root`. Cambiare `--terracotta` cambia bottoni
-e dettagli in tutto il sito.
+Tutti in cima a `style.css`, nel blocco `:root`. Cambiare `--terracotta` cambia
+bottoni e dettagli in tutto il sito. Il pannello usa la stessa palette
+(`admin.css`), così le due cose restano visivamente parenti.
 
 ```css
 --crema:      #fdf8f3;  /* sfondo pagina */
@@ -291,46 +290,68 @@ e dettagli in tutto il sito.
 --bruno:      #3b2e27;  /* testo principale, footer */
 ```
 
+---
+
+## Se qualcosa va storto
+
+| Sintomo | Cosa succede davvero |
+|---|---|
+| Il pannello dice **"Non trovo il file dei contenuti"** | è stato aperto con doppio clic invece che dal sito. Va aperto da `https://dermozanetta.it/admin.html` |
+| **"Il codice di pubblicazione non è valido o è scaduto"** | il token GitHub è scaduto o è stato revocato. Se ne crea uno nuovo: sezione "Pubblicazione" |
+| Ho pubblicato ma **il sito è uguale** | aspetta due minuti e ricarica con `Ctrl+F5`. Se dopo cinque minuti è ancora uguale, guarda la scheda **Actions** su GitHub: se c'è una crocetta rossa, il generatore si è fermato e il messaggio dice perché |
+| **"Qualcun altro ha modificato il sito nel frattempo"** | il file è cambiato da un altro dispositivo. Ricarica il pannello e rifai la modifica: è la protezione che impedisce di cancellare il lavoro altrui |
+| `genera.mjs` dice **"chiave assente in contenuti.json"** | in una pagina c'è un segnaposto `<!--T:...-->` che punta a una voce che non esiste. O si aggiunge la voce, o si toglie il segnaposto |
+| `genera.mjs` dice **"blocco sconosciuto"** | c'è un `<!--B:nome-->` senza la funzione corrispondente in `BLOCCHI`, dentro `genera.mjs` |
+| Ho sostituito una foto e **si vede ancora la vecchia** | non dovrebbe succedere: il pannello dà un nome nuovo a ogni foto. Se capita, è la cache del browser: `Ctrl+F5` |
+
+Le vecchie foto sostituite restano in `img/`: non danno fastidio (un file che
+nessuna pagina richiama non viene mai scaricato) e ogni tanto si possono ripulire
+a mano.
+
+---
+
 ## Checklist prima di pubblicare
 
-- [x] Telefono, indirizzo e nome corretti ovunque (vedi sezione sopra)
-- [x] **P. IVA** e **numero di iscrizione all'Ordine dei Medici** inseriti nel footer
-  di tutte le pagine
-- [x] Email dello studio nei contatti, nel JSON-LD e nella privacy
-- [x] Orari reali nella tabella **e** nel blocco JSON-LD (sono due punti diversi:
-  se aggiorni solo uno Google mostra orari sbagliati)
+- [x] Telefono, indirizzo e nome corretti — si controllano in un punto solo, dal pannello
+- [x] **P. IVA** e **numero di iscrizione all'Ordine** nel footer di tutte le pagine
+- [x] Email dello studio nei contatti, nei dati strutturati e nella privacy
+- [x] Orari reali nella tabella **e** nei dati per Google (li allinea il generatore:
+  non sono più due punti da tenere d'accordo a mano)
 - [ ] **Record DNS inseriti dal registrar** e *Enforce HTTPS* attivo su GitHub
-  (vedi "Dominio personalizzato"): è l'ultimo passo che manca
-- [x] Foto vere al posto dei segnaposto `.svg` in `img/`
-- [ ] Aperto `index.html` e `prestazioni.html` nel browser e cliccato su tutti i
-  bottoni "Chiama" e sul link Google Maps, per controllare che portino al posto giusto
-- [ ] Provato il sito anche da telefono (o restringendo la finestra del browser):
-  il menu si apre, il bottone "Chiama" in basso funziona
+  (vedi "Dominio personalizzato")
+- [x] Foto vere al posto dei segnaposto in `img/`
+- [ ] Cliccati tutti i bottoni "Chiama" e il link a Google Maps
+- [ ] Provato il sito da telefono: il menu si apre, il bottone "Chiama" in basso funziona
+- [ ] Provato **anche il pannello** da telefono: è pensato per funzionare lì
+
+---
 
 ## Pubblicare
 
-Sito statico: carica la cartella su un qualsiasi hosting, oppure attiva GitHub Pages
-(Settings del repository → Pages → Source: *Deploy from a branch* → branch `main`,
-cartella `/ (root)`). Dopo qualche minuto il sito è online all'indirizzo che GitHub
-mostra in quella stessa pagina di impostazioni (del tipo
-`https://tuoutente.github.io/dermoZanetta---easy/`).
+Sito statico: si carica la cartella su un qualsiasi hosting, oppure si attiva
+GitHub Pages (Settings del repository → Pages → Source: *Deploy from a branch* →
+branch `main`, cartella `/ (root)`).
+
+Attenzione a una cosa sola: l'azione automatica in `.github/workflows/genera.yml`
+ha bisogno del permesso di scrivere. Se mai smettesse di funzionare, controlla
+Settings → Actions → General → *Workflow permissions* → **Read and write**.
+
+---
 
 ## Dominio personalizzato
 
-Il dominio **`dermozanetta.it`** e' stato registrato l'11 settembre 2026 ed e' gia'
+Il dominio **`dermozanetta.it`** è stato registrato l'11 settembre 2026 ed è già
 scritto dentro il sito: i tag `<link rel="canonical">` di tutte le pagine, la
-`sitemap.xml`, il `robots.txt` e i tag `og:` puntano li'. Il file `CNAME` accanto a
+`sitemap.xml`, il `robots.txt` e i tag `og:` puntano lì. Il file `CNAME` accanto a
 `index.html` contiene la riga `dermozanetta.it`.
 
-Il dominio **senza `www`** e' quello principale: e' la forma usata nei canonical, e
-cambiarla ora vorrebbe dire rimettere mano a tutti i file. `www.dermozanetta.it`
-viene comunque fatto funzionare dal record CNAME qui sotto, e GitHub lo reindirizza
-da solo sul dominio nudo.
+Il dominio **senza `www`** è quello principale: è la forma usata nei canonical.
+`www.dermozanetta.it` funziona grazie al record CNAME qui sotto, e GitHub lo
+reindirizza da solo sul dominio nudo.
 
 ### Cosa resta da fare (una volta sola)
 
-**1. DNS — dal pannello del registrar.** Sono cinque record. I nomi esatti dei campi
-cambiano da un registrar all'altro, ma il contenuto e' questo:
+**1. DNS — dal pannello del registrar.** Sono cinque record:
 
 | Tipo | Nome | Valore |
 |---|---|---|
@@ -342,58 +363,58 @@ cambiano da un registrar all'altro, ma il contenuto e' questo:
 
 I quattro record A sono gli indirizzi ufficiali di GitHub Pages: servono tutti e
 quattro, sono quattro server diversi. Il valore del CNAME finisce con un punto in
-alcuni pannelli (`filippoborioli-ai.github.io.`): e' normale, lascia come propone il
-pannello.
+alcuni pannelli (`filippoborioli-ai.github.io.`): è normale.
 
 **2. GitHub.** Settings del repository → Pages → campo *Custom domain*: scrivi
-`dermozanetta.it` e salva. Il file `CNAME` c'e' gia', quindi di solito il campo
+`dermozanetta.it` e salva. Il file `CNAME` c'è già, quindi di solito il campo
 risulta compilato da solo dopo il primo push.
 
-**3. Aspettare il DNS.** Da qualche minuto a qualche ora. Finche' non e' propagato
-GitHub scrive *"Domain's DNS record could not be verified"*: non e' un errore da
-correggere, e' solo da aspettare.
+**3. Aspettare il DNS.** Da qualche minuto a qualche ora. Finché non è propagato
+GitHub scrive *"Domain's DNS record could not be verified"*: non è un errore da
+correggere, è solo da aspettare.
 
 **4. Enforce HTTPS.** Nella stessa pagina, quando la spunta diventa cliccabile,
-attivala. Il certificato e' gratuito e si rinnova da solo: non c'e' niente da
-comprare. Prima di quel momento il sito risponde in `http://` e il browser lo segna
-come "non sicuro" — e' una fase di passaggio, non un problema del sito.
+attivala. Il certificato è gratuito e si rinnova da solo.
 
 ### Controllare che sia andato a buon fine
-
-Dal terminale:
 
 ```bash
 nslookup dermozanetta.it        # deve rispondere i quattro 185.199.x.153
 curl -I https://dermozanetta.it # deve rispondere HTTP/2 200
 ```
 
-Nel browser: `https://dermozanetta.it` mostra la home con il lucchetto chiuso.
-
 ### Il rinnovo
 
 Il dominio va rinnovato ogni anno presso il registrar. Se scade, il sito sparisce:
 resta raggiungibile solo l'indirizzo `github.io`. Conviene attivare il rinnovo
-automatico e controllare che l'email del registrante
-(`zanettaroberta@yahoo.it`, diversa da quella di contatto del sito) sia una
-casella letta davvero — gli avvisi di scadenza
-arrivano li'.
+automatico e controllare che l'email del registrante (`zanettaroberta@yahoo.it`,
+diversa da quella di contatto del sito) sia una casella letta davvero — gli avvisi
+di scadenza arrivano lì.
+
+---
 
 ## Privacy
 
-`privacy.html` e' l'informativa del sito, collegata dal footer di tutte le pagine.
+`privacy.html` è l'informativa del sito, collegata dal footer di tutte le pagine.
 
-Dice quello che oggi e' vero: **nessun cookie, nessun modulo, nessuna statistica**.
-Per questo il sito non ha (e non deve avere) il banner dei cookie: non c'e' niente
+Dice quello che oggi è vero: **nessun cookie, nessun modulo, nessuna statistica**.
+Per questo il sito non ha (e non deve avere) il banner dei cookie: non c'è niente
 da far accettare.
 
 > Se un domani si aggiunge **Google Analytics**, una **mappa Google incorporata**
 > (`<iframe>`), un **modulo di contatto**, il **pulsante WhatsApp** o i **font di
 > Google caricati da internet**, l'informativa diventa falsa e serve anche il banner
-> dei cookie. In quel caso `privacy.html` va riscritta: nel file c'e' un commento
+> dei cookie. In quel caso `privacy.html` va riscritta: nel file c'è un commento
 > HTML che lo ricorda, proprio sopra il testo.
 
-L'informativa del sito e' cosa diversa da quella firmata in studio, che riguarda i
+Il pannello non salva niente su nessun server: le modifiche non ancora pubblicate
+restano nel browser di chi le scrive, e da lì vanno solo a GitHub. Non cambia
+nulla per i visitatori del sito, quindi l'informativa resta valida.
+
+L'informativa del sito è cosa diversa da quella firmata in studio, che riguarda i
 dati sanitari del paziente: la pagina lo dice fin dalla prima riga.
+
+---
 
 ## Farsi trovare su Google per "dermatologo Verbania"
 
@@ -409,44 +430,43 @@ contatti): significa che una scheda esiste già. Verifica che sia **rivendicata*
 (gestita da voi, non solo esistente) su [business.google.com](https://business.google.com/):
 
 - **Nome, indirizzo, telefono devono essere identici, carattere per carattere**, fra
-  la scheda Google e il sito (quello che si chiama coerenza "NAP" — Name, Address,
-  Phone). Discrepanze anche piccole confondono Google e indeboliscono il
-  posizionamento. **È già successo**: il sito diceva "Via Castello 27, 28900" mentre
-  la scheda Google dice "Piazza Castello 27, 28921". Ha vinto la scheda Google,
-  perché è quella gestita dalla dottoressa e quella che i pazienti seguono per
-  arrivare. Se correggi un indirizzo, correggilo in tutti e due i posti lo stesso
-  giorno.
+  la scheda Google e il sito (coerenza "NAP" — Name, Address, Phone). Discrepanze
+  anche piccole confondono Google e indeboliscono il posizionamento. **È già
+  successo**: il sito diceva "Via Castello 27, 28900" mentre la scheda Google dice
+  "Piazza Castello 27, 28921". Ha vinto la scheda Google, perché è quella gestita
+  dalla dottoressa e quella che i pazienti seguono per arrivare. Se correggi un
+  indirizzo, correggilo in tutti e due i posti lo stesso giorno.
 - Categoria principale: "Dermatologo".
 - Orari identici a quelli sul sito.
-- Foto vere dello studio caricate sulla scheda (le stesse che metti nel sito vanno bene).
+- Foto vere dello studio caricate sulla scheda (le stesse del sito vanno bene).
 - Sito web nel campo apposito della scheda → punta a `https://dermozanetta.it`.
-  Il sito gia' punta alla scheda (campo `sameAs` nel JSON-LD): fatti i due
-  collegamenti, Google capisce che sito e scheda sono la stessa attivita'.
-- **Recensioni**: sono probabilmente il fattore singolo più pesante per il pacchetto
-  locale. Chiedi ai pazienti soddisfatti di lasciarne una — un link diretto alla
+  Il sito già punta alla scheda (campo `sameAs` nei dati strutturati): fatti i due
+  collegamenti, Google capisce che sito e scheda sono la stessa attività.
+- **Recensioni**: probabilmente il fattore singolo più pesante per il pacchetto
+  locale. Chiedi ai pazienti soddisfatti di lasciarne una — il link diretto alla
   pagina delle recensioni si genera dalla scheda Google Business stessa.
 
 ### 2. Google Search Console — perché Google trovi e legga il sito
 
 Su [search.google.com/search-console](https://search.google.com/search-console/):
-aggiungi la proprietà col dominio, verifica la proprietà (un record DNS TXT, o un
-tag HTML che Google fornisce), poi invia `sitemap.xml` da lì (menu Sitemap). Senza
-questo passo Google trova comunque il sito prima o poi, ma può volerci settimane;
-con Search Console è questione di giorni, e puoi vedere per quali ricerche il sito
-compare già.
+aggiungi la proprietà col dominio, verificala (un record DNS TXT, o un tag HTML che
+Google fornisce), poi invia `sitemap.xml` da lì (menu Sitemap). Senza questo passo
+Google trova comunque il sito prima o poi, ma può volerci settimane.
 
 ### 3. Cosa c'è già nel sito che aiuta
 
-- `<title>` e `<meta description>` con "dermatologa" e "Verbania" in entrambe le
-  pagine — è già fatto, non toccare la struttura, solo i dati quando cambiano.
-- Dati strutturati `schema.org/Physician` (il blocco JSON-LD in fondo a `index.html`)
-  con indirizzo e coordinate: aiuta Google a capire cos'è la pagina, non solo a
-  leggerla come testo.
-- `robots.txt` e `sitemap.xml`: già compilati con `dermozanetta.it`. Quando
-  aggiungi o togli una pagina, aggiorna `sitemap.xml` di conseguenza e cambia il
-  `<lastmod>` delle pagine modificate.
-- Sito veloce e senza dipendenze esterne: Google misura la velocità di caricamento
-  come fattore di posizionamento, e un sito statico come questo parte già avvantaggiato.
+- `<title>` e `<meta description>` con "dermatologa" e "Verbania" su tutte le
+  pagine — modificabili dal pannello, sezione "Google".
+- Dati strutturati `schema.org/Physician` in fondo a `index.html` con indirizzo,
+  coordinate, orari e l'elenco delle prestazioni: li riscrive il generatore, quindi
+  **non possono più andare fuori sincrono** con quello che si legge in pagina.
+- Dati strutturati `FAQPage` su `domande.html`: possono far comparire le domande
+  direttamente nei risultati di ricerca.
+- `robots.txt` e `sitemap.xml` compilati con `dermozanetta.it`. Il `<lastmod>` delle
+  pagine modificate lo aggiorna il generatore da solo.
+- Sito veloce e senza dipendenze esterne: la velocità è un fattore di
+  posizionamento, e un sito statico come questo parte avvantaggiato. Le foto
+  caricate dal pannello vengono compresse apposta per non rovinare questo punto.
 
 ### 4. Citazioni locali (backlink) — da fare una volta, aiutano nel tempo
 
@@ -454,14 +474,11 @@ Registrare lo studio, con **nome indirizzo e telefono identici** al sito, su:
 
 - Directory mediche: [MioDottore](https://www.miodottore.it), [Dottori.it](https://www.dottori.it)
 - Directory generiche: PagineGialle, PagineBianche
-- Sito dell'Ordine dei Medici Chirurghi e Odontoiatri della provincia (Verbano-Cusio-Ossola)
-
-Ognuno di questi è un segnale in più che lega nome-indirizzo-telefono allo studio,
-e alcuni generano visite dirette al sito.
+- Sito dell'Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola
 
 ### Cosa NON serve
 
 Non serve un blog, non servono "parole chiave" nascoste nel testo, non serve pagare
 per pubblicità display generica. Per una ricerca locale come "dermatologo Verbania"
 contano quasi solo: scheda Google curata e con recensioni, dati coerenti ovunque, e
-un sito veloce che li conferma. Il sito attuale copre già l'ultimo punto.
+un sito veloce che li conferma.

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifica il sito — Dott.ssa Roberta Zanetta</title>
+<!-- Questa pagina non deve finire su Google: e' di servizio, non fa parte
+     del sito. Il divieto e' ripetuto anche in robots.txt. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- =====================================================================
+     ACCESSO
+     La password apre questa pagina e sblocca il codice di pubblicazione
+     salvato nel browser (vedi admin.js). Senza quel codice si puo'
+     guardare e scaricare, ma non pubblicare: e' li' la vera serratura.
+     ===================================================================== -->
+<div class="accesso" id="accesso">
+  <form class="accesso-box" id="moduloAccesso" autocomplete="on">
+    <span class="marchio" aria-hidden="true">Z</span>
+    <h1>Modifica il sito</h1>
+    <p>Da qui si cambiano i testi, gli orari, le foto e le prestazioni del sito.
+       Non serve saper programmare.</p>
+
+    <div class="campo">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" autocomplete="username" required>
+    </div>
+    <div class="campo">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+    </div>
+
+    <p class="avviso avviso-errore" id="erroreAccesso" hidden></p>
+    <p><button class="btn" type="submit" id="bottoneEntra">Entra</button></p>
+    <p class="aiuto" style="font-size:.85rem;color:var(--bruno-soft);margin:0">
+      Password dimenticata? È scritta nel file <code>CREDENZIALI.md</code> che ti è
+      stato consegnato. Se non lo trovi, chiedi a chi gestisce il sito.
+    </p>
+  </form>
+</div>
+
+<!-- =====================================================================
+     PANNELLO
+     Le sezioni le costruisce admin.js leggendo l'elenco dei campi:
+     aggiungere un campo al sito vuol dire aggiungere una riga li',
+     non scrivere HTML qui.
+     ===================================================================== -->
+<div id="pannello" hidden>
+
+  <div class="barra">
+    <span class="titolo">Modifica il sito</span>
+    <span class="stato" id="stato"></span>
+    <a class="btn btn-ghost btn-sm" href="index.html" target="_blank" rel="noopener">Vedi il sito</a>
+    <button class="btn btn-ghost btn-sm" type="button" id="bottoneEsci">Esci</button>
+    <button class="btn" type="button" id="bottonePubblica">Salva e pubblica</button>
+  </div>
+
+  <div class="impalcatura">
+    <nav class="menu" id="menu" aria-label="Sezioni da modificare"></nav>
+    <div class="contenuto" id="contenuto"></div>
+  </div>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
