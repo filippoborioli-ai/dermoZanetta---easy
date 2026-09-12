@@ -272,7 +272,7 @@ Il logo si adatta da solo al riquadro (altezza massima 58px, larghezza massima
 215px, senza deformarsi). Funziona meglio uno sfondo bianco o trasparente: uno
 sfondo colorato pieno crea uno stacco netto col resto della fascia.
 
-I loghi presenti oggi sono tre: ProMater, ASL VCO e Biochemical. **Da tre in su la
+I loghi presenti oggi sono quattro: ProMater, ASL VCO, Biochemical e Centro Medico Major. **Da tre in su la
 fascia scorre lateralmente su telefono**: l'ultimo logo si vede a meta', ed e' voluto
 — e' il segnale che ce n'e' dell'altro, lo stesso meccanismo del carosello delle
 prestazioni. Su desktop ci stanno comodi. Se un domani ne aggiungi un quarto o un
