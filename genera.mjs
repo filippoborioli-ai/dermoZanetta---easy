@@ -85,6 +85,34 @@ function aggiorna(file, elenco, indent) {
   return true
 }
 
+/* Le stesse prestazioni entrano anche nei dati strutturati della home:
+   e' il modo in cui si dice a Google "questo studio fa queste cose",
+   in una forma che legge senza doverla dedurre dal testo. La sorgente
+   resta dati.js, cosi' non esistono due elenchi da tenere allineati.
+   Il segnaposto e' la proprieta' availableService: viene sostituita
+   tutta, e fra una generazione e l'altra il JSON resta valido. */
+function aggiornaDatiStrutturati(file, elenco) {
+  const html = readFileSync(file, 'utf8')
+  const servizi = elenco.map(p => ({
+    '@type': 'MedicalProcedure',
+    name: p.nome,
+    description: p.testo,
+  }))
+  const blocco = '"availableService":' + JSON.stringify(servizi, null, 2)
+    .split('\n').map((r, i) => (i === 0 ? r : '  ' + r)).join('\n')
+
+  const nuovo = html.replace(/"availableService":\s*\[[\s\S]*?\n  \]/, blocco)
+  if (nuovo === html) {
+    throw new Error(`${file}: proprieta' availableService non trovata nel JSON-LD`)
+  }
+  writeFileSync(file, nuovo)
+
+  // Un JSON-LD rotto Google lo scarta in silenzio: meglio accorgersene qui.
+  const json = nuovo.split('<script type="application/ld+json">')[1].split('</script>')[0]
+  const dati = JSON.parse(json)
+  console.log(`${file}: ${dati.availableService.length} prestazioni nei dati strutturati`)
+}
+
 const prestazioni = leggiPrestazioni()
 if (!Array.isArray(prestazioni) || !prestazioni.length) {
   throw new Error('dati.js non contiene nessuna prestazione')
@@ -95,3 +123,4 @@ for (const p of prestazioni) {
 
 aggiorna('index.html', prestazioni, '        ')
 aggiorna('prestazioni.html', prestazioni, '        ')
+aggiornaDatiStrutturati('index.html', prestazioni)

@@ -27,6 +27,7 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 | `privacy.html` | informativa privacy del sito, collegata dal footer |
 | `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
 | `genera.mjs` | riscrive le schede dentro le pagine leggendo `dati.js` |
+| `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
