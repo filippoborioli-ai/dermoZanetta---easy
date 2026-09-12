@@ -20,7 +20,7 @@ JavaScript, nessuna libreria, nessun server.
 La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la seconda.
 
 **Indice** — [Come è fatto](#come-è-fatto-il-progetto) · [File](#i-file) ·
-[Il pannello](#il-pannello-di-modifica) · [Cosa non si cambia dal pannello](#cosa-il-pannello-non-cambia) ·
+[Il pannello](#il-pannello-di-modifica) · [Anteprima](#lanteprima) · [Cosa non si cambia dal pannello](#cosa-il-pannello-non-cambia) ·
 [Provarlo in locale](#provare-il-sito-in-locale) · [Aggiungere un campo modificabile](#aggiungere-un-campo-modificabile) ·
 [Dati obbligatori per legge](#dati-obbligatori-per-legge) · [Colori](#colori) ·
 [Se qualcosa va storto](#se-qualcosa-va-storto) · [Pubblicare](#pubblicare) ·
@@ -39,8 +39,8 @@ C'è una sola idea da tenere a mente, il resto discende da quella:
 Il giro completo:
 
 ```
-  admin.html            la dottoressa modifica un modulo
-       │
+  admin.html            la dottoressa modifica un modulo e vede
+       │                 l'anteprima aggiornarsi mentre scrive
        ▼
   contenuti.json        il file dei testi, salvato su GitHub
        │
@@ -54,6 +54,20 @@ Il giro completo:
   GitHub Pages          il sito online, aggiornato in un paio di minuti
 ```
 
+### Una regola sola, usata da due parti
+
+La trasformazione "testi → pagina" sta tutta in **`genera-nucleo.js`**: una
+funzione, `generaPagina(html, contenuti)`, che non legge e non scrive file.
+
+La usano in due:
+
+- `genera.mjs`, che riscrive i file veri quando si pubblica;
+- `admin.html`, che disegna l'anteprima mentre si scrive.
+
+È il motivo per cui l'anteprima **non è una simulazione**: è la pagina vera,
+costruita con lo stesso codice che genererà il sito. Se fossero due copie, prima
+o poi l'anteprima mostrerebbe una cosa e il sito ne pubblicherebbe un'altra.
+
 ### Perché non è più semplice far disegnare le pagine al JavaScript
 
 Perché Google. Se le prestazioni le disegnasse il browser, un motore di ricerca
@@ -62,16 +76,17 @@ non sarebbero nell'HTML, e sono esattamente le ricerche da intercettare. Scriven
 nel file, il testo c'è già quando Google arriva. È lo stesso motivo per cui il
 generatore scrive anche i dati strutturati (JSON-LD) e non li lascia al browser.
 
-### I tre segnaposto nell'HTML
+### I segnaposto nell'HTML
 
 Aprendo `index.html` si trovano dei commenti che sembrano strani. Sono i punti in
-cui il generatore scrive. Sono solo tre tipi:
+cui il generatore scrive. Sono quattro tipi:
 
 | Nella pagina si legge | Vuol dire |
 |---|---|
 | `<!--T:home.titolo-->…<!--/T-->` | qui va il **testo** che in `contenuti.json` sta alla voce `home.titolo` |
-| `<!--B:orari-->…<!--/B-->` | qui va un **blocco** disegnato da una funzione di `genera.mjs` (le righe degli orari, le schede, i loghi…) |
-| `<img data-c="foto.studio" …>` | dentro un tag non si può mettere un commento: `data-c` dice al generatore **quali attributi riscrivere** (`src`, `alt`, `href`, `content`) |
+| `<!--B:orari-->…<!--/B-->` | qui va un **blocco** disegnato da una funzione di `genera-nucleo.js` (le righe degli orari, le schede, i loghi…) |
+| `<title data-t="seo.home.titolo">` | il testo di un **tag intero**. Serve dove un commento non funziona: dentro `<title>` il browser lo mostrerebbe come testo |
+| `<img data-c="foto.studio" …>` | dentro un tag non si può mettere un commento: `data-c` dice **quali attributi riscrivere** (`src`, `alt`, `href`, `content`, `placeholder`) |
 
 Tutto ciò che sta fra `<!--B:` e `<!--/B-->` **viene buttato e riscritto a ogni
 generazione**: modificarlo a mano è tempo perso.
@@ -83,8 +98,9 @@ generazione**: modificarlo a mano è tempo perso.
 | File | Cosa contiene |
 |---|---|
 | `contenuti.json` | **tutti i testi del sito.** È la sorgente di tutto |
-| `admin.html` · `admin.js` · `admin.css` | il pannello di modifica: modulo, accesso, pubblicazione |
-| `genera.mjs` | riscrive le pagine leggendo `contenuti.json` |
+| `admin.html` · `admin.js` · `admin.css` | il pannello di modifica: modulo, anteprima, accesso, pubblicazione |
+| `genera-nucleo.js` | **la regola** con cui i testi diventano pagina. Usato sia da `genera.mjs` sia dall'anteprima |
+| `genera.mjs` | apre i file, applica la regola, li salva, aggiorna la sitemap |
 | `cambia-password.mjs` | cambia la password del pannello |
 | `index.html` | home: medico, prestazioni in evidenza, studio, collaborazioni, contatti |
 | `prestazioni.html` | elenco completo delle prestazioni, con la ricerca |
@@ -139,6 +155,28 @@ Due scorciatoie utili dentro i testi:
   nelle risposte alle domande e nei testi lunghi;
 - le **parole per la ricerca** di una prestazione non si vedono in pagina: servono
   solo alla casella di ricerca. Chi ha l'acne cerca "brufoli", non "acne volgare".
+
+### L'anteprima
+
+Accanto al modulo c'è il sito, che si aggiorna mentre si scrive. Non è un'idea
+approssimativa di come verrà: è la pagina vera, ricostruita a ogni pausa di
+digitazione con lo stesso `genera-nucleo.js` che genererà il sito al momento di
+pubblicare.
+
+- cambiando sezione l'anteprima **va da sola** al punto giusto della pagina
+  (gli orari → i contatti, il medico → "Chi ti visita", e così via);
+- mentre si scrive **resta ferma dov'era**, così si vede l'effetto senza
+  rincorrerlo;
+- **Computer / Telefono** mostra la stessa pagina alla larghezza di uno schermo di
+  telefono: vale la pena guardarci, è da lì che arriva la maggior parte dei pazienti;
+- una **foto appena scelta** si vede subito nell'anteprima, anche se non è ancora
+  stata pubblicata;
+- in alto a destra c'è scritto se quello che si vede è già online o no;
+- il bottone **Nascondi anteprima** la chiude, se serve spazio. Su schermi stretti
+  parte chiusa e si apre a tutto schermo.
+
+I link dentro l'anteprima non funzionano, apposta: servirebbero a uscire dal
+pannello. Per girare il sito vero c'è il bottone "Vedi il sito".
 
 ### Come funziona la pubblicazione
 
@@ -234,7 +272,9 @@ scritto nell'HTML. Tre passi, sempre gli stessi:
 2. **HTML** — metti il segnaposto dove deve comparire:
    `<p><!--T:home.nuovaFrase-->testo di partenza<!--/T--></p>`.
    Se il testo sta dentro un attributo, usa `data-c="home.nuovaFrase"` sul tag e
-   aggiungi la riga corrispondente alla tabella `ATTRIBUTI` di `genera.mjs`.
+   aggiungi la riga corrispondente alla tabella degli attributi in
+   `genera-nucleo.js`. Per il contenuto di un `<title>` serve `data-t`: dentro
+   `<title>` un commento HTML non è un commento, il browser lo mostrerebbe.
 3. **`admin.js`** — nella sezione giusta dell'elenco `SEZIONI`, aggiungi una riga:
    ```js
    box.appendChild(campoTesto('home.nuovaFrase', { etichetta: 'Nuova frase' }))
@@ -245,7 +285,10 @@ generatore si ferma con un errore chiaro invece di lasciare un buco nella pagina
 
 Per un **elenco** (più voci ripetute) ci sono già gli attrezzi in `admin.js`:
 `elencoTesti` per liste di frasi, `elencoSchede` per liste di schede con più campi.
-Il blocco corrispondente si aggiunge a `BLOCCHI`, in `genera.mjs`.
+Il blocco corrispondente si aggiunge a `BLOCCHI`, in `genera-nucleo.js`.
+
+Non serve fare niente per l'anteprima: attinge dalla stessa regola, quindi il
+campo nuovo ci compare da solo.
 
 ---
 

@@ -54,18 +54,49 @@
   <div class="barra">
     <span class="titolo">Modifica il sito</span>
     <span class="stato" id="stato"></span>
+    <button class="btn btn-ghost btn-sm" type="button" id="bottoneAnteprima" aria-pressed="true">Nascondi anteprima</button>
     <a class="btn btn-ghost btn-sm" href="index.html" target="_blank" rel="noopener">Vedi il sito</a>
     <button class="btn btn-ghost btn-sm" type="button" id="bottoneEsci">Esci</button>
     <button class="btn" type="button" id="bottonePubblica">Salva e pubblica</button>
   </div>
 
-  <div class="impalcatura">
+  <div class="impalcatura" id="impalcatura">
     <nav class="menu" id="menu" aria-label="Sezioni da modificare"></nav>
     <div class="contenuto" id="contenuto"></div>
+
+    <!-- Anteprima: la pagina vera, ricostruita mentre si scrive dallo
+         stesso genera-nucleo.js che genera il sito. Quello che si vede
+         qui e' quello che verra' pubblicato. -->
+    <aside class="anteprima" id="anteprima" aria-label="Anteprima del sito">
+      <div class="anteprima-testa">
+        <label class="sr-only" for="anteprimaPagina">Pagina da vedere</label>
+        <select id="anteprimaPagina">
+          <option value="index.html">Home</option>
+          <option value="prestazioni.html">Prestazioni</option>
+          <option value="domande.html">Domande</option>
+          <option value="privacy.html">Privacy</option>
+        </select>
+        <div class="anteprima-misure" role="group" aria-label="Larghezza dello schermo">
+          <button type="button" data-larghezza="intera" aria-pressed="true">Computer</button>
+          <button type="button" data-larghezza="telefono" aria-pressed="false">Telefono</button>
+        </div>
+        <span class="anteprima-nota" id="anteprimaNota">Non ancora pubblicato</span>
+      </div>
+      <div class="anteprima-cornice" id="anteprimaCornice">
+        <!-- Niente sandbox: dentro c'è il sito stesso, generato dagli
+             stessi testi che sta scrivendo chi guarda, e il pannello
+             deve poterci leggere dentro per non perdere il punto in cui
+             si stava guardando a ogni tasto premuto. -->
+        <iframe id="anteprimaTelaio" title="Anteprima del sito"></iframe>
+      </div>
+    </aside>
   </div>
 
 </div>
 
+<!-- Le regole con cui i testi diventano pagine. Stesso file che usa
+     node genera.mjs: anteprima e sito non possono divergere. -->
+<script src="genera-nucleo.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

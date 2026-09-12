@@ -25,11 +25,17 @@
        server dove nascondere una password, quindi la vera barriera e'
        il codice, non la password.
 
+   L'anteprima
+       il riquadro di destra non e' una simulazione: e' la pagina vera,
+       ricostruita a ogni tasto con genera-nucleo.js, lo stesso file che
+       genera il sito quando si pubblica. Quello che si vede li' e'
+       quello che verra' pubblicato.
+
    Aggiungere un campo modificabile
        1. aggiungi la voce in contenuti.json;
        2. aggiungila all'elenco SEZIONI qui sotto;
        3. metti il segnaposto nell'HTML e, se serve, il blocco in
-          genera.mjs.
+          genera-nucleo.js.
    ===================================================================== */
 
 (function () {
@@ -97,6 +103,7 @@
     modificato = true
     mostraStato('Modifiche non pubblicate', '')
     try { localStorage.setItem(CHIAVE_BOZZA, JSON.stringify(dati)) } catch (e) { /* spazio finito: pazienza */ }
+    aggiornaAnteprima()
   }
 
   function mostraStato(testo, tipo) {
@@ -930,6 +937,141 @@
   }
 
   /* -------------------------------------------------------------------
+     ANTEPRIMA
+     ----------------------------------------------------------------
+
+     Dentro il telaio non c'e' una simulazione: c'e' la pagina vera,
+     ricostruita con genera-nucleo.js, lo stesso file che genera il
+     sito quando si pubblica. Quello che si vede qui e' quello che
+     verra' pubblicato.
+
+     Le pagine HTML si scaricano una volta sola e restano in memoria:
+     a ogni tasto premuto si rifa' solo la sostituzione dei testi, che
+     costa niente.
+     ---------------------------------------------------------------- */
+  var anteprimaAperta = true
+  var pagineScaricate = {}      // nome file -> HTML sorgente
+  var anteprimaInCoda = null
+  var paginaAnteprima = 'index.html'
+  /* Dove far vedere l'anteprima al prossimo disegno:
+       null  = dove si stava guardando (si sta scrivendo, non si salta)
+       ''    = in cima
+       '#x'  = a quel punto della pagina */
+  var destinazioneAnteprima = ''
+
+  /* A ogni sezione del pannello corrisponde il punto del sito che si
+     sta modificando: l'anteprima ci va da sola. */
+  var DOVE_GUARDARE = {
+    studio: ['index.html', '#contatti'],
+    home: ['index.html', ''],
+    medico: ['index.html', '#chi-sono'],
+    prestazioni: ['prestazioni.html', ''],
+    foto: ['index.html', '#studio'],
+    collaborazioni: ['index.html', '#collaborazioni'],
+    orari: ['index.html', '#contatti'],
+    contatti: ['index.html', '#contatti'],
+    domande: ['domande.html', ''],
+    google: ['index.html', ''],
+    pubblicazione: null           // niente anteprima: non si tocca il sito
+  }
+
+  async function scaricaPagina(nome) {
+    if (pagineScaricate[nome]) return pagineScaricate[nome]
+    var risposta = await fetch(nome + '?t=' + Date.now())
+    if (!risposta.ok) throw new Error('Non trovo la pagina ' + nome)
+    pagineScaricate[nome] = await risposta.text()
+    return pagineScaricate[nome]
+  }
+
+  /* Le foto appena scelte non sono ancora online: nell'anteprima al
+     loro posto va l'immagine che sta ancora nel browser. */
+  function conFotoNuove(html) {
+    codaImmagini.forEach(function (img) {
+      html = html.split('"' + img.percorso + '"').join('"' + img.anteprima + '"')
+    })
+    return html
+  }
+
+  /* L'anteprima e' una pagina a se': le servono un indirizzo di base
+     per ritrovare style.css e le foto, e un piccolo freno ai link, che
+     altrimenti porterebbero fuori dal pannello. */
+  function perIlTelaio(html) {
+    var base = location.href.replace(/[^/]*$/, '')
+    var aggiunte = '<base href="' + base + '">' +
+      '<script>document.addEventListener("click",function(e){' +
+      'var a=e.target.closest&&e.target.closest("a");' +
+      'if(a&&a.getAttribute("href")&&a.getAttribute("href").charAt(0)!=="#")e.preventDefault();' +
+      '},true)<\/script>'
+    return html.replace('<head>', '<head>' + aggiunte)
+  }
+
+  function aggiornaAnteprima() {
+    if (!anteprimaAperta || !dati) return
+    // Un rendering per pausa di digitazione, non uno per tasto.
+    clearTimeout(anteprimaInCoda)
+    anteprimaInCoda = setTimeout(disegnaAnteprima, 250)
+  }
+
+  async function disegnaAnteprima() {
+    var telaio = $('anteprimaTelaio')
+    var nota = $('anteprimaNota')
+    try {
+      var sorgente = await scaricaPagina(paginaAnteprima)
+      var html = perIlTelaio(conFotoNuove(NucleoGenera.generaPagina(sorgente, dati)))
+
+      // Dove si stava guardando, per non ripartire da capo ogni volta.
+      var altezza = 0
+      try { altezza = telaio.contentWindow.scrollY } catch (e) { /* prima volta */ }
+
+      telaio.onload = function () {
+        try {
+          var finestra = telaio.contentWindow
+          // Mentre si scrive l'anteprima non deve saltare: resta dov'era.
+          if (destinazioneAnteprima === null) { finestra.scrollTo(0, altezza); return }
+          var punto = destinazioneAnteprima && finestra.document.querySelector(destinazioneAnteprima)
+          if (punto) punto.scrollIntoView()
+          else finestra.scrollTo(0, 0)
+          destinazioneAnteprima = null
+        } catch (e) { /* se non si puo' leggere dentro, pazienza */ }
+      }
+      telaio.srcdoc = html
+      nota.textContent = modificato ? 'Non ancora pubblicato' : 'Uguale a quello online'
+      nota.className = 'anteprima-nota'
+    } catch (errore) {
+      nota.textContent = errore.message
+      nota.className = 'anteprima-nota errore'
+    }
+  }
+
+  function mostraAnteprima(acceso) {
+    anteprimaAperta = acceso
+    $('impalcatura').classList.toggle('con-anteprima', acceso)
+    $('anteprima').hidden = !acceso
+    var b = $('bottoneAnteprima')
+    b.textContent = acceso ? 'Nascondi anteprima' : 'Mostra anteprima'
+    b.setAttribute('aria-pressed', String(acceso))
+    if (acceso) disegnaAnteprima()
+  }
+
+  /* Quando si cambia sezione, l'anteprima va dove serve. */
+  function puntaAnteprimaSu(idSezione) {
+    var dove = DOVE_GUARDARE[idSezione]
+    if (!dove) {                      // sezione senza anteprima
+      $('anteprima').hidden = true
+      $('impalcatura').classList.remove('con-anteprima')
+      return
+    }
+    if (anteprimaAperta) {
+      $('anteprima').hidden = false
+      $('impalcatura').classList.add('con-anteprima')
+    }
+    paginaAnteprima = dove[0]
+    destinazioneAnteprima = dove[1]
+    $('anteprimaPagina').value = paginaAnteprima
+    if (anteprimaAperta) disegnaAnteprima()
+  }
+
+  /* -------------------------------------------------------------------
      Impalcatura del pannello
      ---------------------------------------------------------------- */
   function disegnaMenu() {
@@ -959,6 +1101,8 @@
     Array.prototype.forEach.call($('menu').children, function (b) {
       b.setAttribute('aria-current', String(b.dataset.sezione === id))
     })
+
+    puntaAnteprimaSu(id)
   }
 
   /* -------------------------------------------------------------------
@@ -1018,6 +1162,15 @@
       return
     }
 
+    /* Stessi controlli che fa il generatore prima di riscrivere le
+       pagine: se qualcosa non va, meglio dirlo adesso che far fallire
+       l'azione su GitHub a cose gia' pubblicate. */
+    var problemi = NucleoGenera.controlla(dati)
+    if (problemi.length) {
+      alert('Prima di pubblicare c’è da sistemare:\n\n• ' + problemi.join('\n• '))
+      return
+    }
+
     var bottone = $('bottonePubblica')
     bottone.disabled = true
 
@@ -1047,6 +1200,9 @@
       modificato = false
       try { localStorage.removeItem(CHIAVE_BOZZA) } catch (e) { /* niente */ }
       mostraStato('Pubblicato. Il sito si aggiorna fra un paio di minuti.', 'ok')
+      // Le foto ora sono online: l'anteprima puo' smettere di usare le
+      // copie tenute nel browser.
+      disegnaAnteprima()
     } catch (errore) {
       mostraStato(errore.message, 'errore')
       alert('Non sono riuscito a pubblicare.\n\n' + errore.message)
@@ -1091,6 +1247,9 @@
       $('accesso').hidden = true
       $('pannello').hidden = false
       disegnaMenu()
+      // Su uno schermo stretto l'anteprima copre il modulo: si parte
+      // chiusa e si apre col bottone quando serve.
+      mostraAnteprima(window.innerWidth > 1180)
       apriSezione('studio')
       if (!modificato) {
         mostraStato(codice ? 'Pronto' : 'Pronto — pubblicazione non attiva su questo dispositivo', codice ? 'ok' : '')
@@ -1105,6 +1264,26 @@
   })
 
   $('bottonePubblica').addEventListener('click', pubblica)
+
+  /* ---------- Comandi dell'anteprima ---------- */
+  $('bottoneAnteprima').addEventListener('click', function () {
+    mostraAnteprima(!anteprimaAperta)
+  })
+
+  $('anteprimaPagina').addEventListener('change', function () {
+    paginaAnteprima = this.value
+    destinazioneAnteprima = ''
+    disegnaAnteprima()
+  })
+
+  Array.prototype.forEach.call($('anteprima').querySelectorAll('.anteprima-misure button'), function (b) {
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(b.parentNode.children, function (altro) {
+        altro.setAttribute('aria-pressed', String(altro === b))
+      })
+      $('anteprimaCornice').classList.toggle('telefono', b.dataset.larghezza === 'telefono')
+    })
+  })
 
   $('bottoneEsci').addEventListener('click', function () {
     if (modificato && !confirm('Hai modifiche non pubblicate. Restano salvate su questo dispositivo e le ritrovi al prossimo accesso. Esco?')) return
