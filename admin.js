@@ -972,8 +972,23 @@
         return JSON.parse(daGitHub.testo)
       }
     }
-    var risposta = await fetch('contenuti.json?t=' + Date.now())
-    if (!risposta.ok) throw new Error('Non trovo il file dei contenuti (contenuti.json).')
+    /* Qui fetch puo' fallire in due modi molto diversi, e "Failed to
+       fetch" non lo spiega a nessuno:
+         - la pagina e' stata aperta con doppio clic (indirizzo file://)
+           e il browser le vieta di leggere i file accanto a se';
+         - la pagina arriva da un server che pero' non risponde piu'. */
+    var risposta
+    try {
+      risposta = await fetch('contenuti.json?t=' + Date.now())
+    } catch (problemaDiRete) {
+      if (location.protocol === 'file:') {
+        throw new Error('Questa pagina è stata aperta col doppio clic sul file. Va aperta dal sito: https://dermozanetta.it/admin.html')
+      }
+      throw new Error('Non riesco a raggiungere il sito da ' + location.origin + '. Controlla la connessione, o che il server locale sia acceso, e riprova.')
+    }
+    if (!risposta.ok) {
+      throw new Error('Il file dei contenuti non c’è (contenuti.json, errore ' + risposta.status + '). Sei sulla pagina giusta?')
+    }
     return await risposta.json()
   }
 
