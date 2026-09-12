@@ -26,6 +26,7 @@ si apre facendo doppio clic su `index.html`, si pubblica copiando la cartella.
 | `domande.html` | pagina con le domande frequenti |
 | `privacy.html` | informativa privacy del sito, collegata dal footer |
 | `dati.js` | **l'elenco delle prestazioni** — è qui che si aggiunge o si toglie |
+| `genera.mjs` | riscrive le schede dentro le pagine leggendo `dati.js` |
 | `style.css` | colori, tipografia, layout |
 | `script.js` | menu mobile, anno nel footer, disegno dell'elenco e ricerca |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
@@ -86,7 +87,7 @@ obbligatori (pubblicità sanitaria, L. 175/1992 e DL 145/2007). Sono inseriti:
 Vanno tenuti su **ogni** pagina, non solo in home: se un domani ne aggiungi una,
 copia il blocco `<div class="footer-note">` da una pagina esistente e non toccarlo.
 
-L'**email** `zanettaroberta@yahoo.it` è nei contatti della home, nei dati
+L'**email** `dermozanetta@gmail.com` è nei contatti della home, nei dati
 strutturati JSON-LD e nell'informativa privacy come recapito del titolare. Se
 un giorno lo studio avrà una casella propria, va cambiata in tre punti: cerca
 l'indirizzo con una ricerca su tutta la cartella, non a memoria.
@@ -161,6 +162,33 @@ automatico, senza deformarsi) qualunque sia la proporzione reale dello scatto.
 Per il ritratto in apertura il riquadro è verticale (3:4, con la cima ad arco):
 una foto già verticale e centrata sul viso rende meglio di una foto molto
 orizzontale ritagliata stretta.
+
+## Come finiscono in pagina le prestazioni
+
+Si scrivono in `dati.js` e basta: quello resta l'unico file da modificare. Ma le
+schede **non vengono disegnate dal browser**: stanno scritte dentro `index.html` e
+`prestazioni.html`, fra i due commenti `PRESTAZIONI:INIZIO` e `PRESTAZIONI:FINE`.
+
+Il motivo e' Google. Quando le disegnava il JavaScript, un motore di ricerca vedeva
+una pagina quasi vuota: le parole "acne", "psoriasi", "mappatura dei nei" non erano
+nell'HTML, quindi non finivano nell'indice. Erano proprio le ricerche da
+intercettare. Ora `prestazioni.html` passa da 1.176 a 3.018 caratteri di testo vero.
+
+**Non modificare a mano quello che sta fra i due marcatori**: viene riscritto.
+
+Dopo aver toccato `dati.js`:
+
+```bash
+node genera.mjs
+```
+
+Se te ne dimentichi non succede niente di grave: al push ci pensa GitHub da solo
+(`.github/workflows/genera.yml` rilancia il generatore e salva le pagine). Lanciarlo
+a mano serve solo a vedere subito il risultato in locale.
+
+La casella di ricerca continua a funzionare: non ridisegna piu' l'elenco, nasconde
+le schede che non corrispondono. Il testo su cui cerca (nome, descrizione e
+`chiavi`) e' nell'attributo `data-cerca` di ogni scheda, scritto dal generatore.
 
 ## Aggiungere, togliere o modificare una prestazione
 
@@ -345,7 +373,8 @@ Nel browser: `https://dermozanetta.it` mostra la home con il lucchetto chiuso.
 Il dominio va rinnovato ogni anno presso il registrar. Se scade, il sito sparisce:
 resta raggiungibile solo l'indirizzo `github.io`. Conviene attivare il rinnovo
 automatico e controllare che l'email del registrante
-(`zanettaroberta@yahoo.it`) sia una casella letta davvero — gli avvisi di scadenza
+(`zanettaroberta@yahoo.it`, diversa da quella di contatto del sito) sia una
+casella letta davvero — gli avvisi di scadenza
 arrivano li'.
 
 ## Privacy

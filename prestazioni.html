@@ -76,8 +76,74 @@
       </div>
 
       <!-- Le schede arrivano da dati.js: per aggiungere, togliere o modificare
-           una prestazione si tocca SOLO quel file. -->
-      <div class="cards" id="elencoPrestazioni"></div>
+           una prestazione si tocca SOLO quel file, poi si lancia
+           `node genera.mjs` (o si fa il push: ci pensa l'azione di GitHub).
+           Stanno scritte qui e non disegnate dal browser perche' Google
+           legge l'HTML: se le schede non ci sono, per lui la pagina e' vuota. -->
+      <div class="cards" id="elencoPrestazioni">
+        <!-- PRESTAZIONI:INIZIO — generato da genera.mjs, non modificare a mano -->
+        <article class="card" data-cerca="visita dermatologica valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico. generale prima visita controllo pelle cute derma">
+          <h3>Visita dermatologica</h3>
+          <p>Valutazione della pelle, delle mucose, dei capelli e delle unghie, con anamnesi ed esame clinico.</p>
+        </article>
+        <article class="card" data-cerca="mappatura dei nei (dermatoscopia digitale) esame dei nei con dermatoscopio e archiviazione delle immagini, per confrontarle nei controlli successivi. nei neo nevi mappatura melanoma epiluminescenza controllo macchie">
+          <h3>Mappatura dei nei (dermatoscopia digitale)</h3>
+          <p>Esame dei nei con dermatoscopio e archiviazione delle immagini, per confrontarle nei controlli successivi.</p>
+        </article>
+        <article class="card" data-cerca="controllo di un singolo neo valutazione mirata di una lesione comparsa da poco o cambiata di forma, colore o dimensione. neo cambiato cresciuto sanguina prude macchia scura">
+          <h3>Controllo di un singolo neo</h3>
+          <p>Valutazione mirata di una lesione comparsa da poco o cambiata di forma, colore o dimensione.</p>
+        </article>
+        <article class="card" data-cerca="acne e cicatrici da acne inquadramento della forma di acne e impostazione della terapia, con controlli nel tempo. acne brufoli foruncoli punti neri comedoni pelle grassa adolescenti cicatrici">
+          <h3>Acne e cicatrici da acne</h3>
+          <p>Inquadramento della forma di acne e impostazione della terapia, con controlli nel tempo.</p>
+        </article>
+        <article class="card" data-cerca="psoriasi diagnosi e gestione della psoriasi cutanea, con valutazione delle terapie disponibili. psoriasi placche squame chiazze rosse gomiti ginocchia cuoio capelluto">
+          <h3>Psoriasi</h3>
+          <p>Diagnosi e gestione della psoriasi cutanea, con valutazione delle terapie disponibili.</p>
+        </article>
+        <article class="card" data-cerca="dermatite atopica ed eczemi valutazione delle dermatiti, individuazione dei fattori scatenanti e terapia. dermatite eczema atopica seborroica da contatto prurito pelle secca irritazione arrossamento">
+          <h3>Dermatite atopica ed eczemi</h3>
+          <p>Valutazione delle dermatiti, individuazione dei fattori scatenanti e terapia.</p>
+        </article>
+        <article class="card" data-cerca="orticaria e reazioni allergiche cutanee inquadramento delle manifestazioni orticarioidi e delle reazioni cutanee di natura allergica. orticaria pomfi allergia gonfiore prurito reazione punture">
+          <h3>Orticaria e reazioni allergiche cutanee</h3>
+          <p>Inquadramento delle manifestazioni orticarioidi e delle reazioni cutanee di natura allergica.</p>
+        </article>
+        <article class="card" data-cerca="micosi di pelle e unghie diagnosi delle infezioni da funghi di cute e unghie e impostazione del trattamento. micosi funghi unghie onicomicosi piede atleta candida macchie bianche">
+          <h3>Micosi di pelle e unghie</h3>
+          <p>Diagnosi delle infezioni da funghi di cute e unghie e impostazione del trattamento.</p>
+        </article>
+        <article class="card" data-cerca="verruche, condilomi e mollusco contagioso valutazione e trattamento delle lesioni di origine virale della cute e delle mucose. verruche porri condilomi papilloma hpv mollusco contagioso">
+          <h3>Verruche, condilomi e mollusco contagioso</h3>
+          <p>Valutazione e trattamento delle lesioni di origine virale della cute e delle mucose.</p>
+        </article>
+        <article class="card" data-cerca="caduta dei capelli e malattie del cuoio capelluto valutazione tricologica della caduta dei capelli e delle patologie del cuoio capelluto. capelli caduta calvizie alopecia diradamento forfora tricologia cuoio capelluto">
+          <h3>Caduta dei capelli e malattie del cuoio capelluto</h3>
+          <p>Valutazione tricologica della caduta dei capelli e delle patologie del cuoio capelluto.</p>
+        </article>
+        <article class="card" data-cerca="malattie sessualmente trasmissibili (venereologia) valutazione e gestione delle infezioni a trasmissione sessuale con manifestazioni cutanee o mucose. venereologia mst ist infezioni genitali herpes sifilide">
+          <h3>Malattie sessualmente trasmissibili (venereologia)</h3>
+          <p>Valutazione e gestione delle infezioni a trasmissione sessuale con manifestazioni cutanee o mucose.</p>
+        </article>
+        <article class="card" data-cerca="cheratosi attiniche e tumori della pelle valutazione delle lesioni legate all’esposizione solare e dei tumori cutanei, con indicazioni sul percorso da seguire. cheratosi attiniche sole tumore carcinoma basalioma melanoma lesioni precancerose">
+          <h3>Cheratosi attiniche e tumori della pelle</h3>
+          <p>Valutazione delle lesioni legate all’esposizione solare e dei tumori cutanei, con indicazioni sul percorso da seguire.</p>
+        </article>
+        <article class="card" data-cerca="crioterapia trattamento ambulatoriale di alcune lesioni cutanee mediante applicazione di azoto liquido. crioterapia azoto liquido verruche cheratosi lesioni">
+          <h3>Crioterapia</h3>
+          <p>Trattamento ambulatoriale di alcune lesioni cutanee mediante applicazione di azoto liquido.</p>
+        </article>
+        <article class="card" data-cerca="asportazione e biopsia di lesioni cutanee piccoli interventi ambulatoriali con eventuale invio del prelievo all’esame istologico. asportazione biopsia rimozione neo cisti chirurgia ambulatoriale istologico punti">
+          <h3>Asportazione e biopsia di lesioni cutanee</h3>
+          <p>Piccoli interventi ambulatoriali con eventuale invio del prelievo all’esame istologico.</p>
+        </article>
+        <article class="card" data-cerca="dermatologia pediatrica valutazione dei problemi della pelle in bambini e ragazzi. bambini pediatrica neonato ragazzi angiomi crosta lattea dermatite pannolino">
+          <h3>Dermatologia pediatrica</h3>
+          <p>Valutazione dei problemi della pelle in bambini e ragazzi.</p>
+        </article>
+        <!-- PRESTAZIONI:FINE -->
+      </div>
 
       <noscript>
         <p class="section-intro">
@@ -138,7 +204,6 @@
 
 <a class="call-fab" href="tel:+393515118880">Chiama 351 511 8880</a>
 
-<script src="dati.js" defer></script>
 <script src="script.js" defer></script>
 </body>
 </html>

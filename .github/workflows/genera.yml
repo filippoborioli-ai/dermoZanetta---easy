@@ -1,0 +1,40 @@
+# Rigenera le schede delle prestazioni quando cambia dati.js.
+#
+# Serve perche' le schede stanno scritte dentro index.html e
+# prestazioni.html (Google legge l'HTML, non aspetta il JavaScript), ma
+# la sorgente resta dati.js: si continua a modificare solo quello. Al
+# push ci pensa questa azione a riscrivere le due pagine.
+name: Rigenera le schede
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - dati.js
+      - genera.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  genera:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: node genera.mjs
+
+      - name: Salva le pagine, se sono cambiate
+        run: |
+          if [ -z "$(git status --porcelain index.html prestazioni.html)" ]; then
+            echo "Niente da fare: le pagine erano gia' allineate a dati.js."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html prestazioni.html
+          git commit -m "Rigenerate le schede delle prestazioni da dati.js"
+          git push

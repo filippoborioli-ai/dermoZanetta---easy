@@ -207,6 +207,10 @@ p{ margin:0 0 .8em; }
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 .card:hover{ transform:translateY(-4px); box-shadow:var(--ombra); border-color:var(--terracotta); }
+/* La ricerca nasconde le schede che non corrispondono. Dentro una
+   griglia l'attributo hidden da solo non basta: display:grid del
+   contenitore vince sul display:none implicito. */
+.card[hidden]{ display:none; }
 .card h3{ margin-bottom:.3em; font-size:1rem; }
 .card p{ margin:0; color:var(--bruno-soft); font-size:.9rem; line-height:1.5; }
 /* Filetto terracotta al posto dell'icona: sobrio, adatto a un sito medico. */

@@ -27,33 +27,14 @@
   if (year) year.textContent = new Date().getFullYear();
 
   /* ---------- Prestazioni ----------
-     Una scheda per prestazione. textContent e mai innerHTML: nulla di
-     quello che si scrive in dati.js può diventare codice eseguibile. */
-  function scheda(p) {
-    var el = document.createElement('article');
-    el.className = 'card';
-    var h = document.createElement('h3');
-    h.textContent = p.nome;
-    var t = document.createElement('p');
-    t.textContent = p.testo;
-    el.append(h, t);
-    return el;
-  }
-
-  function disegna(box, elenco) {
-    box.textContent = '';
-    elenco.forEach(function (p) { box.append(scheda(p)); });
-  }
-
+     Le schede NON le disegna piu' il browser: stanno gia' scritte
+     nell'HTML, generate da dati.js con `node genera.mjs`. Il motivo e'
+     Google: quello che appare solo dopo il JavaScript rischia di non
+     finire nell'indice, e le prestazioni sono le parole con cui i
+     pazienti cercano. Qui restano solo le parti che il browser deve
+     fare davvero: la barra del carosello e la ricerca. */
   var box = document.getElementById('elencoPrestazioni');
-  if (!box || typeof PRESTAZIONI === 'undefined') return;
-
-  // Senza l'attributo data-quante si disegnano tutte le prestazioni
-  // (e' il caso sia della home sia di prestazioni.html); con
-  // data-quante="N" solo le prime N dell'elenco in dati.js.
-  var quante = parseInt(box.dataset.quante, 10);
-  var lista = quante > 0 ? PRESTAZIONI.slice(0, quante) : PRESTAZIONI;
-  disegna(box, lista);
+  if (!box) return;
 
   /* ---------- Linea di scorrimento del carosello (solo home) ----------
      Indica quanto elenco resta e dove ci si trova; si puo' trascinare.
@@ -120,18 +101,27 @@
     return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
+  // Le schede ci sono tutte: la ricerca nasconde quelle che non
+  // corrispondono, invece di ridisegnare l'elenco. Il testo su cui
+  // cerca sta in data-cerca, gia' senza accenti, e comprende le chiavi
+  // di dati.js (chi ha l'acne scrive "brufoli").
+  var schede = box.querySelectorAll('.card');
+
   campo.addEventListener('input', function () {
     var q = normalizza(campo.value).trim();
-    var trovate = !q ? PRESTAZIONI : PRESTAZIONI.filter(function (p) {
-      var testo = normalizza(p.nome + ' ' + p.testo + ' ' + (p.chiavi || ''));
-      return q.split(/\s+/).every(function (parola) { return testo.includes(parola); });
-    });
+    var parole = q ? q.split(/\s+/) : [];
+    var trovate = 0;
 
-    disegna(box, trovate);
+    Array.prototype.forEach.call(schede, function (el) {
+      var testo = el.dataset.cerca || '';
+      var ok = parole.every(function (parola) { return testo.indexOf(parola) !== -1; });
+      el.hidden = !ok;
+      if (ok) trovate++;
+    });
 
     if (!esito) return;
     if (!q) esito.textContent = '';
-    else if (!trovate.length) esito.textContent = 'Nessuna prestazione trovata. Chiama lo studio: 351 511 8880.';
-    else esito.textContent = trovate.length === 1 ? '1 prestazione trovata.' : trovate.length + ' prestazioni trovate.';
+    else if (!trovate) esito.textContent = 'Nessuna prestazione trovata. Chiama lo studio: 351 511 8880.';
+    else esito.textContent = trovate === 1 ? '1 prestazione trovata.' : trovate + ' prestazioni trovate.';
   });
 })();
