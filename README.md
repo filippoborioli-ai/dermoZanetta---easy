@@ -25,7 +25,7 @@ La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la sec
 [Dati obbligatori per legge](#dati-obbligatori-per-legge) · [Colori](#colori) ·
 [Se qualcosa va storto](#se-qualcosa-va-storto) · [Pubblicare](#pubblicare) ·
 [Dominio](#dominio-personalizzato) · [Privacy](#privacy) ·
-[Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania)
+[Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania) · [Cosa manca ancora](SEO-DA-FARE.md)
 
 ---
 
@@ -113,6 +113,7 @@ generazione**: modificarlo a mano è tempo perso.
 | `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
 | `CNAME` | una riga sola: il dominio `dermozanetta.it`. Serve a GitHub Pages |
 | `CREDENZIALI.md` | email e password del pannello. **Non è su GitHub**, sta in `.gitignore` |
+| `SEO-DA-FARE.md` | la lista delle cose ancora da fare per farsi trovare su Google, con le caselle da spuntare |
 | `.github/workflows/genera.yml` | rilancia `genera.mjs` a ogni modifica dei contenuti |
 
 Il vecchio `dati.js` non c'è più: le prestazioni sono dentro `contenuti.json`
@@ -478,6 +479,8 @@ dati sanitari del paziente: la pagina lo dice fin dalla prima riga.
 ---
 
 ## Farsi trovare su Google per "dermatologo Verbania"
+
+> **La lista operativa, con le caselle da spuntare, sta in [SEO-DA-FARE.md](SEO-DA-FARE.md).** Qui sotto c'è il perché.
 
 Per una ricerca locale come questa, Google mostra due cose separate: il **pacchetto
 locale** (la mappa con 3 studi in alto) e i **risultati organici** sotto. Per uno
