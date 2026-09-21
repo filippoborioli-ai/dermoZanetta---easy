@@ -364,6 +364,9 @@
         var dati = {
           '@context': 'https://schema.org',
           '@type': 'Physician',
+          // Un indirizzo fisso per lo studio: cosi' le altre pagine possono
+          // puntare a questa stessa scheda invece di ridescriverla.
+          '@id': c.studio.sito.replace(/\/$/, '') + '/#studio',
           name: c.studio.nomeMedico + ' — Dermatologa',
           medicalSpecialty: 'Dermatology',
           telephone: c.studio.telefonoLink,
@@ -391,7 +394,11 @@
           }),
           hasMap: c.studio.mappaUrl,
           url: c.studio.sito,
-          sameAs: [c.studio.mappaUrl],
+          // Gli altri posti dove la stessa attivita' e' elencata (scheda
+          // Google, albo, directory mediche). Servono a Google per capire
+          // che parlano tutti dello stesso studio: si aggiungono in
+          // contenuti.json, campo studio.profili.
+          sameAs: [c.studio.mappaUrl].concat(c.studio.profili || []),
           // Solo i giorni con un orario: "chiuso" non si scrive, si omette.
           openingHours: c.orari.filter(function (o) {
             return /\d/.test(o.orario)
@@ -421,7 +428,27 @@
           })
         }
         return '<script type="application/ld+json">\n' + JSON.stringify(dati, null, 2) + '\n</' + 'script>'
+      },
+
+      /* Briciole di pane: dicono a Google che la pagina sta sotto la home.
+         Nei risultati di ricerca il percorso prende il posto dell'indirizzo
+         nudo, e aiuta a far indicizzare anche le pagine interne. */
+      briciolePrestazioni: function () { return briciole('prestazioni.html', c.paginaPrestazioni.titolo) },
+      bricioleDomande: function () { return briciole('domande.html', c.paginaDomande.titolo) },
+      briciolePrivacy: function () { return briciole('privacy.html', 'Privacy') }
+    }
+
+    function briciole(file, titolo) {
+      var base = c.studio.sito.replace(/\/$/, '')
+      var dati = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: base + '/' },
+          { '@type': 'ListItem', position: 2, name: titolo, item: base + '/' + file }
+        ]
       }
+      return '<script type="application/ld+json">\n' + JSON.stringify(dati, null, 2) + '\n</' + 'script>'
     }
 
     /* I blocchi contengono data-c, quindi vanno scritti per primi. */

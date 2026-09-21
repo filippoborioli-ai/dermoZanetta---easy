@@ -31,12 +31,12 @@ jobs:
 
       - name: Salva le pagine, se sono cambiate
         run: |
-          if [ -z "$(git status --porcelain index.html prestazioni.html domande.html privacy.html sitemap.xml)" ]; then
+          if [ -z "$(git status --porcelain index.html prestazioni.html domande.html privacy.html 404.html sitemap.xml)" ]; then
             echo "Niente da fare: le pagine erano gia' allineate a contenuti.json."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html prestazioni.html domande.html privacy.html sitemap.xml
+          git add index.html prestazioni.html domande.html privacy.html 404.html sitemap.xml
           git commit -m "Rigenerate le pagine da contenuti.json"
           git push

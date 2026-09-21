@@ -525,6 +525,18 @@ Google trova comunque il sito prima o poi, ma può volerci settimane.
   direttamente nei risultati di ricerca.
 - `robots.txt` e `sitemap.xml` compilati con `dermozanetta.it`. Il `<lastmod>` delle
   pagine modificate lo aggiorna il generatore da solo.
+- Briciole di pane (`BreadcrumbList`) su prestazioni, domande e privacy: nei
+  risultati Google mostra "dermozanetta.it › Prestazioni" invece dell'indirizzo
+  nudo, e aiuta a far indicizzare anche le pagine interne.
+- `404.html`: chi arriva da un link vecchio vede una pagina dello studio con i
+  collegamenti giusti, non la schermata grigia di GitHub.
+- La foto della prima schermata viene caricata per prima (`preload` +
+  `fetchpriority`): è l'immagine che Google cronometra per il punteggio di
+  velocità.
+- Campo `studio.profili` in `contenuti.json`: elenco degli altri posti dove lo
+  studio è registrato (scheda Google, PagineGialle, MioDottore...). Finisce nei
+  dati strutturati come `sameAs` e dice a Google che parlano tutti della stessa
+  attività. Si riempie man mano che le schede vengono corrette.
 - Sito veloce e senza dipendenze esterne: la velocità è un fattore di
   posizionamento, e un sito statico come questo parte avvantaggiato. Le foto
   caricate dal pannello vengono compresse apposta per non rovinare questo punto.
@@ -536,6 +548,35 @@ Registrare lo studio, con **nome indirizzo e telefono identici** al sito, su:
 - Directory mediche: [MioDottore](https://www.miodottore.it), [Dottori.it](https://www.dottori.it)
 - Directory generiche: PagineGialle, PagineBianche
 - Sito dell'Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola
+
+**Le schede esistono già, e dicono cose diverse dal sito.** Controllato il
+21 settembre 2026, cercando "Roberta Zanetta dermatologa Verbania":
+
+| Dove | Cosa dice | Cosa dovrebbe dire |
+|---|---|---|
+| PagineGialle, PagineBianche, Virgilio, Cylex, ReteImprese | Via Castello 27, **28900** — tel. **0323 553555** | Piazza Castello 27, 28921 — tel. 351 511 8880 |
+| Doctolib | "**Sig.ra** Roberta Zanetta", indirizzo di un altro studio | "Dott.ssa", indirizzo di Piazza Castello |
+
+Finché due indirizzi e due numeri diversi girano in rete, Google non sa quale
+sia lo studio vero e tiene la scheda più in basso. Sono schede rivendicabili:
+su ognuna c'è un "sei il proprietario di questa attività?". Correggerle è noioso
+ma si fa una volta sola, ed è il singolo intervento che pesa di più dopo la
+scheda Google.
+
+### 5. I due siti vecchi — da chiudere o far puntare qui
+
+Cercando il nome della dottoressa escono ancora due siti diversi da questo:
+
+- `dermatologazanettaroberta.it` — il dominio non risponde più (non risolve
+  nemmeno il DNS), ma Google lo mostra ancora. Se il dominio è ancora
+  intestato alla dottoressa conviene rinnovarlo e reindirizzarlo su
+  `dermozanetta.it`: si porta dietro la reputazione che ha accumulato. Se è
+  scaduto davvero, chiedere a Google di rimuoverlo dall'indice
+  (Search Console → Rimozioni).
+- `dermatologa-dott-ssa-roberta-zanetta.jimdosite.com` — sito Jimdo ancora
+  online. Va spento, oppure sostituito con una pagina sola che rimanda qui.
+  Due siti dello stesso medico si rubano le visite a vicenda e confondono
+  Google su quale sia quello ufficiale.
 
 ### Cosa NON serve
 

@@ -23,6 +23,9 @@
 <meta property="og:image:alt" data-c="foto.ritrattoOgAlt" content="Ritratto della Dott.ssa Roberta Zanetta">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dermozanetta.it/">
+<!-- La foto dell'hero e' l'immagine piu' grande della prima schermata:
+     il browser la scarica subito invece di scoprirla a meta' pagina. -->
+<link rel="preload" as="image" href="img/dottoressa.jpg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -65,7 +68,7 @@
     <div class="wrap hero-inner">
       <div class="hero-text">
         <p class="eyebrow"><!--T:home.eyebrow-->Dermatologia e Venereologia — Verbania<!--/T--></p>
-        <h1><!--T:home.titolo-->Visite dermatologiche e controllo dei nei a Verbania, su appuntamento.<!--/T--></h1>
+        <h1><!--T:home.titolo-->Dermatologa a Verbania: visite dermatologiche e controllo dei nei, su appuntamento.<!--/T--></h1>
         <p class="lead">
           <!--T:home.lead-->La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania, in Piazza Castello. Ogni visita ha il tempo che serve.<!--/T-->
         </p>
@@ -83,7 +86,7 @@
 
       <figure class="hero-photo">
         <!-- FOTO 1 — ritratto della dottoressa. Si sostituisce da admin.html. -->
-        <img data-c="foto.dottoressa" src="img/dottoressa.jpg" alt="Ritratto della Dott.ssa Roberta Zanetta" width="520" height="620">
+        <img fetchpriority="high" data-c="foto.dottoressa" src="img/dottoressa.jpg" alt="Ritratto della Dott.ssa Roberta Zanetta" width="520" height="620">
       </figure>
     </div>
   </section>
@@ -340,6 +343,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Physician",
+  "@id": "https://dermozanetta.it/#studio",
   "name": "Dott.ssa Roberta Zanetta — Dermatologa",
   "medicalSpecialty": "Dermatology",
   "telephone": "+393515118880",

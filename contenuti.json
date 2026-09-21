@@ -17,11 +17,12 @@
     "longitudine": 8.572854,
     "partitaIva": "01367340039",
     "ordine": "Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604",
-    "sito": "https://dermozanetta.it/"
+    "sito": "https://dermozanetta.it/",
+    "profili": []
   },
   "home": {
     "eyebrow": "Dermatologia e Venereologia — Verbania",
-    "titolo": "Visite dermatologiche e controllo dei nei a Verbania, su appuntamento.",
+    "titolo": "Dermatologa a Verbania: visite dermatologiche e controllo dei nei, su appuntamento.",
     "lead": "La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania, in Piazza Castello. Ogni visita ha il tempo che serve.",
     "bottonePrestazioni": "Vedi le prestazioni",
     "bottoneMappa": "Dove si trova",
@@ -140,7 +141,7 @@
   ],
   "paginaPrestazioni": {
     "eyebrow": "Prestazioni",
-    "titolo": "Di cosa si occupa lo studio",
+    "titolo": "Prestazioni dermatologiche a Verbania",
     "lead": "Le prestazioni erogate nello studio di Verbania. Per informazioni su costi e modalità di pagamento chiama lo studio: te lo diciamo prima di fissare l’appuntamento, senza impegno.",
     "etichettaRicerca": "Cerca una prestazione o un disturbo",
     "suggerimentoRicerca": "es. nei, brufoli, capelli, verruche",

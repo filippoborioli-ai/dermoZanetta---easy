@@ -31,7 +31,7 @@ import './genera-nucleo.js'
 const { generaPagina, controlla } = globalThis.NucleoGenera
 
 const c = JSON.parse(readFileSync('contenuti.json', 'utf8'))
-const PAGINE = ['index.html', 'prestazioni.html', 'domande.html', 'privacy.html']
+const PAGINE = ['index.html', 'prestazioni.html', 'domande.html', 'privacy.html', '404.html']
 
 const problemi = controlla(c)
 if (problemi.length) {
@@ -71,7 +71,8 @@ function aggiornaSitemap(cambiate) {
 }
 
 const cambiate = PAGINE.filter(aggiorna)
-aggiornaSitemap(cambiate)
+/* La 404 non e' una pagina da far trovare: sta fuori dalla sitemap. */
+aggiornaSitemap(cambiate.filter(f => f !== '404.html'))
 
 /* Un JSON-LD rotto Google lo scarta in silenzio: meglio accorgersene qui. */
 for (const file of PAGINE) {
