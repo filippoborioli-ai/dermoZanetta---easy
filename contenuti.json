@@ -81,12 +81,10 @@
     "eyebrow": "Il medico",
     "titolo": "Chi ti visita",
     "paragrafi": [
-      "Dermatologa con pluriennale esperienza clinica, con particolare competenze in dermochirurgia e nella diagnosi e trattamento delle patologie infiammatorie cutanee.",
-      "La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio, crioterapia per trattamento di verruche."
+      "Dermatologa con pluriennale esperienza clinica e competenze specifiche in dermochirurgia e nella diagnosi e nel trattamento delle patologie infiammatorie della pelle.",
+      "La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie, con il dermatoscopio per il controllo dei nei. Lo studio esegue anche trattamenti ambulatoriali, dalla crioterapia alle piccole asportazioni: l’elenco completo è nella pagina Prestazioni."
     ],
-    "punti": [
-      ""
-    ]
+    "punti": []
   },
   "sezionePrestazioni": {
     "eyebrow": "Prestazioni",
