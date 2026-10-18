@@ -15,6 +15,45 @@ Qui c'è solo la lista delle cose da fare, in ordine di importanza.
 
 ---
 
+## Dove siamo rimasti (aggiornato il 18 ottobre 2026)
+
+**Perché cercando "dermatologo Verbania" il sito non esce ancora, mentre "zanetta"
+sì.** Cercando il nome non c'è concorrenza. Cercando la categoria Google ordina per
+fiducia accumulata, e il sito è online da poche settimane; inoltre Search Console non
+è attivata e le directory riportano dati sbagliati. Per le ricerche locali pesa
+soprattutto la **mappa**, cioè la scheda Google con le recensioni. "Dermatologo" e
+"dermatologa" per Google sono la stessa parola: non serve cambiare i testi. Tempi
+realistici: qualche mese, non giorni.
+
+Si procede nell'ordine dei punti 1 → 4 qui sotto. Stato:
+
+- [x] Scheda Google **rivendicata e verificata** (4,3 stelle, 11 recensioni)
+- [x] Sito web, telefono, indirizzo e orari della scheda controllati: presenti. Il
+      sito web punta a `https://dermozanetta.it/`
+- [x] **Descrizione** e **15 servizi** inseriti nella scheda (il testo è qui sotto)
+- [ ] **Foto** sulla scheda: istruzioni date, caricamento da confermare (punto 1)
+- [ ] **Recensioni**: passo 2D, da fare
+- [ ] **Search Console**: serve l'accesso a IONOS (il DNS è lì). Il record TXT di
+      Google si **aggiunge**; il record `v=spf1…` già presente **non si tocca**, serve
+      alla posta (punto 3)
+- [ ] **Nome della scheda**: oggi "Dr.ssa Roberta Zanetta Dermatologa". La
+      specializzazione nel nome è sconsigliata (sta già nella categoria) e può far
+      intervenire Google. Non urgente: ogni modifica del nome può far ripartire un
+      controllo, quindi si decide dopo il resto
+- [ ] **Directory** con dati sbagliati e **richiesta di link** ai centri (punto 4)
+
+Descrizione inserita nella scheda (605 caratteri, il limite è 750; tono informativo,
+nessuna formula promozionale):
+
+```
+Studio dermatologico a Verbania Intra, in Piazza Castello 27. La Dott.ssa Roberta Zanetta, specialista in Dermatologia e Venereologia, riceve su appuntamento. Visite dermatologiche, mappatura dei nei con dermatoscopia digitale e controllo di singoli nei. Valutazione e gestione di acne, psoriasi, dermatite atopica ed eczemi, orticaria, micosi di pelle e unghie, verruche e condilomi, caduta dei capelli e malattie del cuoio capelluto. Crioterapia, asportazione e biopsia di lesioni cutanee, dermatologia pediatrica. Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri del Verbano-Cusio-Ossola, n. 604.
+```
+
+I servizi hanno gli stessi nomi delle prestazioni del sito; prezzo e descrizione del
+singolo servizio sono lasciati vuoti (sul sito non ci sono tariffe).
+
+---
+
 ## Il sito, lato tecnico: già fatto
 
 Niente da fare qui. Elencato solo perché non venga rifatto due volte.
@@ -41,20 +80,28 @@ Niente da fare qui. Elencato solo perché non venga rifatto due volte.
 Per "dermatologo Verbania" Google mostra prima la mappa con tre studi, poi i
 risultati normali. La mappa la decide la scheda, non il sito.
 
-- [ ] Entrare su [business.google.com](https://business.google.com/) e verificare che
-      la scheda sia **rivendicata** (gestita dalla dottoressa, non solo esistente).
-      La scheda esiste già: è quella collegata dal sito, `cid=15553148866995770811`.
-- [ ] Categoria principale: **Dermatologo**
-- [ ] Nome, indirizzo e telefono **identici carattere per carattere** a quelli del sito
-      (vedi il riquadro al punto 4)
-- [ ] Orari identici a quelli del sito: lun 14:30–19:00, mar 10:00–17:00,
+- [x] Scheda **rivendicata e verificata**: è quella collegata dal sito,
+      `cid=15553148866995770811`
+- [x] Categoria principale: **Dermatologo**
+- [x] Indirizzo e telefono identici a quelli del sito (vedi il riquadro al punto 4).
+      Il nome ha una piccola differenza ("Dr.ssa … Dermatologa" contro "Dott.ssa"),
+      vedi "Dove siamo rimasti"
+- [x] Orari identici a quelli del sito: lun 14:30–19:00, mar 10:00–17:00,
       mer 14:00–18:00, gio 14:30–19:00, ven 10:00–17:00, sabato e domenica chiuso
-- [ ] Campo "sito web" della scheda verso `https://dermozanetta.it`.
+- [x] Campo "sito web" della scheda verso `https://dermozanetta.it/`.
       Il sito punta già alla scheda: fatti tutti e due i collegamenti, Google capisce
       che sono la stessa attività.
-- [ ] Foto vere dello studio caricate sulla scheda (vanno bene le stesse del sito)
+- [x] Descrizione e servizi (vedi sopra)
+- [ ] **Foto vere** dello studio caricate sulla scheda, con la categoria giusta:
+      ingresso → *Esterno*; sala visite e sala d'attesa → *Interno*; ritratto →
+      *Team*. Copertina: la sala visite. **Meglio gli originali del telefono**: le foto
+      del sito sono compresse e `salaAttesa` e `studio` stanno sotto i 720 px che Google
+      consiglia. Niente pazienti riconoscibili. Da controllare anche la foto grande in
+      testa alla scheda (un neo con dermatoscopio): se non è dello studio, va tolta
 - [ ] **Chiedere le recensioni ai pazienti soddisfatti.** È il fattore singolo più
-      pesante di tutti. Il link diretto per lasciarne una si genera dalla scheda stessa.
+      pesante di tutti: oggi sono 11. Il link diretto per lasciarne una si genera dalla
+      scheda stessa (pulsante "Chiedi recensioni"). Si chiede con gentilezza, senza
+      offrire niente in cambio
 
 ---
 
@@ -71,8 +118,10 @@ nessuno dei tre vince.
     la cosa migliore che possa succedere a questo sito.
   - Se è scaduto davvero: chiederne la rimozione dall'indice
     (Search Console, menu Rimozioni).
-- [ ] **`dermatologa-dott-ssa-roberta-zanetta.jimdosite.com`** — sito Jimdo ancora
-      online. Spegnerlo, oppure lasciare una pagina sola che rimanda qui.
+- [ ] **`dermatologa-dott-ssa-roberta-zanetta.jimdosite.com`** — il 18 ottobre
+      risponde "pagina inesistente" (404): sembra già spento. Google lo toglie da solo
+      in qualche settimana. Ricontrollare fra un mese; se compare ancora, chiederne la
+      rimozione da Search Console.
 
 ---
 
@@ -85,7 +134,13 @@ settimana invece di qualche giorno.
 - [ ] [search.google.com/search-console](https://search.google.com/search-console/)
       → aggiungi proprietà → **Dominio** → `dermozanetta.it`
 - [ ] Verificare con il record **TXT** che Google fornisce, da aggiungere sul pannello
-      di chi gestisce il dominio
+      di chi gestisce il dominio. **Il dominio è su IONOS** (nameserver `ui-dns`):
+      *Domini e SSL → dermozanetta.it → DNS → Aggiungi record → TXT*, nome `@`, valore
+      la scritta `google-site-verification=…`. **Non modificare il record TXT `v=spf1…`
+      già presente**: serve alla posta dello studio. Usare l'account Google dello
+      studio (`dermozanetta@gmail.com`), così la proprietà resta dello studio. Il
+      registrante del dominio è `zanettaroberta@yahoo.it`: se l'accesso a IONOS è suo,
+      serve il suo aiuto per entrare
 - [ ] Menu **Sitemap**: inviare `sitemap.xml`
 - [ ] Dopo qualche giorno, nel menu **Pagine**, controllare che tutte e quattro le
       pagine risultino indicizzate
@@ -132,6 +187,10 @@ Da aggiungere anche dove ancora non c'è:
 - [ ] [ProMater](https://www.centropromater.it/ambulatorio-polispecialistico/dermatologia/):
       la pagina esiste già, chiedere che il nome della dottoressa colleghi a
       `dermozanetta.it`
+- [ ] Lo stesso per gli altri tre centri delle collaborazioni (**ASL VCO**,
+      **Biochemical**, **Centro Medico Major**): se citano la dottoressa sul loro
+      sito, chiedere un collegamento a `dermozanetta.it`. Sono link locali e
+      autorevoli, i più preziosi per un sito nuovo
 
 Man mano che una scheda viene corretta **va aggiunta in `contenuti.json`**, campo
 `studio.profili`: finisce nei dati strutturati come `sameAs` e dice a Google che
