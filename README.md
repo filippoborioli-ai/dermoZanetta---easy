@@ -24,7 +24,7 @@ La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la sec
 [Provarlo in locale](#provare-il-sito-in-locale) · [Aggiungere un campo modificabile](#aggiungere-un-campo-modificabile) ·
 [Dati obbligatori per legge](#dati-obbligatori-per-legge) · [Colori](#colori) ·
 [Se qualcosa va storto](#se-qualcosa-va-storto) · [Pubblicare](#pubblicare) ·
-[Dominio](#dominio-personalizzato) · [Privacy](#privacy) ·
+[Dominio](#dominio-personalizzato) · [Privacy](#privacy) · [Sicurezza](#sicurezza) ·
 [Farsi trovare su Google](#farsi-trovare-su-google-per-dermatologo-verbania) · [Cosa manca ancora](SEO-DA-FARE.md)
 
 ---
@@ -115,6 +115,7 @@ generazione**: modificarlo a mano è tempo perso.
 | `CREDENZIALI.md` | email e password del pannello. **Non è su GitHub**, sta in `.gitignore` |
 | `SEO-DA-FARE.md` | la lista delle cose ancora da fare per farsi trovare su Google, con le caselle da spuntare |
 | `.github/workflows/genera.yml` | rilancia `genera.mjs` a ogni modifica dei contenuti |
+| `.github/dependabot.yml` | una volta al mese propone di aggiornare le azioni usate da `genera.yml` (vedi [Sicurezza](#sicurezza)) |
 
 Il vecchio `dati.js` non c'è più: le prestazioni sono dentro `contenuti.json`
 insieme a tutto il resto.
@@ -131,8 +132,9 @@ Va aperta **dal sito vero**, non con doppio clic sul file: aperta da disco il
 browser non le lascia leggere i contenuti (è una regola di sicurezza dei browser,
 non un difetto della pagina).
 
-Non è collegata da nessun menu e `robots.txt` la tiene fuori da Google: la si
-raggiunge solo scrivendo l'indirizzo.
+Non è collegata da nessun menu e il tag `noindex` la tiene fuori da Google: la si
+raggiunge solo scrivendo l'indirizzo. (Non è bloccata in `robots.txt` apposta:
+Google rispetta il `noindex` solo se può leggere la pagina.)
 
 ### Che cosa si può cambiare
 
@@ -341,16 +343,24 @@ ven 10–17, sabato e domenica chiuso.
 ## Colori
 
 Tutti in cima a `style.css`, nel blocco `:root`. Cambiare `--terracotta` cambia
-bottoni e dettagli in tutto il sito. Il pannello usa la stessa palette
+filetti e dettagli in tutto il sito; i bottoni pieni usano `--terracotta-forte`. Il pannello usa la stessa palette
 (`admin.css`), così le due cose restano visivamente parenti.
 
 ```css
 --crema:      #fdf8f3;  /* sfondo pagina */
 --sabbia:     #f4e9de;  /* sfondo sezioni alternate */
---terracotta: #c0764e;  /* bottoni, filetti, accenti */
---salvia:     #7f8f7a;  /* eyebrow, pallini elenco */
+--terracotta: #c0764e;  /* filetti, bordi, accenti */
+--terracotta-forte: #ab633d;  /* fondo dei bottoni con la scritta bianca */
+--salvia:     #7f8f7a;  /* pallini elenco */
+--salvia-testo: #606d5c;  /* eyebrow ed etichette piccole */
 --bruno:      #3b2e27;  /* testo principale, footer */
 ```
+
+Le due varianti "forte" e "testo" esistono per la leggibilità: con la scritta
+bianca la terracotta chiara arriva a un contrasto di 3,5:1, la salvia chiara sullo
+sfondo sabbia a 2,9:1; il minimo per un testo di quella misura è 4,5:1 (WCAG AA).
+Se si cambia un colore, conviene ricontrollarlo con un qualsiasi "contrast
+checker" prima di pubblicare.
 
 ---
 
@@ -364,6 +374,8 @@ bottoni e dettagli in tutto il sito. Il pannello usa la stessa palette
 | **"Qualcun altro ha modificato il sito nel frattempo"** | il file è cambiato da un altro dispositivo. Ricarica il pannello e rifai la modifica: è la protezione che impedisce di cancellare il lavoro altrui |
 | `genera.mjs` dice **"chiave assente in contenuti.json"** | in una pagina c'è un segnaposto `<!--T:...-->` che punta a una voce che non esiste. O si aggiunge la voce, o si toglie il segnaposto |
 | `genera.mjs` dice **"blocco sconosciuto"** | c'è un `<!--B:nome-->` senza la funzione corrispondente in `BLOCCHI`, dentro `genera.mjs` |
+| Su GitHub compare una **richiesta di Dependabot** ("Bump actions/…") | è l'aggiornamento mensile delle azioni di `genera.yml`. Si apre, si controlla che i controlli siano verdi e si preme *Merge*. Lasciarla lì non rompe niente subito, ma a lungo andare le azioni invecchiano |
+| Il pannello dice **"Il link a Google Maps deve iniziare con https://"** (o simile) | un indirizzo, un'email o un logo senza immagine non passano il controllo: va corretto il campo indicato, poi si ripubblica |
 | Ho sostituito una foto e **si vede ancora la vecchia** | non dovrebbe succedere: il pannello dà un nome nuovo a ogni foto. Se capita, è la cache del browser: `Ctrl+F5` |
 
 Le vecchie foto sostituite restano in `img/`: non danno fastidio (un file che
@@ -382,6 +394,10 @@ a mano.
 - [ ] **Record DNS inseriti dal registrar** e *Enforce HTTPS* attivo su GitHub
   (vedi "Dominio personalizzato")
 - [x] Foto vere al posto dei segnaposto in `img/`
+- [ ] **Ritratto della prima schermata più definito.** Quello di oggi è 596×335,
+  orizzontale, e viene mostrato in un riquadro verticale: sui telefoni e sugli
+  schermi nitidi esce sgranato. Serve una foto verticale di almeno 800×1070
+  (una qualsiasi fatta col telefono va bene): si carica dal pannello, sezione Foto
 - [ ] Cliccati tutti i bottoni "Chiama" e il link a Google Maps
 - [ ] Provato il sito da telefono: il menu si apre, il bottone "Chiama" in basso funziona
 - [ ] Provato **anche il pannello** da telefono: è pensato per funzionare lì
@@ -397,6 +413,11 @@ branch `main`, cartella `/ (root)`).
 Attenzione a una cosa sola: l'azione automatica in `.github/workflows/genera.yml`
 ha bisogno del permesso di scrivere. Se mai smettesse di funzionare, controlla
 Settings → Actions → General → *Workflow permissions* → **Read and write**.
+
+L'azione gira su Node 24, con `actions/checkout` e `actions/setup-node` alla
+versione 7, fissate all'impronta del commit (vedi [Sicurezza](#sicurezza)).
+Se due pubblicazioni arrivano a pochi secondi l'una dall'altra, la seconda aspetta
+che la prima finisca e riparte dall'ultima versione del sito.
 
 ---
 
@@ -455,6 +476,45 @@ di scadenza arrivano lì.
 
 ---
 
+## Sicurezza
+
+Un sito statico ha poco da attaccare: niente database, niente server, niente
+moduli. I punti delicati sono due, il pannello e l'azione di GitHub, e sono
+protetti così.
+
+**Regole di sicurezza delle pagine (Content-Security-Policy).** Ogni pagina ha in
+testa un `<meta http-equiv="Content-Security-Policy">`: il browser carica ed
+esegue solo file di `dermozanetta.it`. Il pannello ha la sua, più stretta: oltre al
+sito può parlare solo con `api.github.com`, quindi anche se qualcosa di estraneo
+finisse nella pagina non potrebbe spedire altrove il codice di collegamento.
+**Se un domani si aggiunge una risorsa esterna** (mappa incorporata, font di
+Google, statistiche) va aggiunta lì, altrimenti il browser la blocca — e va
+riscritta anche l'informativa privacy (vedi sotto).
+
+**Il pannello non si lascia incorniciare** dentro un altro sito (difesa dal
+*clickjacking*: una pagina finta sopra il pannello che fa cliccare "Salva e
+pubblica" a tradimento).
+
+**Controlli prima di pubblicare** (`controlla()` in `genera-nucleo.js`, usata sia
+dal pannello sia dall'azione): i link devono iniziare con `https://`, l'email deve
+avere una forma valida, ogni foto e ogni logo deve avere un'immagine dentro `img/`.
+Un dato sbagliato si ferma lì invece di finire online.
+
+**L'azione di GitHub** usa le azioni ufficiali fissate all'impronta del commit,
+non all'etichetta "v7": se qualcuno manomettesse l'etichetta, qui non cambierebbe
+niente. Dependabot propone gli aggiornamenti una volta al mese. Il token del
+pannello non può toccare le azioni: per modificare `.github/workflows/` serve un
+permesso (*Workflows*) che il token, creato come spiegato sopra, non ha.
+
+**Cosa GitHub Pages non permette.** Le intestazioni HTTP di sicurezza
+(`Strict-Transport-Security`, `X-Frame-Options`, `X-Content-Type-Options`) si
+impostano dal server, e GitHub Pages non lo consente. Quello che si poteva fare
+dalla pagina è stato fatto; l'HTTPS è comunque forzato (`http://` rimanda a
+`https://`). Per avere anche quelle intestazioni bisognerebbe mettere davanti al
+sito un servizio come Cloudflare (gratuito): non serve per un sito come questo.
+
+---
+
 ## Privacy
 
 `privacy.html` è l'informativa del sito, collegata dal footer di tutte le pagine.
@@ -467,7 +527,9 @@ da far accettare.
 > (`<iframe>`), un **modulo di contatto**, il **pulsante WhatsApp** o i **font di
 > Google caricati da internet**, l'informativa diventa falsa e serve anche il banner
 > dei cookie. In quel caso `privacy.html` va riscritta: nel file c'è un commento
-> HTML che lo ricorda, proprio sopra il testo.
+> HTML che lo ricorda, proprio sopra il testo. E va aggiornata la
+> Content-Security-Policy in testa alle pagine, altrimenti il browser blocca la
+> risorsa nuova (vedi [Sicurezza](#sicurezza)).
 
 Il pannello non salva niente su nessun server: le modifiche non ancora pubblicate
 restano nel browser di chi le scrive, e da lì vanno solo a GitHub. Non cambia

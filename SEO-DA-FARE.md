@@ -1,7 +1,9 @@
 # Cosa manca per farsi trovare su Google
 
 Controllo fatto il **21 settembre 2026** sul sito online (`https://dermozanetta.it`)
-e su cosa esce cercando il nome della dottoressa.
+e su cosa esce cercando il nome della dottoressa. Parte tecnica ricontrollata il
+**18 ottobre 2026** (Lighthouse: accessibilità, buone pratiche e SEO a 100 su tutte
+le pagine).
 
 **In una riga:** il sito è a posto. Quello che manca sta quasi tutto **fuori dal
 sito** — la scheda Google, le schede delle directory, e due vecchi siti ancora in
@@ -25,6 +27,12 @@ Niente da fare qui. Elencato solo perché non venga rifatto due volte.
 - [x] Pagina `404.html` che tiene il visitatore dentro il sito
 - [x] Foto della prima schermata caricata per prima (`preload` e `fetchpriority`)
 - [x] Titoli con "Dermatologa a Verbania" e "Prestazioni dermatologiche a Verbania" in testa
+- [x] Contrasto dei colori sufficiente per tutti i testi (bottoni, occhielli)
+- [x] Pannello `admin.html` fuori da Google con `noindex`, non più bloccato in
+      `robots.txt` (bloccarlo impediva a Google di leggere il `noindex`)
+
+> Le voci del 21 settembre (briciole di pane, pagina 404, foto caricata per prima)
+> erano rimaste solo sul computer: sono andate online il 18 ottobre.
 
 ---
 
