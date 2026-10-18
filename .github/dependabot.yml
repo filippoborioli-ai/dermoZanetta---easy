@@ -1,0 +1,14 @@
+# Tiene aggiornate le azioni usate in .github/workflows/genera.yml.
+# Una volta al mese, se esce una versione nuova, apre una richiesta di
+# modifica (pull request) da approvare con un clic: senza, le versioni
+# fissate invecchiano finche' GitHub smette di supportarle (com'e'
+# successo a Node 20, tolto dai server di GitHub a settembre 2026).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      azioni:
+        patterns: ['*']

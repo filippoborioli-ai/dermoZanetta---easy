@@ -12,20 +12,37 @@ on:
     paths:
       - contenuti.json
       - genera.mjs
+      - genera-nucleo.js
+      - '*.html'
   # Si puo' anche lanciare a mano, dalla scheda Actions di GitHub.
   workflow_dispatch:
 
 permissions:
   contents: write
 
+# Due pubblicazioni ravvicinate dal pannello: la seconda aspetta che la
+# prima abbia finito, invece di scrivere le pagine nello stesso momento.
+concurrency:
+  group: genera-pagine
+  cancel-in-progress: false
+
 jobs:
   genera:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Le azioni sono fissate alla versione esatta (l'impronta del
+      # commit, non solo "v7"): se qualcuno manomettesse un'etichetta,
+      # qui non cambierebbe niente. Le aggiorna Dependabot (.github/dependabot.yml).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version: '20'
+          # L'ultima versione del ramo, non quella del push che ha avviato
+          # l'azione: se nel frattempo e' arrivata un'altra pubblicazione,
+          # si parte da quella e il push finale non viene rifiutato.
+          ref: main
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
 
       - run: node genera.mjs
 
@@ -39,4 +56,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html prestazioni.html domande.html privacy.html 404.html sitemap.xml
           git commit -m "Rigenerate le pagine da contenuti.json"
-          git push
+          # Se fra la lettura e la scrittura e' arrivato un altro push, ci si
+          # rimette in coda a quello e si riprova una volta.
+          git push || (git pull --rebase origin main && git push)
