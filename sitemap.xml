@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Aggiornare <lastmod> a ogni modifica di contenuto (formato AAAA-MM-GG). -->
+<!-- La scrive genera.mjs: elenca le pagine online. Non modificarla a mano. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://dermozanetta.it/</loc>

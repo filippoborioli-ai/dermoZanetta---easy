@@ -77,6 +77,18 @@
       "dove": "contatti"
     }
   ],
+  "pagine": [
+    {
+      "id": "pagina-prestazioni",
+      "tipo": "prestazioni",
+      "visibile": true
+    },
+    {
+      "id": "pagina-domande",
+      "tipo": "domande",
+      "visibile": true
+    }
+  ],
   "chiSono": {
     "eyebrow": "Il medico",
     "titolo": "Chi ti visita",

@@ -81,15 +81,79 @@
     libera: { nome: 'Sezione libera', titolo: function (c, s) { return s.titolo } }
   }
 
-  /* Le pagine a cui puo' portare una voce del menu, oltre alle sezioni. */
-  var PAGINE_MENU = [
-    { dove: 'prestazioni.html', nome: 'Pagina Prestazioni' },
-    { dove: 'domande.html', nome: 'Pagina Domande' }
-  ]
+  /* ---------------------------------------------------------------
+     LE PAGINE
+     ---------------------------------------------------------------
+     Oltre alla home (sempre) e alla privacy (sempre: l'informativa e'
+     obbligatoria), contenuti.json ha un elenco "pagine":
+       - Prestazioni e Domande, di serie: si possono nascondere. Una
+         pagina nascosta non e' piu' collegata da nessuna parte del sito,
+         esce dalla sitemap e dice a Google di non indicizzarla; il file
+         resta, perche' e' anche lo stampo da cui si rigenera.
+       - pagine "libere": si aggiungono e si tolgono dal pannello. Le
+         scrive genera.mjs partendo da modello-pagina.html; una pagina
+         libera tolta o nascosta viene cancellata dal sito.
+     ------------------------------------------------------------ */
+  var PAGINE_DI_SERIE = {
+    prestazioni: { file: 'prestazioni.html', nome: 'Prestazioni', pannello: 'prestazioni' },
+    domande: { file: 'domande.html', nome: 'Domande frequenti', pannello: 'domande' }
+  }
 
-  /* Com'era il sito prima che sezioni e menu diventassero modificabili:
-     un contenuti.json senza questi campi (o una bozza vecchia rimasta
-     nel browser) si comporta esattamente come prima. */
+  /* Nomi di file che una pagina libera non puo' prendere. */
+  var FILE_RISERVATI = ['index.html', 'prestazioni.html', 'domande.html', 'privacy.html', '404.html', 'admin.html', 'modello-pagina.html']
+
+  /* Toglie accenti e maiuscole. Stessa normalizzazione della ricerca
+     in script.js, cosi' "psoriasi" trova anche "Psoriàsi". */
+  function normalizza(t) {
+    return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  }
+
+  /* "Ferie d'agosto" -> "ferie-d-agosto": l'indirizzo di una sezione
+     (dermozanetta.it/#ferie-d-agosto) o di una pagina (tariffe.html). */
+  function slug(t, riserva) {
+    return normalizza(t).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '') || riserva
+  }
+
+  /* Il file di una pagina. Quello di una pagina libera si decide alla
+     prima pubblicazione (dal titolo) e poi resta fisso: cambiare il
+     titolo non deve rompere i link gia' dati in giro. */
+  function fileDellaPagina(p) {
+    if (PAGINE_DI_SERIE[p.tipo]) return PAGINE_DI_SERIE[p.tipo].file
+    return p.file || slug(p.titolo, 'pagina') + '.html'
+  }
+
+  /* Assegna il file alle pagine libere che non l'hanno ancora, senza
+     scontrarsi con i nomi gia' presi. La chiama il pannello prima di
+     pubblicare. */
+  function fissaFilePagine(c) {
+    var presi = FILE_RISERVATI.concat(c.pagine.filter(function (p) { return p.file }).map(function (p) { return p.file }))
+    c.pagine.forEach(function (p) {
+      if (p.tipo !== 'libera' || p.file) return
+      var base = slug(p.titolo, 'pagina'), file = base + '.html', n = 2
+      while (presi.indexOf(file) !== -1) file = base + '-' + n++ + '.html'
+      p.file = file
+      presi.push(file)
+    })
+    return c
+  }
+
+  /* Le pagine a cui puo' portare una voce del menu, oltre alle sezioni:
+     di serie (il valore e' il nome del file, come prima) e libere (il
+     valore e' l'identificativo, che resta lo stesso se cambia il file). */
+  function sceltePagine(c) {
+    return c.pagine.map(function (p) {
+      var serie = PAGINE_DI_SERIE[p.tipo]
+      return {
+        dove: serie ? serie.file : p.id,
+        nome: 'Pagina ' + (serie ? serie.nome : (pieno(p.titolo) ? p.titolo : 'senza titolo')),
+        visibile: p.visibile !== false
+      }
+    })
+  }
+
+  /* Com'era il sito prima che sezioni, menu e pagine diventassero
+     modificabili: un contenuti.json senza questi campi (o una bozza
+     vecchia rimasta nel browser) si comporta esattamente come prima. */
   var SEZIONI_DI_SERIE = ['medico', 'prestazioni', 'studio', 'collaborazioni', 'contatti']
   var MENU_DI_SERIE = [
     { testo: 'Il medico', dove: 'medico' },
@@ -99,20 +163,37 @@
     { testo: 'Dove siamo', dove: 'contatti' }
   ]
 
+  function completaSezioneLibera(s) {
+    if (s.visibile === undefined) s.visibile = true
+    if (s.eyebrow == null) s.eyebrow = ''
+    if (s.titolo == null) s.titolo = ''
+    if (!Array.isArray(s.paragrafi)) s.paragrafi = []
+    if (!Array.isArray(s.punti)) s.punti = []
+    if (!s.foto) s.foto = { file: '', alt: '' }
+    if (!s.bottone) s.bottone = { testo: '', link: '' }
+    return s
+  }
+
   function completa(c) {
     if (!Array.isArray(c.sezioniHome)) {
       c.sezioniHome = SEZIONI_DI_SERIE.map(function (t) { return { id: t, tipo: t, visibile: true } })
     }
     if (!Array.isArray(c.menu)) c.menu = JSON.parse(JSON.stringify(MENU_DI_SERIE))
+    if (!Array.isArray(c.pagine)) {
+      // "pagina-…": l'identificativo non deve confondersi con quello della
+      // sezione omonima della home (la sezione "prestazioni" e' un'altra cosa).
+      c.pagine = Object.keys(PAGINE_DI_SERIE).map(function (t) { return { id: 'pagina-' + t, tipo: t, visibile: true } })
+    }
     c.sezioniHome.forEach(function (s) {
-      if (s.visibile === undefined) s.visibile = true
-      if (s.tipo !== 'libera') return
-      if (s.eyebrow == null) s.eyebrow = ''
-      if (s.titolo == null) s.titolo = ''
-      if (!Array.isArray(s.paragrafi)) s.paragrafi = []
-      if (!Array.isArray(s.punti)) s.punti = []
-      if (!s.foto) s.foto = { file: '', alt: '' }
-      if (!s.bottone) s.bottone = { testo: '', link: '' }
+      if (s.tipo === 'libera') completaSezioneLibera(s)
+      else if (s.visibile === undefined) s.visibile = true
+    })
+    c.pagine.forEach(function (p) {
+      if (p.visibile === undefined) p.visibile = true
+      if (p.tipo !== 'libera') return
+      ;['file', 'titolo', 'eyebrow', 'lead', 'seoTitolo', 'seoDescrizione'].forEach(function (k) { if (p[k] == null) p[k] = '' })
+      if (!Array.isArray(p.sezioni)) p.sezioni = []
+      p.sezioni.forEach(completaSezioneLibera)
     })
     return c
   }
@@ -120,14 +201,28 @@
   /* C'e' qualcosa di scritto? Spazi e a capo non contano. */
   function pieno(t) { return String(t == null ? '' : t).trim() !== '' }
 
-  /* Dove puo' portare il bottone di una sezione libera. */
-  function eLinkBottone(l) {
-    l = String(l || '').trim()
-    return ['{telefono}', '{mappa}', '{email}', 'index.html', 'prestazioni.html', 'domande.html', 'privacy.html'].indexOf(l) !== -1 ||
-      /^https:\/\/[^\s"'<>]+$/.test(l)
+  /* Una pagina e' online? Home e privacy sempre; le altre se visibili. */
+  function paginaOnline(c, file) {
+    if (file === 'index.html' || file === 'privacy.html') return true
+    return c.pagine.some(function (p) { return p.visibile !== false && fileDellaPagina(p) === file })
   }
 
-  function creaMotore(c) {
+  /* Dove puo' portare il bottone di una sezione libera: le scorciatoie
+     dei dati dello studio, una pagina del sito che c'e', o un indirizzo
+     https. */
+  function eLinkBottone(l, c) {
+    l = String(l || '').trim()
+    if (['{telefono}', '{mappa}', '{email}'].indexOf(l) !== -1) return true
+    if (/\.html$/.test(l)) return paginaOnline(c, l)
+    return /^https:\/\/[^\s"'<>]+$/.test(l)
+  }
+
+  /* idPagina: solo per le pagine libere, che si costruiscono tutte dallo
+     stesso stampo (modello-pagina.html) e qui scoprono quale sono. */
+  function creaMotore(c, idPagina) {
+
+    var PAGINA = idPagina ? c.pagine.filter(function (p) { return p.id === idPagina })[0] : null
+    if (idPagina && !PAGINA) throw new Error('pagina sconosciuta: ' + idPagina)
 
     /* ---------------------------------------------------------------
        Utilita'
@@ -166,12 +261,6 @@
       return v
     }
 
-    /* Toglie accenti e maiuscole. Stessa normalizzazione della ricerca
-       in script.js, cosi' "psoriasi" trova anche "Psoriàsi". */
-    function normalizza(t) {
-      return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-    }
-
     function indirizzoCompleto() {
       return c.studio.via + ', ' + c.studio.cap + ' ' + c.studio.citta + ' (' + c.studio.provincia + ')'
     }
@@ -190,25 +279,27 @@
       return righe.filter(function (r) { return r }).join('\n')
     }
 
-    /* "Ferie d'agosto" -> "ferie-d-agosto": l'indirizzo della sezione
-       nella pagina (dermozanetta.it/#ferie-d-agosto). */
-    function slug(t) {
-      return normalizza(t).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '') || 'sezione'
+    /* L'indirizzo di ogni sezione dentro la sua pagina (#ferie-d-agosto).
+       Mai uno gia' usato: una sezione libera intitolata "Contatti" non
+       puo' prendere #contatti, che e' gia' di un'altra. */
+    function calcolaAncore(sezioni) {
+      var giaUsate = ['top', 'nav', 'navtoggle', 'main', 'elencoprestazioni', 'year', 'cerca', 'esitoricerca']
+        .concat(Object.keys(TIPI_SEZIONE).map(function (t) { return TIPI_SEZIONE[t].ancora }).filter(Boolean))
+      var ancore = {}
+      sezioni.forEach(function (s) {
+        if (s.tipo !== 'libera') { ancore[s.id] = TIPI_SEZIONE[s.tipo].ancora; return }
+        var base = slug(s.titolo, 'sezione'), ancora = base, n = 2
+        while (giaUsate.indexOf(ancora) !== -1) ancora = base + '-' + n++
+        giaUsate.push(ancora)
+        ancore[s.id] = ancora
+      })
+      return ancore
     }
 
-    /* Indirizzi gia' usati nella pagina: una sezione libera intitolata
-       "Contatti" non puo' prendere #contatti, che e' gia' di un'altra. */
-    var GIA_USATE = ['top', 'nav', 'navtoggle', 'main', 'elencoprestazioni', 'year', 'cerca', 'esitoricerca']
-      .concat(Object.keys(TIPI_SEZIONE).map(function (t) { return TIPI_SEZIONE[t].ancora }).filter(Boolean))
+    var ANCORE = calcolaAncore(c.sezioniHome)
+    var ANCORE_PAGINA = PAGINA ? calcolaAncore(PAGINA.sezioni) : {}
 
-    var ANCORE = {}
-    c.sezioniHome.forEach(function (s) {
-      if (s.tipo !== 'libera') { ANCORE[s.id] = TIPI_SEZIONE[s.tipo].ancora; return }
-      var base = slug(s.titolo), ancora = base, n = 2
-      while (GIA_USATE.indexOf(ancora) !== -1) ancora = base + '-' + n++
-      GIA_USATE.push(ancora)
-      ANCORE[s.id] = ancora
-    })
+    function online(file) { return paginaOnline(c, file) }
 
     /* Le sezioni che finiscono davvero in pagina: visibili, e con
        qualcosa dentro (Collaborazioni senza nessun logo non si mostra). */
@@ -230,13 +321,20 @@
     function vociMenu(paginaCorrente) {
       var prefisso = paginaCorrente ? 'index.html' : ''
       return (c.menu || []).map(function (v) {
-        var href
-        if (/\.html$/.test(v.dove)) href = v.dove
-        else if (mostrata(v.dove)) href = prefisso + '#' + ANCORE[v.dove]
-        else return null
-        var corrente = v.dove === paginaCorrente ? ' aria-current="page"' : ''
+        var href = hrefVoce(v.dove, prefisso)
+        if (!href) return null
+        var corrente = href === paginaCorrente ? ' aria-current="page"' : ''
         return '<a href="' + esc(href) + '"' + corrente + '>' + esc(v.testo) + '</a>'
       }).filter(Boolean).join('\n')
+    }
+
+    /* Dove porta una voce del menu, o null se porta a qualcosa che oggi
+       non si vede (sezione o pagina nascosta). */
+    function hrefVoce(dove, prefisso) {
+      if (/\.html$/.test(dove)) return online(dove) ? dove : null
+      if (mostrata(dove)) return prefisso + '#' + ANCORE[dove]
+      var pagina = c.pagine.filter(function (p) { return p.id === dove && p.visibile !== false })[0]
+      return pagina ? fileDellaPagina(pagina) : null
     }
 
     /* Il bottone di una sezione libera: {telefono}, {mappa} ed {email}
@@ -289,12 +387,15 @@
           '      </div>',
           '      <div class="carosello-barra" hidden><span></span></div>',
           '    </div>',
-          '    <noscript>',
-          '      <p class="section-intro center">',
-          '        <a href="prestazioni.html">Apri l&rsquo;elenco completo delle prestazioni</a>.',
-          '      </p>',
-          '    </noscript>',
-          pieno(p.bottone) && unisci([
+          // Il rimando alla pagina Prestazioni c'e' solo se la pagina c'e'.
+          online('prestazioni.html') && unisci([
+            '    <noscript>',
+            '      <p class="section-intro center">',
+            '        <a href="prestazioni.html">Apri l&rsquo;elenco completo delle prestazioni</a>.',
+            '      </p>',
+            '    </noscript>'
+          ]),
+          online('prestazioni.html') && pieno(p.bottone) && unisci([
             '    <p class="center azione-sezione">',
             '      <a class="btn btn-ghost" href="prestazioni.html">' + esc(p.bottone) + '</a>',
             '    </p>'
@@ -367,11 +468,11 @@
       /* Sezione libera: titolo obbligatorio, tutto il resto facoltativo.
          E' testo, non HTML: si puo' scrivere {telefono} e diventa il
          numero cliccabile, nient'altro. */
-      libera: function (alt, s) {
+      libera: function (alt, s, ancore) {
         var punti = s.punti.filter(pieno)
         var bottone = pieno(s.bottone.testo) && pieno(s.bottone.link) && linkBottone(s.bottone.link)
         return unisci([
-          '<section id="' + esc(ANCORE[s.id]) + '" class="section' + alt + '">',
+          '<section id="' + esc((ancore || ANCORE)[s.id]) + '" class="section' + alt + '">',
           '  <div class="wrap narrow">',
           pieno(s.eyebrow) && '    <p class="eyebrow">' + esc(s.eyebrow) + '</p>',
           '    <h2>' + esc(s.titolo) + '</h2>',
@@ -522,6 +623,9 @@
          Prestazioni se il carosello e' nascosto. */
       hero: function () {
         var h = c.home
+        // "Vedi le prestazioni": al carosello, o alla pagina se il carosello
+        // e' nascosto; se mancano tutti e due, il bottone non c'e'.
+        var destinazionePrestazioni = mostrata('prestazioni') ? '#prestazioni' : online('prestazioni.html') ? 'prestazioni.html' : null
         return unisci([
           '<section class="hero">',
           '  <div class="wrap hero-inner">',
@@ -531,7 +635,7 @@
           pieno(h.lead) && '      <p class="lead">' + conTelefono(h.lead) + '</p>',
           '      <div class="hero-cta">',
           rientra(BLOCCHI.bottoneChiama(), 8),
-          pieno(h.bottonePrestazioni) && '        <a class="btn btn-ghost" href="' + (mostrata('prestazioni') ? '#prestazioni' : 'prestazioni.html') + '">' + esc(h.bottonePrestazioni) + '</a>',
+          pieno(h.bottonePrestazioni) && destinazionePrestazioni && '        <a class="btn btn-ghost" href="' + destinazionePrestazioni + '">' + esc(h.bottonePrestazioni) + '</a>',
           // Porta alla scheda Google dello studio: mappa, indicazioni e recensioni.
           pieno(h.bottoneMappa) && '        <a class="btn btn-ghost" data-c="mappa" href="' + esc(c.studio.mappaUrl) + '" target="_blank" rel="noopener">' + esc(h.bottoneMappa) + '</a>',
           '      </div>',
@@ -556,7 +660,91 @@
       /* Menu in alto: <!--B:menu--> nella home, dove le sezioni sono
          ancore (#studio); <!--B:menu:pagina.html--> nelle altre, dove
          portano alla home (index.html#studio). */
-      menu: function (paginaCorrente) { return vociMenu(paginaCorrente || '') },
+      menu: function (paginaCorrente) {
+        return vociMenu(paginaCorrente || (PAGINA ? fileDellaPagina(PAGINA) : ''))
+      },
+
+      /* <!--B:robots:prestazioni.html--> in testa a una pagina di serie:
+         vuoto finche' la pagina e' visibile; se e' nascosta dice a Google
+         di toglierla dai risultati (il file resta: e' lo stampo). */
+      robots: function (file) {
+        return online(file) ? '' : '<meta name="robots" content="noindex, follow">'
+      },
+
+      /* I rimandi della pagina 404: solo verso pagine che ci sono. Gli
+         indirizzi partono da "/" perche' la 404 si vede a qualunque
+         profondita' (/vecchia/pagina/). */
+      link404: function () {
+        var voci = ['<li><a href="/">Home</a> — chi visita, dove si trova lo studio, gli orari</li>']
+        if (online('prestazioni.html')) voci.push('<li><a href="/prestazioni.html">Prestazioni</a> — di cosa si occupa lo studio</li>')
+        if (online('domande.html')) voci.push('<li><a href="/domande.html">Domande frequenti</a> — cosa portare, quanto dura</li>')
+        c.pagine.forEach(function (p) {
+          if (p.tipo === 'libera' && p.visibile !== false) {
+            voci.push('<li><a href="/' + esc(fileDellaPagina(p)) + '">' + esc(p.titolo) + '</a></li>')
+          }
+        })
+        return voci.join('\n')
+      },
+
+      /* ---- Pagine libere (stampo: modello-pagina.html) ---- */
+
+      /* Lo stampo, aperto da solo, e' una pagina vuota con "noindex":
+         nelle copie vere il divieto sparisce. */
+      robotsPagina: function () { return '' },
+
+      /* Titolo, descrizione e anteprima social. Se il titolo per Google o
+         la descrizione restano vuoti, si ricavano dal titolo e dal testo
+         di apertura della pagina. */
+      testaPagina: function () {
+        var p = PAGINA
+        var base = c.studio.sito.replace(/\/$/, '')
+        var indirizzo = base + '/' + fileDellaPagina(p)
+        var titolo = pieno(p.seoTitolo) ? p.seoTitolo : p.titolo + ' — ' + c.studio.nomeMedico + ', dermatologa a ' + c.studio.citta
+        var descrizione = pieno(p.seoDescrizione) ? p.seoDescrizione : p.lead
+        return unisci([
+          '<title>' + esc(titolo) + '</title>',
+          pieno(descrizione) && '<meta name="description" content="' + esc(descrizione) + '">',
+          '<link rel="canonical" href="' + esc(indirizzo) + '">',
+          '<meta property="og:title" content="' + esc(titolo) + '">',
+          pieno(descrizione) && '<meta property="og:description" content="' + esc(descrizione) + '">',
+          '<meta property="og:type" content="website">',
+          '<meta property="og:locale" content="it_IT">',
+          '<meta property="og:site_name" content="' + esc(c.studio.nomeMedico) + ' — Dermatologa">',
+          '<meta property="og:url" content="' + esc(indirizzo) + '">',
+          '<meta property="og:image" content="' + esc(base + '/' + c.foto.dottoressa.file) + '">',
+          '<meta property="og:image:alt" content="' + esc(c.foto.dottoressa.alt) + '">',
+          '<meta name="twitter:card" content="summary_large_image">'
+        ])
+      },
+
+      /* Testata della pagina, le sue sezioni e la striscia "Prenotare e'
+         una telefonata" in fondo. Gli sfondi si alternano partendo chiari
+         sotto la testata; la striscia finale prende sempre il colore
+         opposto all'ultima sezione. */
+      contenutoPagina: function () {
+        var p = PAGINA
+        var sezioni = p.sezioni.filter(function (s) { return s.visibile !== false })
+        var altFinale = sezioni.length % 2 === 1 || sezioni.length === 0
+        return unisci([
+          '<section class="page-head">',
+          '  <div class="wrap">',
+          pieno(p.eyebrow) && '    <p class="eyebrow">' + esc(p.eyebrow) + '</p>',
+          '    <h1>' + esc(p.titolo) + '</h1>',
+          pieno(p.lead) && '    <p class="lead">' + conTelefono(p.lead) + '</p>',
+          '  </div>',
+          '</section>',
+          sezioni.map(function (s, i) {
+            return SEZIONE.libera(i % 2 === 1 ? ' section-alt' : '', s, ANCORE_PAGINA)
+          }).join('\n'),
+          '<section class="section' + (altFinale ? ' section-alt' : '') + '">',
+          '  <div class="wrap cta-strip">',
+          rientra(BLOCCHI.ctaFinale(), 4),
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      briciolePagina: function () { return briciole(fileDellaPagina(PAGINA), PAGINA.titolo) },
 
       orari: function () {
         return c.orari.map(function (o) {
@@ -858,17 +1046,15 @@
       if (!eFileImmagine(l.file)) problemi.push('Il logo n. ' + (i + 1) + ' non ha un’immagine: caricala o togli il logo.')
     })
 
-    /* Sezioni della home: una sezione visibile deve avere almeno il
-       titolo (e' la sua intestazione, per chi legge e per Google). */
-    var esistenti = {}
-    c.sezioniHome.forEach(function (s, i) {
+    /* Una sezione visibile deve avere almeno il titolo (e' la sua
+       intestazione, per chi legge e per Google). Per le libere si
+       controllano anche foto e bottone. "dove" dice in che pagina sta,
+       per i messaggi. */
+    function controllaSezione(s, dove) {
       var tipo = TIPI_SEZIONE[s.tipo]
-      if (!tipo) { problemi.push('La sezione n. ' + (i + 1) + ' della home è di un tipo sconosciuto: ' + s.tipo + '.'); return }
-      if (esistenti[s.id]) problemi.push('Due sezioni della home hanno lo stesso identificativo (' + s.id + ').')
-      esistenti[s.id] = true
       if (s.visibile === false) return
       var titolo = tipo.titolo(c, s)
-      var nome = s.tipo === 'libera' ? '“' + (pieno(titolo) ? titolo : 'senza titolo') + '”' : '“' + tipo.nome + '”'
+      var nome = (s.tipo === 'libera' ? '“' + (pieno(titolo) ? titolo : 'senza titolo') + '”' : '“' + tipo.nome + '”') + dove
       if (!pieno(titolo)) problemi.push('La sezione ' + nome + ' è visibile ma non ha il titolo: scrivilo, oppure nascondi la sezione.')
       if (s.tipo !== 'libera') return
       if (pieno(s.foto.file)) {
@@ -877,31 +1063,64 @@
       }
       if (pieno(s.bottone.testo) !== pieno(s.bottone.link)) {
         problemi.push('Il bottone della sezione ' + nome + ' ha il testo ma non dove porta, o viceversa.')
-      } else if (pieno(s.bottone.link) && !eLinkBottone(s.bottone.link)) {
-        problemi.push('Il bottone della sezione ' + nome + ' porta a un indirizzo che non va bene: usa {telefono}, {mappa}, {email}, il nome di una pagina del sito (es. prestazioni.html) o un indirizzo che inizia con https://')
+      } else if (pieno(s.bottone.link) && !eLinkBottone(s.bottone.link, c)) {
+        problemi.push('Il bottone della sezione ' + nome + ' porta a un indirizzo che non va bene: usa {telefono}, {mappa}, {email}, il nome di una pagina del sito che c’è (es. prestazioni.html) o un indirizzo che inizia con https://')
       }
+    }
+
+    var esistenti = {}
+    c.sezioniHome.forEach(function (s, i) {
+      if (!TIPI_SEZIONE[s.tipo]) { problemi.push('La sezione n. ' + (i + 1) + ' della home è di un tipo sconosciuto: ' + s.tipo + '.'); return }
+      if (esistenti[s.id]) problemi.push('Due sezioni della home hanno lo stesso identificativo (' + s.id + ').')
+      esistenti[s.id] = true
+      controllaSezione(s, '')
+    })
+
+    /* Pagine: le libere hanno bisogno di un titolo e di un nome di file
+       loro, che non sia gia' di un'altra pagina. */
+    var fileUsati = {}
+    c.pagine.forEach(function (p, i) {
+      if (!PAGINE_DI_SERIE[p.tipo] && p.tipo !== 'libera') { problemi.push('La pagina n. ' + (i + 1) + ' è di un tipo sconosciuto: ' + p.tipo + '.'); return }
+      if (esistenti[p.id]) problemi.push('Due elementi del sito hanno lo stesso identificativo (' + p.id + ').')
+      esistenti[p.id] = true
+      if (p.tipo !== 'libera') return
+      var nome = '“' + (pieno(p.titolo) ? p.titolo : 'senza titolo') + '”'
+      var file = fileDellaPagina(p)
+      if (!/^[a-z0-9][a-z0-9-]*\.html$/.test(file)) problemi.push('Il nome del file della pagina ' + nome + ' non va bene: solo lettere minuscole, numeri e trattini, e “.html” in fondo.')
+      if (FILE_RISERVATI.indexOf(file) !== -1) problemi.push('La pagina ' + nome + ' non può chiamarsi ' + file + ': quel nome è già di una pagina del sito.')
+      if (fileUsati[file]) problemi.push('Due pagine hanno lo stesso indirizzo (' + file + '): cambia il titolo o il nome del file di una delle due.')
+      fileUsati[file] = true
+      if (p.visibile === false) return
+      if (!pieno(p.titolo)) problemi.push('Una pagina visibile non ha il titolo: scrivilo, oppure nascondi la pagina.')
+      p.sezioni.forEach(function (s) { controllaSezione(s, ' (pagina ' + nome + ')') })
     })
 
     /* Menu in alto: ogni voce deve avere un testo e portare a qualcosa
-       che esiste. A una sezione nascosta si', semplicemente non compare. */
-    var pagine = PAGINE_MENU.map(function (p) { return p.dove })
+       che esiste. A una sezione o pagina nascosta si', semplicemente non
+       compare. */
+    var pagineDiSerie = Object.keys(PAGINE_DI_SERIE).map(function (t) { return PAGINE_DI_SERIE[t].file })
     c.menu.forEach(function (v, i) {
       if (!pieno(v.testo)) problemi.push('La voce n. ' + (i + 1) + ' del menu non ha il testo.')
-      if (pagine.indexOf(v.dove) === -1 && !esistenti[v.dove]) {
-        problemi.push('La voce “' + (v.testo || i + 1) + '” del menu porta a una sezione che non esiste più.')
+      if (pagineDiSerie.indexOf(v.dove) === -1 && !esistenti[v.dove]) {
+        problemi.push('La voce “' + (v.testo || i + 1) + '” del menu porta a una sezione o una pagina che non esiste più.')
       }
     })
     return problemi
   }
 
   globale.NucleoGenera = {
-    generaPagina: function (html, contenuti) { return creaMotore(completa(contenuti)).generaPagina(html) },
+    // idPagina solo per le pagine libere, generate da modello-pagina.html.
+    generaPagina: function (html, contenuti, idPagina) { return creaMotore(completa(contenuti), idPagina).generaPagina(html) },
     controlla: controlla,
-    // Per il pannello: riempie i campi nuovi in un contenuti.json vecchio,
-    // e sa quali tipi di sezione e quali pagine esistono.
+    // Per il pannello e per genera.mjs: riempie i campi nuovi in un
+    // contenuti.json vecchio, e sa quali sezioni e quali pagine esistono.
     completa: completa,
+    fissaFilePagine: fissaFilePagine,
+    fileDellaPagina: fileDellaPagina,
+    sceltePagine: sceltePagine,
+    paginaOnline: paginaOnline,
     TIPI_SEZIONE: TIPI_SEZIONE,
-    PAGINE_MENU: PAGINE_MENU
+    PAGINE_DI_SERIE: PAGINE_DI_SERIE
   }
 
 })(typeof globalThis !== 'undefined' ? globalThis : this)

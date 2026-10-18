@@ -712,6 +712,14 @@
     },
 
     {
+      id: 'pagine',
+      nome: 'Pagine',
+      titolo: 'Le pagine del sito',
+      guida: 'Oltre alla home: Prestazioni e Domande si possono nascondere; se ne possono aggiungere di nuove (per esempio “Tariffe” o “Come arrivare”), fatte di sezioni come quelle della home. La Privacy c’è sempre.',
+      disegna: disegnaPagine
+    },
+
+    {
       id: 'medico',
       nome: 'Il medico',
       titolo: 'Sezione “Chi ti visita”',
@@ -949,7 +957,9 @@
           voce.appendChild(creaElemento('p', 'aiuto', 'Nascosta: non compare sul sito, ma i testi restano salvati. Spunta "Visibile" per rimetterla.'))
         }
         if (s.tipo === 'libera') {
-          corpoSezioneLibera(voce, s, i, nome)
+          corpoSezioneLibera(voce, s, 'sezioniHome.' + i, function (titolo) {
+            nome.textContent = (i + 1) + '. Sezione libera: ' + (titolo.trim() || 'senza titolo')
+          }, ridisegna)
         } else if (TIPI[s.tipo]) {
           var rimando = creaElemento('p', 'aiuto')
           rimando.appendChild(document.createTextNode('I testi di questa sezione si modificano in '))
@@ -964,56 +974,12 @@
       })
     }
 
-    /* Una sezione libera: titolo obbligatorio, tutto il resto facoltativo. */
-    function corpoSezioneLibera(voce, s, i, nome) {
-      var p = 'sezioniHome.' + i
-      voce.appendChild(campoTesto(p + '.eyebrow', { etichetta: 'Riga piccola sopra il titolo', facoltativo: true }))
-      voce.appendChild(campoTesto(p + '.titolo', {
-        etichetta: 'Titolo',
-        aiuto: 'Obbligatorio. Diventa anche l’indirizzo della sezione, per il menu.',
-        dopo: function (valore) { nome.textContent = (i + 1) + '. Sezione libera: ' + (valore.trim() || 'senza titolo') }
-      }))
-      voce.appendChild(creaElemento('h4', null, 'Paragrafi'))
-      voce.appendChild(creaElemento('p', 'aiuto', 'Scrivendo {telefono} compare il numero dello studio, cliccabile.'))
-      voce.appendChild(elencoTesti(p + '.paragrafi', { nomeVoce: 'Paragrafo', tipo: 'area' }))
-      voce.appendChild(creaElemento('h4', null, 'Elenco con la spunta'))
-      voce.appendChild(creaElemento('p', 'aiuto', 'Facoltativo: senza punti, l’elenco non compare.'))
-      voce.appendChild(elencoTesti(p + '.punti', { nomeVoce: 'Punto', tipo: 'testo' }))
-
-      voce.appendChild(creaElemento('h4', null, 'Foto'))
-      voce.appendChild(rigaImmagine({
-        titolo: 'Foto della sezione',
-        nota: 'Facoltativa. Compare sotto il testo, in formato orizzontale.',
-        percorsoFile: p + '.foto.file',
-        percorsoAlt: p + '.foto.alt',
-        nomeFile: 'sezione',
-        cartella: 'img/',
-        formato: 'image/jpeg',
-        maxLato: 1600,
-        qualita: 0.82,
-        testoTogli: 'Togli la foto',
-        togli: s.foto.file ? function () {
-          s.foto.file = ''
-          s.foto.alt = ''
-          segnaModificato()
-          ridisegna()
-        } : null
-      }))
-
-      voce.appendChild(creaElemento('h4', null, 'Bottone'))
-      voce.appendChild(campoTesto(p + '.bottone.testo', { etichetta: 'Testo del bottone', facoltativo: true }))
-      voce.appendChild(campoTesto(p + '.bottone.link', {
-        etichetta: 'Dove porta il bottone',
-        aiuto: 'Scrivi {telefono} per chiamare lo studio, {mappa} per la scheda Google, {email} per scrivere; prestazioni.html o domande.html per una pagina del sito; oppure un indirizzo completo che inizia con https://'
-      }))
-    }
-
     /* --- Il menu in alto --- */
     function sceltePerMenu() {
       return dati.sezioniHome.map(function (s) {
         return { valore: s.id, testo: 'Sezione: ' + nomeSezione(s).replace(/^Sezione libera: /, '') + (s.visibile === false ? ' (nascosta)' : '') }
-      }).concat(NucleoGenera.PAGINE_MENU.map(function (pag) {
-        return { valore: pag.dove, testo: pag.nome }
+      }).concat(NucleoGenera.sceltePagine(dati).map(function (pag) {
+        return { valore: pag.dove, testo: pag.nome + (pag.visibile ? '' : ' (nascosta)') }
       }))
     }
 
@@ -1061,6 +1027,262 @@
     box.appendChild(aggiungiVoce)
 
     ridisegna()
+  }
+
+  /* Una sezione libera, nella home o in una pagina: titolo obbligatorio,
+     tutto il resto facoltativo. "p" e' dove sta in contenuti.json
+     (sezioniHome.3, pagine.2.sezioni.0…). */
+  function corpoSezioneLibera(voce, s, p, aggiornaNome, ridisegna) {
+    voce.appendChild(campoTesto(p + '.eyebrow', { etichetta: 'Riga piccola sopra il titolo', facoltativo: true }))
+    voce.appendChild(campoTesto(p + '.titolo', {
+      etichetta: 'Titolo',
+      aiuto: 'Obbligatorio. Diventa anche l’indirizzo della sezione, per il menu.',
+      dopo: aggiornaNome
+    }))
+    voce.appendChild(creaElemento('h4', null, 'Paragrafi'))
+    voce.appendChild(creaElemento('p', 'aiuto', 'Scrivendo {telefono} compare il numero dello studio, cliccabile.'))
+    voce.appendChild(elencoTesti(p + '.paragrafi', { nomeVoce: 'Paragrafo', tipo: 'area' }))
+    voce.appendChild(creaElemento('h4', null, 'Elenco con la spunta'))
+    voce.appendChild(creaElemento('p', 'aiuto', 'Facoltativo: senza punti, l’elenco non compare.'))
+    voce.appendChild(elencoTesti(p + '.punti', { nomeVoce: 'Punto', tipo: 'testo' }))
+
+    voce.appendChild(creaElemento('h4', null, 'Foto'))
+    voce.appendChild(rigaImmagine({
+      titolo: 'Foto della sezione',
+      nota: 'Facoltativa. Compare sotto il testo, in formato orizzontale.',
+      percorsoFile: p + '.foto.file',
+      percorsoAlt: p + '.foto.alt',
+      nomeFile: 'sezione',
+      cartella: 'img/',
+      formato: 'image/jpeg',
+      maxLato: 1600,
+      qualita: 0.82,
+      testoTogli: 'Togli la foto',
+      togli: s.foto.file ? function () {
+        s.foto.file = ''
+        s.foto.alt = ''
+        segnaModificato()
+        ridisegna()
+      } : null
+    }))
+
+    voce.appendChild(creaElemento('h4', null, 'Bottone'))
+    voce.appendChild(campoTesto(p + '.bottone.testo', { etichetta: 'Testo del bottone', facoltativo: true }))
+    voce.appendChild(campoTesto(p + '.bottone.link', {
+      etichetta: 'Dove porta il bottone',
+      aiuto: 'Scrivi {telefono} per chiamare lo studio, {mappa} per la scheda Google, {email} per scrivere; il nome di una pagina del sito (prestazioni.html, domande.html, o una pagina aggiunta: lo trovi nella sezione “Pagine”); oppure un indirizzo completo che inizia con https://'
+    }))
+  }
+
+  /* -------------------------------------------------------------------
+     Pagine
+     ----------------------------------------------------------------
+     Prestazioni e Domande si possono nascondere (non cancellare: i
+     testi restano). La Privacy c'e' sempre. Le pagine libere si
+     aggiungono e si tolgono, e sono fatte di sezioni libere.
+     ---------------------------------------------------------------- */
+  function nuovaPaginaLibera() {
+    return {
+      id: 'pagina-' + Date.now().toString(36),
+      tipo: 'libera',
+      visibile: true,
+      file: '',
+      titolo: 'Nuova pagina',
+      eyebrow: '',
+      lead: '',
+      seoTitolo: '',
+      seoDescrizione: '',
+      sezioni: [nuovaSezioneLibera()]
+    }
+  }
+
+  function indirizzoPagina(p) {
+    return dati.studio.sito.replace(/\/$/, '') + '/' + NucleoGenera.fileDellaPagina(p)
+  }
+
+  function disegnaPagine(box) {
+    var lista = creaElemento('div')
+    box.appendChild(lista)
+
+    function ridisegna() {
+      lista.textContent = ''
+      dati.pagine.forEach(function (p, i) { lista.appendChild(schedaPagina(p, i)) })
+
+      // La privacy non e' nell'elenco: c'e' sempre, la si mostra per chiarezza.
+      var privacy = creaElemento('div', 'voce')
+      var testa = creaElemento('div', 'voce-testa')
+      testa.appendChild(creaElemento('span', 'numero', 'Privacy'))
+      privacy.appendChild(testa)
+      privacy.appendChild(creaElemento('p', 'aiuto', 'C’è sempre: l’informativa privacy è obbligatoria per legge e non si può nascondere.'))
+      lista.appendChild(privacy)
+      aggiornaSceltaAnteprima()
+    }
+
+    function schedaPagina(p, i) {
+      var serie = NucleoGenera.PAGINE_DI_SERIE[p.tipo]
+      var voce = creaElemento('div', 'voce' + (p.visibile === false ? ' nascosta' : ''))
+      var testa = creaElemento('div', 'voce-testa')
+      var nome = creaElemento('span', 'numero', serie ? serie.nome : 'Pagina: ' + (p.titolo.trim() || 'senza titolo'))
+      testa.appendChild(nome)
+
+      var spunta = creaElemento('label', 'spunta')
+      var casella = document.createElement('input')
+      casella.type = 'checkbox'
+      casella.checked = p.visibile !== false
+      casella.addEventListener('change', function () {
+        p.visibile = casella.checked
+        segnaModificato()
+        ridisegna()
+      })
+      spunta.appendChild(casella)
+      spunta.appendChild(document.createTextNode(' Visibile'))
+      testa.appendChild(spunta)
+
+      if (!serie) {
+        var vedi = creaElemento('button', 'btn btn-ghost btn-sm', 'Anteprima')
+        vedi.type = 'button'
+        vedi.title = 'Mostra questa pagina nell’anteprima'
+        vedi.addEventListener('click', function () { mostraNellAnteprima('pagina:' + p.id) })
+        testa.appendChild(vedi)
+
+        var togli = creaElemento('button', 'btn btn-rosso btn-sm', 'Togli')
+        togli.type = 'button'
+        togli.addEventListener('click', function () {
+          if (!confirm('Vuoi togliere la pagina “' + (p.titolo || 'senza titolo') + '” dal sito?\n\nVa via anche la sua voce nel menu, se c’era. Sparisce solo dopo che premi "Salva e pubblica".')) return
+          dati.pagine.splice(i, 1)
+          dati.menu = dati.menu.filter(function (v) { return v.dove !== p.id })
+          segnaModificato()
+          ridisegna()
+        })
+        testa.appendChild(togli)
+      }
+      voce.appendChild(testa)
+
+      if (p.visibile === false) {
+        voce.appendChild(creaElemento('p', 'aiuto', serie
+          ? 'Nascosta: non è più collegata dal sito e Google la toglie dai risultati. I testi restano salvati: spunta "Visibile" per rimetterla.'
+          : 'Nascosta: non è online, ma i testi restano salvati. Spunta "Visibile" per rimetterla.'))
+      }
+
+      if (serie) {
+        var rimando = creaElemento('p', 'aiuto')
+        rimando.appendChild(document.createTextNode('I testi di questa pagina si modificano in '))
+        var vai = creaElemento('button', 'link', '“' + nomePannello(serie.pannello) + '”')
+        vai.type = 'button'
+        vai.addEventListener('click', function () { apriSezione(serie.pannello) })
+        rimando.appendChild(vai)
+        rimando.appendChild(document.createTextNode('.'))
+        voce.appendChild(rimando)
+        return voce
+      }
+
+      corpoPaginaLibera(voce, p, 'pagine.' + i, nome, ridisegna)
+      return voce
+    }
+
+    var aggiungi = creaElemento('button', 'btn btn-ghost', '+ Aggiungi una pagina')
+    aggiungi.type = 'button'
+    aggiungi.addEventListener('click', function () {
+      var nuova = nuovaPaginaLibera()
+      dati.pagine.push(nuova)
+      // Una pagina che nessun link raggiunge non serve a niente: la voce
+      // di menu si aggiunge da sola (si toglie o si sposta in "Sezioni e menu").
+      dati.menu.push({ testo: nuova.titolo, dove: nuova.id })
+      segnaModificato()
+      ridisegna()
+      lista.children[dati.pagine.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' })
+      mostraNellAnteprima('pagina:' + nuova.id)
+    })
+    box.appendChild(aggiungi)
+    box.appendChild(creaElemento('p', 'aiuto', 'Ogni pagina nuova compare anche nel menu in alto: la voce si cambia, si sposta o si toglie in “Sezioni e menu”.'))
+
+    ridisegna()
+  }
+
+  /* Una pagina libera: testata, sezioni, e come appare su Google. */
+  function corpoPaginaLibera(voce, p, percorso, nome, ridisegna) {
+    var titoloPrima = p.titolo
+    var indirizzo = creaElemento('p', 'aiuto')
+    function scriviIndirizzo() {
+      indirizzo.textContent = p.file
+        ? 'Indirizzo: ' + indirizzoPagina(p)
+        : 'Indirizzo (si fissa alla prima pubblicazione, poi non cambia più anche se cambi il titolo): ' + indirizzoPagina(p)
+    }
+    scriviIndirizzo()
+    voce.appendChild(campoTesto(percorso + '.titolo', {
+      etichetta: 'Titolo della pagina',
+      aiuto: 'Obbligatorio. È la frase grande in cima alla pagina.',
+      dopo: function (valore) {
+        nome.textContent = 'Pagina: ' + (valore.trim() || 'senza titolo')
+        // La voce di menu che aveva lo stesso titolo lo segue.
+        dati.menu.forEach(function (v) { if (v.dove === p.id && v.testo === titoloPrima) v.testo = valore })
+        titoloPrima = valore
+        // ...e anche il suo nome nell'elenco sopra l'anteprima.
+        p.titolo = valore
+        aggiornaSceltaAnteprima()
+        scriviIndirizzo()
+      }
+    }))
+    voce.appendChild(campoTesto(percorso + '.eyebrow', { etichetta: 'Riga piccola sopra il titolo', facoltativo: true }))
+    voce.appendChild(campoTesto(percorso + '.lead', { etichetta: 'Testo di apertura', tipo: 'area', facoltativo: true, aiuto: 'Una o due frasi sotto il titolo.' }))
+
+    voce.appendChild(indirizzo)
+
+    voce.appendChild(creaElemento('h4', null, 'Sezioni della pagina'))
+    voce.appendChild(elencoSezioniPagina(percorso + '.sezioni'))
+
+    voce.appendChild(avanzate([
+      campoTesto(percorso + '.seoTitolo', { etichetta: 'Titolo su Google', consigliato: 60, aiuto: 'Se lo lasci vuoto: il titolo della pagina, seguito dal nome della dottoressa.' }),
+      campoTesto(percorso + '.seoDescrizione', { etichetta: 'Descrizione su Google', tipo: 'area', consigliato: 160, aiuto: 'Se la lasci vuota si usa il testo di apertura.' }),
+      campoTesto(percorso + '.file', { etichetta: 'Nome del file', aiuto: 'Per esempio tariffe.html: solo lettere minuscole, numeri e trattini. Cambiarlo rompe i link già dati in giro: meglio non toccarlo dopo la prima pubblicazione.' })
+    ]))
+  }
+
+  /* Le sezioni di una pagina libera: si aggiungono, si spostano, si
+     nascondono, si tolgono. */
+  function elencoSezioniPagina(percorso) {
+    var box = creaElemento('div')
+    var lista = creaElemento('div')
+    box.appendChild(lista)
+
+    function ridisegna() {
+      lista.textContent = ''
+      var sezioni = leggi(percorso)
+      sezioni.forEach(function (s, i) {
+        var voce = creaElemento('div', 'voce' + (s.visibile === false ? ' nascosta' : ''))
+        var testa = creaElemento('div', 'voce-testa')
+        var nome = creaElemento('span', 'numero', 'Sezione ' + (i + 1) + ': ' + (s.titolo.trim() || 'senza titolo'))
+        testa.appendChild(nome)
+        var spunta = creaElemento('label', 'spunta')
+        var casella = document.createElement('input')
+        casella.type = 'checkbox'
+        casella.checked = s.visibile !== false
+        casella.addEventListener('change', function () { s.visibile = casella.checked; segnaModificato(); ridisegna() })
+        spunta.appendChild(casella)
+        spunta.appendChild(document.createTextNode(' Visibile'))
+        testa.appendChild(spunta)
+        testa.appendChild(bottoneSposta(percorso, i, -1, ridisegna))
+        testa.appendChild(bottoneSposta(percorso, i, +1, ridisegna))
+        testa.appendChild(bottoneTogli(percorso, i, ridisegna, 'Sezione', s.titolo))
+        voce.appendChild(testa)
+        corpoSezioneLibera(voce, s, percorso + '.' + i, function (titolo) {
+          nome.textContent = 'Sezione ' + (i + 1) + ': ' + (titolo.trim() || 'senza titolo')
+        }, ridisegna)
+        lista.appendChild(voce)
+      })
+      if (!sezioni.length) lista.appendChild(creaElemento('p', 'aiuto', 'Nessuna sezione: la pagina avrà solo il titolo e il testo di apertura.'))
+    }
+
+    var aggiungi = creaElemento('button', 'btn btn-ghost', '+ Aggiungi una sezione alla pagina')
+    aggiungi.type = 'button'
+    aggiungi.addEventListener('click', function () {
+      leggi(percorso).push(nuovaSezioneLibera())
+      segnaModificato()
+      ridisegna()
+    })
+    box.appendChild(aggiungi)
+    ridisegna()
+    return box
   }
 
   function nomePannello(id) {
@@ -1253,8 +1475,35 @@
     orari: ['index.html', '#contatti'],
     contatti: ['index.html', '#contatti'],
     domande: ['domande.html', ''],
+    pagine: ['prestazioni.html', ''],   // o la prima pagina aggiunta, se c'e' (vedi puntaAnteprimaSu)
     google: ['index.html', ''],
     pubblicazione: null           // niente anteprima: non si tocca il sito
+  }
+
+  /* L'elenco "pagina da vedere" sopra l'anteprima: le pagine fisse piu'
+     quelle aggiunte dal pannello, che si costruiscono dallo stampo
+     (valore "pagina:<id>"). */
+  function aggiornaSceltaAnteprima() {
+    var scelta = $('anteprimaPagina')
+    var voci = [['index.html', 'Home'], ['prestazioni.html', 'Prestazioni'], ['domande.html', 'Domande'], ['privacy.html', 'Privacy']]
+    dati.pagine.forEach(function (p) {
+      if (p.tipo === 'libera') voci.push(['pagina:' + p.id, p.titolo.trim() || 'Pagina senza titolo'])
+    })
+    scelta.textContent = ''
+    voci.forEach(function (v) {
+      var o = creaElemento('option', null, v[1])
+      o.value = v[0]
+      scelta.appendChild(o)
+    })
+    if (!voci.some(function (v) { return v[0] === paginaAnteprima })) paginaAnteprima = 'index.html'
+    scelta.value = paginaAnteprima
+  }
+
+  function mostraNellAnteprima(pagina) {
+    paginaAnteprima = pagina
+    destinazioneAnteprima = ''
+    aggiornaSceltaAnteprima()
+    if (anteprimaAperta) disegnaAnteprima()
   }
 
   async function scaricaPagina(nome) {
@@ -1303,8 +1552,16 @@
     var telaio = $('anteprimaTelaio')
     var nota = $('anteprimaNota')
     try {
-      var sorgente = await scaricaPagina(paginaAnteprima)
-      var html = perIlTelaio(conFotoNuove(NucleoGenera.generaPagina(sorgente, dati)))
+      // Una pagina aggiunta dal pannello non ha ancora un file suo: la si
+      // costruisce dallo stampo, come fara' genera.mjs alla pubblicazione.
+      var idPagina = paginaAnteprima.indexOf('pagina:') === 0 ? paginaAnteprima.slice(7) : null
+      if (idPagina && !dati.pagine.some(function (p) { return p.id === idPagina })) {
+        idPagina = null
+        paginaAnteprima = 'index.html'
+        aggiornaSceltaAnteprima()
+      }
+      var sorgente = await scaricaPagina(idPagina ? 'modello-pagina.html' : paginaAnteprima)
+      var html = perIlTelaio(conFotoNuove(NucleoGenera.generaPagina(sorgente, dati, idPagina)))
 
       // Dove si stava guardando, per non ripartire da capo ogni volta.
       var altezza = 0
@@ -1355,7 +1612,11 @@
     }
     paginaAnteprima = dove[0]
     destinazioneAnteprima = dove[1]
-    $('anteprimaPagina').value = paginaAnteprima
+    if (idSezione === 'pagine') {
+      var prima = dati.pagine.filter(function (p) { return p.tipo === 'libera' })[0]
+      if (prima) paginaAnteprima = 'pagina:' + prima.id
+    }
+    aggiornaSceltaAnteprima()
     if (anteprimaAperta) disegnaAnteprima()
   }
 
@@ -1380,6 +1641,14 @@
   var PARTE_DELLA_HOME = { medico: 'medico', prestazioni: 'prestazioni', foto: 'studio', collaborazioni: 'collaborazioni', orari: 'contatti', contatti: 'contatti' }
 
   function avvisoSeNascosta(idPannello, box) {
+    // Le pagine Prestazioni e Domande, se nascoste in "Pagine".
+    var pagina = dati.pagine.filter(function (p) {
+      var serie = NucleoGenera.PAGINE_DI_SERIE[p.tipo]
+      return serie && serie.pannello === idPannello && p.visibile === false
+    })[0]
+    if (pagina) {
+      box.appendChild(creaElemento('p', 'avviso avviso-info', 'La pagina “' + NucleoGenera.PAGINE_DI_SERIE[pagina.tipo].nome + '” è nascosta: questi testi restano salvati ma la pagina non è collegata dal sito. Si rimette visibile da “Pagine”.'))
+    }
     var tipo = PARTE_DELLA_HOME[idPannello]
     var sezione = tipo && dati.sezioniHome.filter(function (s) { return s.tipo === tipo })[0]
     if (!sezione || sezione.visibile !== false) return
@@ -1473,6 +1742,9 @@
     /* Stessi controlli che fa il generatore prima di riscrivere le
        pagine: se qualcosa non va, meglio dirlo adesso che far fallire
        l'azione su GitHub a cose gia' pubblicate. */
+    // Le pagine nuove prendono il loro indirizzo adesso, dal titolo, e
+    // poi lo tengono anche se il titolo cambia.
+    NucleoGenera.fissaFilePagine(dati)
     var problemi = NucleoGenera.controlla(dati)
     if (problemi.length) {
       alert('Prima di pubblicare c’è da sistemare:\n\n• ' + problemi.join('\n• '))

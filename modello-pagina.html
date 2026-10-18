@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- PAGINA-LIBERA
+     Stampo delle pagine aggiunte dal pannello ("Pagine"). genera.mjs ne
+     fa una copia per ogni pagina libera (per esempio tariffe.html) e ci
+     scrive dentro i testi di contenuti.json. Le copie non vanno
+     modificate a mano: si riscrivono a ogni pubblicazione, e quelle che
+     portano la scritta qui sopra vengono cancellate quando la pagina
+     viene tolta o nascosta dal pannello. Per cambiare l'aspetto di tutte
+     le pagine libere si modifica questo file. -->
+<!-- Sicurezza: la pagina carica solo file di questo sito. Se un domani
+     si aggiunge qualcosa da fuori (mappa incorporata, font di Google,
+     statistiche) va aggiunto qui, oltre che nell'informativa privacy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- Lo stampo e' online (serve all'anteprima del pannello) ma e' una
+     pagina vuota: fuori da Google. Nelle copie vere questo divieto lo
+     toglie il generatore. -->
+<!--B:robotsPagina-->
+<meta name="robots" content="noindex, nofollow">
+<!--/B-->
+<!--B:testaPagina-->
+<!--/B-->
+<meta name="theme-color" content="#c0764e">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Vai al contenuto</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <!--B:marchio-->
+      <!--/B-->
+    </a>
+
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="nav" class="nav">
+      <!-- Voci del menu: si cambiano dal pannello, sezione "Sezioni e menu". -->
+      <!--B:menu-->
+      <!--/B-->
+      <!--B:bottoneChiamaPiccolo-->
+      <!--/B-->
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!--B:contenutoPagina-->
+  <!--/B-->
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <!--B:footer-->
+    <!--/B-->
+  </div>
+</footer>
+
+<!--B:bottoneChiamaFisso-->
+<!--/B-->
+
+<!--B:briciolePagina-->
+<!--/B-->
+
+<script src="script.js" defer></script>
+</body>
+</html>

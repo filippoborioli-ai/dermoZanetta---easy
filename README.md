@@ -16,7 +16,8 @@ JavaScript, nessuna libreria, nessun server.
 |---|---|
 | testi, orari, foto, prestazioni, domande, dati dello studio | **[il pannello](#il-pannello-di-modifica)**, `admin.html` — nessun codice |
 | sezioni della home (mostrare, nascondere, spostare, aggiungerne di nuove) e menu in alto | **il pannello**, sezione "Sezioni e menu" — nessun codice |
-| colori, tipografia, layout, pagine nuove, un *tipo* di sezione nuovo | il codice: `style.css`, `genera-nucleo.js` e i file `.html` |
+| pagine: nascondere Prestazioni o Domande, aggiungerne o toglierne di nuove | **il pannello**, sezione "Pagine" — nessun codice |
+| colori, tipografia, layout, un *tipo* di sezione nuovo | il codice: `style.css`, `genera-nucleo.js` e i file `.html` |
 
 La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la seconda.
 
@@ -110,7 +111,8 @@ generazione**: modificarlo a mano è tempo perso.
 | `contenuti.json` | **tutti i testi del sito.** È la sorgente di tutto |
 | `admin.html` · `admin.js` · `admin.css` | il pannello di modifica: modulo, anteprima, accesso, pubblicazione |
 | `genera-nucleo.js` | **la regola** con cui i testi diventano pagina. Usato sia da `genera.mjs` sia dall'anteprima |
-| `genera.mjs` | apre i file, applica la regola, li salva, aggiorna la sitemap |
+| `genera.mjs` | apre i file, applica la regola, li salva; crea e cancella le pagine libere; riscrive la sitemap |
+| `modello-pagina.html` | lo stampo delle pagine aggiunte dal pannello: ogni pagina libera (es. `tariffe.html`) è una copia riempita da `genera.mjs`. Per cambiare l'aspetto di tutte si modifica questo |
 | `cambia-password.mjs` | cambia la password del pannello |
 | `index.html` | home: prima schermata e sezioni (di serie: medico, prestazioni in evidenza, studio, collaborazioni, contatti). Quali e in che ordine lo decide il pannello |
 | `prestazioni.html` | elenco completo delle prestazioni, con la ricerca |
@@ -119,7 +121,7 @@ generazione**: modificarlo a mano è tempo perso.
 | `style.css` | colori, tipografia, layout del sito |
 | `script.js` | menu mobile, barra del carosello, ricerca delle prestazioni |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
-| `sitemap.xml` · `robots.txt` | elenco delle pagine per i motori di ricerca |
+| `sitemap.xml` · `robots.txt` | elenco delle pagine per i motori di ricerca. La sitemap la riscrive `genera.mjs` con le sole pagine online |
 | `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
 | `CNAME` | una riga sola: il dominio `dermozanetta.it`. Serve a GitHub Pages |
 | `CREDENZIALI.md` | email e password del pannello. **Non è su GitHub**, sta in `.gitignore` |
@@ -153,6 +155,7 @@ Google rispetta il `noindex` solo se può leggere la pagina.)
 | **Studio e contatti** | nome, telefono, email, indirizzo, P. IVA, Ordine, link a Google Maps. Cambiati qui, cambiano **ovunque**: footer di tutte le pagine, bottoni "Chiama", privacy, dati per Google |
 | **Prima schermata** | la frase grande della home, quella sotto, i bottoni |
 | **Sezioni e menu** | quali sezioni compaiono nella home e in che ordine; sezioni nuove ("libere": titolo, paragrafi, elenco, foto, bottone); le voci del menu in alto. Vedi [Sezioni della home](#sezioni-della-home) |
+| **Pagine** | nascondere Prestazioni o Domande; aggiungere pagine nuove fatte di sezioni libere, o toglierle. Vedi [Pagine](#pagine) |
 | **Il medico** | la sezione "Chi ti visita": paragrafi ed elenco con la spunta |
 | **Prestazioni** | aggiungi, togli, riordina, riscrivi. Compaiono da sole sia nel carosello della home sia nella pagina Prestazioni |
 | **Foto** | le quattro foto del sito. Si scelgono dal telefono o dal computer: vengono rimpicciolite e compresse dal pannello, non serve preparare niente |
@@ -198,6 +201,34 @@ nessun logo non compare.
 Restano **sempre**: la prima schermata con il titolo grande (è la frase più
 importante per Google) e il fondo pagina con P. IVA, Ordine e avviso, che sono
 obbligatori per legge.
+
+### Pagine
+
+Dal pannello, sezione **Pagine**:
+
+- **Prestazioni e Domande** si possono **nascondere**: la pagina non è più collegata
+  da nessuna parte del sito (menu, bottoni della home, pagina 404), esce dalla
+  sitemap e dice a Google di toglierla dai risultati (`noindex`). I testi restano
+  salvati: si rimette visibile con una spunta. Il file resta sul sito, perché è
+  anche lo stampo da cui la pagina si rigenera.
+- **Pagine nuove** ("libere"): titolo, riga piccola, testo di apertura e un elenco
+  di sezioni, le stesse delle sezioni libere della home. Utili per tariffe, come
+  arrivare, convenzioni, curriculum. Ogni pagina nuova riceve da sola una voce nel
+  menu in alto (si toglie o si sposta in "Sezioni e menu") e finisce nella
+  sitemap. Titolo e descrizione per Google sono nelle impostazioni avanzate; se
+  restano vuoti si ricavano dal titolo e dal testo di apertura.
+- **L'indirizzo** di una pagina nuova (`dermozanetta.it/tariffe.html`) si fissa alla
+  prima pubblicazione, dal titolo, e poi non cambia più anche se il titolo cambia:
+  i link già dati in giro restano buoni. Si può cambiare a mano, ma di solito non
+  conviene.
+- Una pagina nuova **tolta o nascosta** viene cancellata dal sito alla
+  pubblicazione. `genera.mjs` cancella solo i file che portano il segno
+  `PAGINA-LIBERA` dello stampo: le altre pagine non le può toccare.
+- La **Privacy** c'è sempre: l'informativa è obbligatoria.
+
+Il bottone di una sezione libera può portare anche a una pagina nuova, scrivendo
+il suo nome di file (`tariffe.html`). Se la pagina viene poi nascosta o tolta, il
+pannello ferma la pubblicazione e chiede di sistemare il bottone.
 
 ### L'anteprima
 
@@ -294,8 +325,9 @@ Di proposito. Sono cose che si toccano di rado e che, sbagliate, rompono il sito
 o lo mettono fuori legge:
 
 - **colori, tipografia, layout** → `style.css`;
-- **struttura delle pagine diverse dalla home** (Prestazioni, Domande, Privacy) → i
-  file `.html`. Le sezioni della home invece si gestiscono dal pannello;
+- **struttura interna di Prestazioni, Domande e Privacy** → i file `.html`. Si
+  possono però nascondere dal pannello, come le sezioni della home; e le pagine
+  nuove si fanno dal pannello;
 - **un tipo di sezione nuovo**, con una forma diversa da quelle che ci sono (per
   esempio una tabella di tariffe) → una funzione nuova in `SEZIONE` e una voce in
   `TIPI_SEZIONE`, entrambe in `genera-nucleo.js`. Le sezioni "libere" coprono già i
@@ -303,8 +335,6 @@ o lo mettono fuori legge:
 - **testo dell'informativa privacy** → `privacy.html`. Dal pannello si aggiornano
   solo i dati del titolare (nome, indirizzo, telefono, email), che devono restare
   identici a quelli del footer;
-- **pagine nuove** → si crea il file, si aggiunge la voce in `sitemap.xml` e il
-  link nel menu di tutte le pagine;
 - **P. IVA e numero d'Ordine** si cambiano dal pannello, ma **non si tolgono**: sono
   obbligatori per legge (vedi sotto).
 
@@ -643,7 +673,8 @@ Google trova comunque il sito prima o poi, ma può volerci settimane.
   **non possono più andare fuori sincrono** con quello che si legge in pagina.
 - Dati strutturati `FAQPage` su `domande.html`: possono far comparire le domande
   direttamente nei risultati di ricerca.
-- `robots.txt` e `sitemap.xml` compilati con `dermozanetta.it`. Il `<lastmod>` delle
+- `robots.txt` e `sitemap.xml` compilati con `dermozanetta.it`. La sitemap la riscrive
+  il generatore con le sole pagine online. Il `<lastmod>` delle
   pagine modificate lo aggiorna il generatore da solo.
 - Briciole di pane (`BreadcrumbList`) su prestazioni, domande e privacy: nei
   risultati Google mostra "dermozanetta.it › Prestazioni" invece dell'indirizzo
