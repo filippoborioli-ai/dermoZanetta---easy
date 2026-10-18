@@ -35,6 +35,11 @@
         <!--B:orari-->...<!--/B-->
       Li disegna una funzione di questo file (vedi BLOCCHI in fondo).
       Tutto cio' che sta fra i due commenti viene buttato e riscritto.
+      Dopo i due punti si puo' passare un'indicazione al blocco:
+        <!--B:menu:domande.html-->  (il menu visto dalla pagina Domande)
+      La home e' fatta quasi solo di blocchi: <!--B:hero--> e
+      <!--B:sezioniHome-->, che disegna le sezioni scelte nel pannello
+      con le funzioni di SEZIONE.
 
    3. TESTO DI UN TAG INTERO
         <title data-t="seo.home.titolo">...</title>
@@ -53,6 +58,74 @@
 
 (function (globale) {
   'use strict'
+
+  /* ---------------------------------------------------------------
+     LE SEZIONI DELLA HOME
+     ---------------------------------------------------------------
+     Sotto la prima schermata, la home e' un elenco di sezioni
+     (contenuti.json, campo sezioniHome): si mostrano, si nascondono,
+     si spostano e se ne aggiungono di nuove dal pannello. Le cinque
+     sezioni "di serie" si possono solo nascondere, cosi' i loro testi
+     non vanno persi; quelle "libere" si possono anche togliere.
+
+     Restano fuori dall'elenco, e quindi sempre presenti, la prima
+     schermata (il titolo <h1>, la frase piu' importante per Google)
+     e il footer con i dati obbligatori per legge.
+     ------------------------------------------------------------ */
+  var TIPI_SEZIONE = {
+    medico: { nome: 'Il medico', ancora: 'chi-sono', pannello: 'medico', titolo: function (c) { return c.chiSono.titolo } },
+    prestazioni: { nome: 'Prestazioni (carosello)', ancora: 'prestazioni', pannello: 'prestazioni', titolo: function (c) { return c.sezionePrestazioni.titolo } },
+    studio: { nome: 'Lo studio (foto)', ancora: 'studio', pannello: 'foto', titolo: function (c) { return c.sezioneStudio.titolo } },
+    collaborazioni: { nome: 'Collaborazioni (loghi)', ancora: 'collaborazioni', pannello: 'collaborazioni', titolo: function (c) { return c.sezioneCollaborazioni.titolo } },
+    contatti: { nome: 'Dove siamo e orari', ancora: 'contatti', pannello: 'contatti', titolo: function (c) { return c.contatti.titolo } },
+    libera: { nome: 'Sezione libera', titolo: function (c, s) { return s.titolo } }
+  }
+
+  /* Le pagine a cui puo' portare una voce del menu, oltre alle sezioni. */
+  var PAGINE_MENU = [
+    { dove: 'prestazioni.html', nome: 'Pagina Prestazioni' },
+    { dove: 'domande.html', nome: 'Pagina Domande' }
+  ]
+
+  /* Com'era il sito prima che sezioni e menu diventassero modificabili:
+     un contenuti.json senza questi campi (o una bozza vecchia rimasta
+     nel browser) si comporta esattamente come prima. */
+  var SEZIONI_DI_SERIE = ['medico', 'prestazioni', 'studio', 'collaborazioni', 'contatti']
+  var MENU_DI_SERIE = [
+    { testo: 'Il medico', dove: 'medico' },
+    { testo: 'Prestazioni', dove: 'prestazioni.html' },
+    { testo: 'Lo studio', dove: 'studio' },
+    { testo: 'Domande', dove: 'domande.html' },
+    { testo: 'Dove siamo', dove: 'contatti' }
+  ]
+
+  function completa(c) {
+    if (!Array.isArray(c.sezioniHome)) {
+      c.sezioniHome = SEZIONI_DI_SERIE.map(function (t) { return { id: t, tipo: t, visibile: true } })
+    }
+    if (!Array.isArray(c.menu)) c.menu = JSON.parse(JSON.stringify(MENU_DI_SERIE))
+    c.sezioniHome.forEach(function (s) {
+      if (s.visibile === undefined) s.visibile = true
+      if (s.tipo !== 'libera') return
+      if (s.eyebrow == null) s.eyebrow = ''
+      if (s.titolo == null) s.titolo = ''
+      if (!Array.isArray(s.paragrafi)) s.paragrafi = []
+      if (!Array.isArray(s.punti)) s.punti = []
+      if (!s.foto) s.foto = { file: '', alt: '' }
+      if (!s.bottone) s.bottone = { testo: '', link: '' }
+    })
+    return c
+  }
+
+  /* C'e' qualcosa di scritto? Spazi e a capo non contano. */
+  function pieno(t) { return String(t == null ? '' : t).trim() !== '' }
+
+  /* Dove puo' portare il bottone di una sezione libera. */
+  function eLinkBottone(l) {
+    l = String(l || '').trim()
+    return ['{telefono}', '{mappa}', '{email}', 'index.html', 'prestazioni.html', 'domande.html', 'privacy.html'].indexOf(l) !== -1 ||
+      /^https:\/\/[^\s"'<>]+$/.test(l)
+  }
 
   function creaMotore(c) {
 
@@ -103,6 +176,224 @@
       return c.studio.via + ', ' + c.studio.cap + ' ' + c.studio.citta + ' (' + c.studio.provincia + ')'
     }
 
+    /* Rientro uguale davanti a ogni riga di un pezzo di HTML gia'
+       pronto: i blocchi annidati restano leggibili come scritti a mano. */
+    function rientra(html, spazi) {
+      var margine = new Array(spazi + 1).join(' ')
+      return html.split('\n').map(function (r) { return r ? margine + r : r }).join('\n')
+    }
+
+    /* Mette in fila le righe di una sezione saltando quelle vuote: e'
+       cosi' che un testo facoltativo lasciato vuoto sparisce dalla
+       pagina invece di lasciare un paragrafo vuoto. */
+    function unisci(righe) {
+      return righe.filter(function (r) { return r }).join('\n')
+    }
+
+    /* "Ferie d'agosto" -> "ferie-d-agosto": l'indirizzo della sezione
+       nella pagina (dermozanetta.it/#ferie-d-agosto). */
+    function slug(t) {
+      return normalizza(t).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '') || 'sezione'
+    }
+
+    /* Indirizzi gia' usati nella pagina: una sezione libera intitolata
+       "Contatti" non puo' prendere #contatti, che e' gia' di un'altra. */
+    var GIA_USATE = ['top', 'nav', 'navtoggle', 'main', 'elencoprestazioni', 'year', 'cerca', 'esitoricerca']
+      .concat(Object.keys(TIPI_SEZIONE).map(function (t) { return TIPI_SEZIONE[t].ancora }).filter(Boolean))
+
+    var ANCORE = {}
+    c.sezioniHome.forEach(function (s) {
+      if (s.tipo !== 'libera') { ANCORE[s.id] = TIPI_SEZIONE[s.tipo].ancora; return }
+      var base = slug(s.titolo), ancora = base, n = 2
+      while (GIA_USATE.indexOf(ancora) !== -1) ancora = base + '-' + n++
+      GIA_USATE.push(ancora)
+      ANCORE[s.id] = ancora
+    })
+
+    /* Le sezioni che finiscono davvero in pagina: visibili, e con
+       qualcosa dentro (Collaborazioni senza nessun logo non si mostra). */
+    var MOSTRATE = c.sezioniHome.filter(function (s) {
+      if (s.visibile === false || !TIPI_SEZIONE[s.tipo]) return false
+      if (s.tipo === 'collaborazioni' && !(c.loghi || []).length) return false
+      return true
+    })
+
+    function mostrata(id) {
+      return MOSTRATE.some(function (s) { return s.id === id })
+    }
+
+    /* Voci del menu in alto. Una voce che porta a una sezione nascosta
+       non si scrive: un link che non porta da nessuna parte e' peggio
+       di un link in meno. Nelle pagine interne le sezioni stanno in
+       index.html, da qui il prefisso; la voce della pagina in cui ci si
+       trova e' segnata per i lettori di schermo (aria-current). */
+    function vociMenu(paginaCorrente) {
+      var prefisso = paginaCorrente ? 'index.html' : ''
+      return (c.menu || []).map(function (v) {
+        var href
+        if (/\.html$/.test(v.dove)) href = v.dove
+        else if (mostrata(v.dove)) href = prefisso + '#' + ANCORE[v.dove]
+        else return null
+        var corrente = v.dove === paginaCorrente ? ' aria-current="page"' : ''
+        return '<a href="' + esc(href) + '"' + corrente + '>' + esc(v.testo) + '</a>'
+      }).filter(Boolean).join('\n')
+    }
+
+    /* Il bottone di una sezione libera: {telefono}, {mappa} ed {email}
+       sono scorciatoie per i dati dello studio, cosi' non vanno
+       riscritti (e corretti) a mano in due posti. */
+    function linkBottone(l) {
+      l = String(l || '').trim()
+      if (l === '{telefono}') return { href: 'tel:' + c.studio.telefonoLink }
+      if (l === '{mappa}') return { href: c.studio.mappaUrl, fuori: true }
+      if (l === '{email}') return { href: 'mailto:' + c.studio.email }
+      return { href: l, fuori: /^https:\/\//.test(l) }
+    }
+
+    /* ---------------------------------------------------------------
+       Le sezioni della home, una funzione per tipo. "alt" e' lo sfondo
+       sabbia: si alterna da solo, una si' e una no, qualunque sia
+       l'ordine o il numero delle sezioni mostrate.
+       ------------------------------------------------------------ */
+    var SEZIONE = {
+
+      medico: function (alt) {
+        var punti = c.chiSono.punti.filter(pieno)
+        return unisci([
+          '<section id="chi-sono" class="section' + alt + '">',
+          '  <div class="wrap narrow">',
+          pieno(c.chiSono.eyebrow) && '    <p class="eyebrow">' + esc(c.chiSono.eyebrow) + '</p>',
+          '    <h2>' + esc(c.chiSono.titolo) + '</h2>',
+          rientra(BLOCCHI.paragrafiChiSono(), 4),
+          punti.length && unisci(['    <ul class="check-list">', rientra(BLOCCHI.puntiChiSono(), 6), '    </ul>']),
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      /* Carosello: tre schede visibili, si scorre per le altre. Ci sono
+         tutte le prestazioni, nell'ordine del pannello; l'elenco completo
+         con la ricerca resta su prestazioni.html. La barra sotto la pista
+         dice che c'e' altro e si puo' trascinare: la riempie script.js. */
+      prestazioni: function (alt) {
+        var p = c.sezionePrestazioni
+        return unisci([
+          '<section id="prestazioni" class="section' + alt + '">',
+          '  <div class="wrap">',
+          pieno(p.eyebrow) && '    <p class="eyebrow center">' + esc(p.eyebrow) + '</p>',
+          '    <h2 class="center">' + esc(p.titolo) + '</h2>',
+          pieno(p.intro) && '    <p class="section-intro center">' + conTelefono(p.intro) + '</p>',
+          '    <div class="carosello">',
+          '      <div class="cards carosello-pista" id="elencoPrestazioni" tabindex="0" role="group" aria-label="Prestazioni, scorrevoli lateralmente">',
+          rientra(BLOCCHI.prestazioni(), 8),
+          '      </div>',
+          '      <div class="carosello-barra" hidden><span></span></div>',
+          '    </div>',
+          '    <noscript>',
+          '      <p class="section-intro center">',
+          '        <a href="prestazioni.html">Apri l&rsquo;elenco completo delle prestazioni</a>.',
+          '      </p>',
+          '    </noscript>',
+          pieno(p.bottone) && unisci([
+            '    <p class="center azione-sezione">',
+            '      <a class="btn btn-ghost" href="prestazioni.html">' + esc(p.bottone) + '</a>',
+            '    </p>'
+          ]),
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      studio: function (alt) {
+        var s = c.sezioneStudio
+        return unisci([
+          '<section id="studio" class="section' + alt + '">',
+          '  <div class="wrap">',
+          pieno(s.eyebrow) && '    <p class="eyebrow center">' + esc(s.eyebrow) + '</p>',
+          '    <h2 class="center">' + esc(s.titolo) + '</h2>',
+          pieno(s.intro) && '    <p class="section-intro center">' + conTelefono(s.intro) + '</p>',
+          '    <div class="gallery">',
+          rientra(BLOCCHI.galleria(), 6),
+          '    </div>',
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      /* Titolo unico: l'occhiello fa anche da intestazione (h2), cosi' la
+         sezione resta navigabile dai lettori di schermo pur avendo una
+         riga sola sopra i loghi. */
+      collaborazioni: function (alt) {
+        return unisci([
+          '<section id="collaborazioni" class="section' + alt + '">',
+          '  <div class="wrap">',
+          '    <h2 class="eyebrow center">' + esc(c.sezioneCollaborazioni.titolo) + '</h2>',
+          '    <div class="logos">',
+          rientra(BLOCCHI.loghi(), 6),
+          '    </div>',
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      contatti: function (alt) {
+        var k = c.contatti
+        return unisci([
+          '<section id="contatti" class="section' + alt + '">',
+          '  <div class="wrap two-col">',
+          '    <div>',
+          pieno(k.eyebrow) && '      <p class="eyebrow">' + esc(k.eyebrow) + '</p>',
+          '      <h2>' + esc(k.titolo) + '</h2>',
+          pieno(k.intro) && '      <p class="section-intro">' + conTelefono(k.intro) + '</p>',
+          '      <div class="contact-list">',
+          rientra(BLOCCHI.contatti(), 8),
+          '      </div>',
+          '    </div>',
+          '    <div class="hours-card">',
+          pieno(k.titoloOrari) && '      <h3>' + esc(k.titoloOrari) + '</h3>',
+          '      <table class="hours">',
+          '        <tbody>',
+          rientra(BLOCCHI.orari(), 10),
+          '        </tbody>',
+          '      </table>',
+          pieno(k.bottoneOrari) && rientra(BLOCCHI.bottoneOrari(), 6),
+          pieno(k.notaOrari) && '      <p class="note">' + esc(k.notaOrari) + '</p>',
+          '    </div>',
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      /* Sezione libera: titolo obbligatorio, tutto il resto facoltativo.
+         E' testo, non HTML: si puo' scrivere {telefono} e diventa il
+         numero cliccabile, nient'altro. */
+      libera: function (alt, s) {
+        var punti = s.punti.filter(pieno)
+        var bottone = pieno(s.bottone.testo) && pieno(s.bottone.link) && linkBottone(s.bottone.link)
+        return unisci([
+          '<section id="' + esc(ANCORE[s.id]) + '" class="section' + alt + '">',
+          '  <div class="wrap narrow">',
+          pieno(s.eyebrow) && '    <p class="eyebrow">' + esc(s.eyebrow) + '</p>',
+          '    <h2>' + esc(s.titolo) + '</h2>',
+          unisci(s.paragrafi.filter(pieno).map(function (t) { return '    <p>' + conTelefono(t) + '</p>' })),
+          punti.length && unisci(['    <ul class="check-list">'].concat(
+            punti.map(function (t) { return '      <li>' + conTelefono(t) + '</li>' }), ['    </ul>'])),
+          pieno(s.foto.file) && unisci([
+            '    <figure class="sezione-foto">',
+            '      <img src="' + esc(s.foto.file) + '" alt="' + esc(s.foto.alt) + '" width="900" height="600" loading="lazy">',
+            '    </figure>'
+          ]),
+          bottone && unisci([
+            '    <p class="azione-sezione">',
+            '      <a class="btn btn-ghost" href="' + esc(bottone.href) + '"' + (bottone.fuori ? ' target="_blank" rel="noopener"' : '') + '>' + esc(s.bottone.testo) + '</a>',
+            '    </p>'
+          ]),
+          '  </div>',
+          '</section>'
+        ])
+      }
+    }
+
     /* ---------------------------------------------------------------
        1. Testi semplici:  <!--T:chiave-->...<!--/T-->
        ------------------------------------------------------------ */
@@ -129,14 +420,18 @@
        L'indentazione viene ripresa dalla riga del segnaposto, cosi'
        l'HTML generato resta leggibile come quello scritto a mano.
        ------------------------------------------------------------ */
+    /* Un blocco puo' ricevere un'indicazione dopo i due punti:
+       <!--B:menu:domande.html--> e' il menu visto dalla pagina Domande,
+       che segna quella voce come pagina corrente. */
     function scriviBlocchi(html) {
-      return html.replace(/([ \t]*)<!--B:([\w.]+)-->[\s\S]*?<!--\/B-->/g, function (_, indent, nome) {
+      return html.replace(/([ \t]*)<!--B:([\w.]+)(?::([\w.-]+))?-->[\s\S]*?<!--\/B-->/g, function (_, indent, nome, dettaglio) {
         var disegna = BLOCCHI[nome]
         if (!disegna) throw new Error('blocco sconosciuto: ' + nome)
-        var righe = disegna().split('\n').map(function (r) {
+        var righe = disegna(dettaglio).split('\n').map(function (r) {
           return r ? indent + r : r
         }).join('\n')
-        return indent + '<!--B:' + nome + '-->\n' + righe + '\n' + indent + '<!--/B-->'
+        var segnaposto = nome + (dettaglio ? ':' + dettaglio : '')
+        return indent + '<!--B:' + segnaposto + '-->\n' + righe + '\n' + indent + '<!--/B-->'
       })
     }
 
@@ -214,12 +509,54 @@
       },
 
       paragrafiChiSono: function () {
-        return c.chiSono.paragrafi.map(function (t) { return '<p>' + conTelefono(t) + '</p>' }).join('\n')
+        return c.chiSono.paragrafi.filter(pieno).map(function (t) { return '<p>' + conTelefono(t) + '</p>' }).join('\n')
       },
 
       puntiChiSono: function () {
-        return c.chiSono.punti.map(function (t) { return '<li>' + conTelefono(t) + '</li>' }).join('\n')
+        return c.chiSono.punti.filter(pieno).map(function (t) { return '<li>' + conTelefono(t) + '</li>' }).join('\n')
       },
+
+      /* Prima schermata della home. Il titolo (h1) c'e' sempre; riga
+         piccola, frase sotto, bottoni e nota spariscono se lasciati
+         vuoti. "Vedi le prestazioni" porta al carosello, o alla pagina
+         Prestazioni se il carosello e' nascosto. */
+      hero: function () {
+        var h = c.home
+        return unisci([
+          '<section class="hero">',
+          '  <div class="wrap hero-inner">',
+          '    <div class="hero-text">',
+          pieno(h.eyebrow) && '      <p class="eyebrow">' + esc(h.eyebrow) + '</p>',
+          '      <h1>' + esc(h.titolo) + '</h1>',
+          pieno(h.lead) && '      <p class="lead">' + conTelefono(h.lead) + '</p>',
+          '      <div class="hero-cta">',
+          rientra(BLOCCHI.bottoneChiama(), 8),
+          pieno(h.bottonePrestazioni) && '        <a class="btn btn-ghost" href="' + (mostrata('prestazioni') ? '#prestazioni' : 'prestazioni.html') + '">' + esc(h.bottonePrestazioni) + '</a>',
+          // Porta alla scheda Google dello studio: mappa, indicazioni e recensioni.
+          pieno(h.bottoneMappa) && '        <a class="btn btn-ghost" data-c="mappa" href="' + esc(c.studio.mappaUrl) + '" target="_blank" rel="noopener">' + esc(h.bottoneMappa) + '</a>',
+          '      </div>',
+          pieno(h.nota) && '      <p class="hero-note">' + conTelefono(h.nota) + '</p>',
+          '    </div>',
+          '    <figure class="hero-photo">',
+          '      <img fetchpriority="high" data-c="foto.dottoressa" src="' + esc(c.foto.dottoressa.file) + '" alt="' + esc(c.foto.dottoressa.alt) + '" width="520" height="620">',
+          '    </figure>',
+          '  </div>',
+          '</section>'
+        ])
+      },
+
+      /* Tutte le sezioni della home sotto la prima schermata, nell'ordine
+         e con la visibilita' decisi nel pannello. */
+      sezioniHome: function () {
+        return MOSTRATE.map(function (s, i) {
+          return SEZIONE[s.tipo](i % 2 === 0 ? ' section-alt' : '', s)
+        }).join('\n\n')
+      },
+
+      /* Menu in alto: <!--B:menu--> nella home, dove le sezioni sono
+         ancore (#studio); <!--B:menu:pagina.html--> nelle altre, dove
+         portano alla home (index.html#studio). */
+      menu: function (paginaCorrente) { return vociMenu(paginaCorrente || '') },
 
       orari: function () {
         return c.orari.map(function (o) {
@@ -477,7 +814,11 @@
   /* Controlli che valgono sia prima di scrivere i file sia prima di
      pubblicare dal pannello: meglio accorgersene di qua. */
   function controlla(c) {
+    completa(c)
     var problemi = []
+    if (!pieno(c.home && c.home.titolo)) {
+      problemi.push('Manca la frase grande della prima schermata: è il titolo della home e non si può togliere.')
+    }
     if (!Array.isArray(c.prestazioni) || !c.prestazioni.length) {
       problemi.push('Non c’è nessuna prestazione.')
     }
@@ -516,12 +857,51 @@
     ;(c.loghi || []).forEach(function (l, i) {
       if (!eFileImmagine(l.file)) problemi.push('Il logo n. ' + (i + 1) + ' non ha un’immagine: caricala o togli il logo.')
     })
+
+    /* Sezioni della home: una sezione visibile deve avere almeno il
+       titolo (e' la sua intestazione, per chi legge e per Google). */
+    var esistenti = {}
+    c.sezioniHome.forEach(function (s, i) {
+      var tipo = TIPI_SEZIONE[s.tipo]
+      if (!tipo) { problemi.push('La sezione n. ' + (i + 1) + ' della home è di un tipo sconosciuto: ' + s.tipo + '.'); return }
+      if (esistenti[s.id]) problemi.push('Due sezioni della home hanno lo stesso identificativo (' + s.id + ').')
+      esistenti[s.id] = true
+      if (s.visibile === false) return
+      var titolo = tipo.titolo(c, s)
+      var nome = s.tipo === 'libera' ? '“' + (pieno(titolo) ? titolo : 'senza titolo') + '”' : '“' + tipo.nome + '”'
+      if (!pieno(titolo)) problemi.push('La sezione ' + nome + ' è visibile ma non ha il titolo: scrivilo, oppure nascondi la sezione.')
+      if (s.tipo !== 'libera') return
+      if (pieno(s.foto.file)) {
+        if (!eFileImmagine(s.foto.file)) problemi.push('La foto della sezione ' + nome + ' ha un nome che non va bene.')
+        if (!pieno(s.foto.alt)) problemi.push('La foto della sezione ' + nome + ' non ha la descrizione.')
+      }
+      if (pieno(s.bottone.testo) !== pieno(s.bottone.link)) {
+        problemi.push('Il bottone della sezione ' + nome + ' ha il testo ma non dove porta, o viceversa.')
+      } else if (pieno(s.bottone.link) && !eLinkBottone(s.bottone.link)) {
+        problemi.push('Il bottone della sezione ' + nome + ' porta a un indirizzo che non va bene: usa {telefono}, {mappa}, {email}, il nome di una pagina del sito (es. prestazioni.html) o un indirizzo che inizia con https://')
+      }
+    })
+
+    /* Menu in alto: ogni voce deve avere un testo e portare a qualcosa
+       che esiste. A una sezione nascosta si', semplicemente non compare. */
+    var pagine = PAGINE_MENU.map(function (p) { return p.dove })
+    c.menu.forEach(function (v, i) {
+      if (!pieno(v.testo)) problemi.push('La voce n. ' + (i + 1) + ' del menu non ha il testo.')
+      if (pagine.indexOf(v.dove) === -1 && !esistenti[v.dove]) {
+        problemi.push('La voce “' + (v.testo || i + 1) + '” del menu porta a una sezione che non esiste più.')
+      }
+    })
     return problemi
   }
 
   globale.NucleoGenera = {
-    generaPagina: function (html, contenuti) { return creaMotore(contenuti).generaPagina(html) },
-    controlla: controlla
+    generaPagina: function (html, contenuti) { return creaMotore(completa(contenuti)).generaPagina(html) },
+    controlla: controlla,
+    // Per il pannello: riempie i campi nuovi in un contenuti.json vecchio,
+    // e sa quali tipi di sezione e quali pagine esistono.
+    completa: completa,
+    TIPI_SEZIONE: TIPI_SEZIONE,
+    PAGINE_MENU: PAGINE_MENU
   }
 
 })(typeof globalThis !== 'undefined' ? globalThis : this)

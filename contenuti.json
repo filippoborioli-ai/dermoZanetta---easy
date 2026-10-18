@@ -28,6 +28,55 @@
     "bottoneMappa": "Dove si trova",
     "nota": "Stesso numero per prenotazioni e informazioni."
   },
+  "sezioniHome": [
+    {
+      "id": "medico",
+      "tipo": "medico",
+      "visibile": true
+    },
+    {
+      "id": "prestazioni",
+      "tipo": "prestazioni",
+      "visibile": true
+    },
+    {
+      "id": "studio",
+      "tipo": "studio",
+      "visibile": true
+    },
+    {
+      "id": "collaborazioni",
+      "tipo": "collaborazioni",
+      "visibile": true
+    },
+    {
+      "id": "contatti",
+      "tipo": "contatti",
+      "visibile": true
+    }
+  ],
+  "menu": [
+    {
+      "testo": "Il medico",
+      "dove": "medico"
+    },
+    {
+      "testo": "Prestazioni",
+      "dove": "prestazioni.html"
+    },
+    {
+      "testo": "Lo studio",
+      "dove": "studio"
+    },
+    {
+      "testo": "Domande",
+      "dove": "domande.html"
+    },
+    {
+      "testo": "Dove siamo",
+      "dove": "contatti"
+    }
+  ],
   "chiSono": {
     "eyebrow": "Il medico",
     "titolo": "Chi ti visita",

@@ -15,7 +15,8 @@ JavaScript, nessuna libreria, nessun server.
 | Vuoi cambiare… | Si fa da… |
 |---|---|
 | testi, orari, foto, prestazioni, domande, dati dello studio | **[il pannello](#il-pannello-di-modifica)**, `admin.html` — nessun codice |
-| colori, tipografia, layout, pagine nuove | il codice: `style.css` e i file `.html` |
+| sezioni della home (mostrare, nascondere, spostare, aggiungerne di nuove) e menu in alto | **il pannello**, sezione "Sezioni e menu" — nessun codice |
+| colori, tipografia, layout, pagine nuove, un *tipo* di sezione nuovo | il codice: `style.css`, `genera-nucleo.js` e i file `.html` |
 
 La dottoressa usa solo la prima riga. Chi legge questo README, di solito, la seconda.
 
@@ -88,6 +89,15 @@ cui il generatore scrive. Sono quattro tipi:
 | `<title data-t="seo.home.titolo">` | il testo di un **tag intero**. Serve dove un commento non funziona: dentro `<title>` il browser lo mostrerebbe come testo |
 | `<img data-c="foto.studio" …>` | dentro un tag non si può mettere un commento: `data-c` dice **quali attributi riscrivere** (`src`, `alt`, `href`, `content`, `placeholder`) |
 
+Un blocco può ricevere un'indicazione dopo i due punti: `<!--B:menu:domande.html-->`
+è il menu visto dalla pagina Domande, che segna quella voce come pagina corrente.
+
+**La home è quasi tutta un blocco.** In `index.html`, dentro `<main>`, ci sono solo
+due segnaposto: `<!--B:hero-->` (la prima schermata) e `<!--B:sezioniHome-->` (tutte le
+sezioni sotto, nell'ordine e con la visibilità decisi nel pannello). L'HTML di ogni
+sezione sta nelle funzioni `SEZIONE` di `genera-nucleo.js`, una per tipo. È il prezzo
+per poterle spostare, nascondere e aggiungere senza toccare il codice.
+
 Tutto ciò che sta fra `<!--B:` e `<!--/B-->` **viene buttato e riscritto a ogni
 generazione**: modificarlo a mano è tempo perso.
 
@@ -102,7 +112,7 @@ generazione**: modificarlo a mano è tempo perso.
 | `genera-nucleo.js` | **la regola** con cui i testi diventano pagina. Usato sia da `genera.mjs` sia dall'anteprima |
 | `genera.mjs` | apre i file, applica la regola, li salva, aggiorna la sitemap |
 | `cambia-password.mjs` | cambia la password del pannello |
-| `index.html` | home: medico, prestazioni in evidenza, studio, collaborazioni, contatti |
+| `index.html` | home: prima schermata e sezioni (di serie: medico, prestazioni in evidenza, studio, collaborazioni, contatti). Quali e in che ordine lo decide il pannello |
 | `prestazioni.html` | elenco completo delle prestazioni, con la ricerca |
 | `domande.html` | domande frequenti |
 | `privacy.html` | informativa privacy del sito, collegata dal footer |
@@ -142,6 +152,7 @@ Google rispetta il `noindex` solo se può leggere la pagina.)
 |---|---|
 | **Studio e contatti** | nome, telefono, email, indirizzo, P. IVA, Ordine, link a Google Maps. Cambiati qui, cambiano **ovunque**: footer di tutte le pagine, bottoni "Chiama", privacy, dati per Google |
 | **Prima schermata** | la frase grande della home, quella sotto, i bottoni |
+| **Sezioni e menu** | quali sezioni compaiono nella home e in che ordine; sezioni nuove ("libere": titolo, paragrafi, elenco, foto, bottone); le voci del menu in alto. Vedi [Sezioni della home](#sezioni-della-home) |
 | **Il medico** | la sezione "Chi ti visita": paragrafi ed elenco con la spunta |
 | **Prestazioni** | aggiungi, togli, riordina, riscrivi. Compaiono da sole sia nel carosello della home sia nella pagina Prestazioni |
 | **Foto** | le quattro foto del sito. Si scelgono dal telefono o dal computer: vengono rimpicciolite e compresse dal pannello, non serve preparare niente |
@@ -158,6 +169,35 @@ Due scorciatoie utili dentro i testi:
   nelle risposte alle domande e nei testi lunghi;
 - le **parole per la ricerca** di una prestazione non si vedono in pagina: servono
   solo alla casella di ricerca. Chi ha l'acne cerca "brufoli", non "acne volgare".
+
+### Sezioni della home
+
+Sotto la prima schermata la home è un elenco di sezioni. Dal pannello, sezione
+**Sezioni e menu**, si può:
+
+- **nascondere** una sezione (casella *Visibile*): sparisce dal sito e dal menu, ma
+  i suoi testi restano salvati e tornano quando la si rimette;
+- **spostarla** su e giù con le frecce;
+- **aggiungere una sezione libera**: titolo, riga piccola, paragrafi, elenco con la
+  spunta, una foto e un bottone. Utile per avvisi ("Studio chiuso per ferie"),
+  tariffe, come arrivare, convenzioni. Le libere si possono anche **togliere**;
+- **cambiare il menu in alto**: testo, ordine, dove porta ogni voce. Una voce che
+  porta a una sezione nascosta non compare finché la sezione resta nascosta.
+
+Il bottone di una sezione libera accetta `{telefono}`, `{mappa}`, `{email}` (i dati
+dello studio, senza riscriverli), il nome di una pagina del sito (`prestazioni.html`)
+oppure un indirizzo che inizia con `https://`. Qualunque altra cosa viene fermata
+prima di pubblicare.
+
+**Testi facoltativi.** In tutto il pannello, un campo segnato "Facoltativo" si può
+lasciare vuoto: quel pezzo sparisce dalla pagina invece di lasciare un buco (la riga
+piccola sopra un titolo, un bottone, una nota…). Le sezioni di serie si possono solo
+nascondere, non togliere, proprio per non perdere i loro testi. Collaborazioni senza
+nessun logo non compare.
+
+Restano **sempre**: la prima schermata con il titolo grande (è la frase più
+importante per Google) e il fondo pagina con P. IVA, Ordine e avviso, che sono
+obbligatori per legge.
 
 ### L'anteprima
 
@@ -254,7 +294,12 @@ Di proposito. Sono cose che si toccano di rado e che, sbagliate, rompono il sito
 o lo mettono fuori legge:
 
 - **colori, tipografia, layout** → `style.css`;
-- **struttura delle pagine** (aggiungere una sezione, spostarne una) → i file `.html`;
+- **struttura delle pagine diverse dalla home** (Prestazioni, Domande, Privacy) → i
+  file `.html`. Le sezioni della home invece si gestiscono dal pannello;
+- **un tipo di sezione nuovo**, con una forma diversa da quelle che ci sono (per
+  esempio una tabella di tariffe) → una funzione nuova in `SEZIONE` e una voce in
+  `TIPI_SEZIONE`, entrambe in `genera-nucleo.js`. Le sezioni "libere" coprono già i
+  casi più comuni;
 - **testo dell'informativa privacy** → `privacy.html`. Dal pannello si aggiornano
   solo i dati del titolare (nome, indirizzo, telefono, email), che devono restare
   identici a quelli del footer;
@@ -290,7 +335,11 @@ Serve quando si vuole rendere modificabile dal pannello un testo che oggi è
 scritto nell'HTML. Tre passi, sempre gli stessi:
 
 1. **`contenuti.json`** — aggiungi la voce, per esempio `"home": { "nuovaFrase": "..." }`.
-2. **HTML** — metti il segnaposto dove deve comparire:
+2. **Dove compare** — nella **home** il testo va scritto nella funzione della
+   sezione, in `SEZIONE` (o in `hero`, per la prima schermata) dentro
+   `genera-nucleo.js`: per esempio `pieno(c.home.nuovaFrase) && '<p>' + esc(c.home.nuovaFrase) + '</p>'`
+   (con `pieno` il pezzo sparisce se il campo è vuoto). Nelle **altre pagine** si mette
+   il segnaposto nell'HTML:
    `<p><!--T:home.nuovaFrase-->testo di partenza<!--/T--></p>`.
    Se il testo sta dentro un attributo, usa `data-c="home.nuovaFrase"` sul tag e
    aggiungi la riga corrispondente alla tabella degli attributi in
@@ -373,6 +422,8 @@ checker" prima di pubblicare.
 | Ho pubblicato ma **il sito è uguale** | aspetta due minuti e ricarica con `Ctrl+F5`. Se dopo cinque minuti è ancora uguale, guarda la scheda **Actions** su GitHub: se c'è una crocetta rossa, il generatore si è fermato e il messaggio dice perché |
 | **"Qualcun altro ha modificato il sito nel frattempo"** | il file è cambiato da un altro dispositivo. Ricarica il pannello e rifai la modifica: è la protezione che impedisce di cancellare il lavoro altrui |
 | `genera.mjs` dice **"chiave assente in contenuti.json"** | in una pagina c'è un segnaposto `<!--T:...-->` che punta a una voce che non esiste. O si aggiunge la voce, o si toglie il segnaposto |
+| Ho nascosto (o tolto) una sezione e **la voce del menu è sparita** | è voluto: una voce che porta a una sezione che non si vede non compare. Rimettendo visibile la sezione, torna da sola |
+| Il pannello dice **"La sezione … è visibile ma non ha il titolo"** | ogni sezione visibile ha bisogno del titolo: scrivilo, oppure nascondi la sezione |
 | `genera.mjs` dice **"blocco sconosciuto"** | c'è un `<!--B:nome-->` senza la funzione corrispondente in `BLOCCHI`, dentro `genera-nucleo.js` |
 | Su GitHub compare una **richiesta di Dependabot** ("Bump actions/…") | è l'aggiornamento mensile delle azioni di `genera.yml`. Si apre, si controlla che i controlli siano verdi e si preme *Merge*. Lasciarla lì non rompe niente subito, ma a lungo andare le azioni invecchiano |
 | Il pannello dice **"Il link a Google Maps deve iniziare con https://"** (o simile) | un indirizzo, un'email o un logo senza immagine non passano il controllo: va corretto il campo indicato, poi si ripubblica |

@@ -306,6 +306,13 @@ a:focus-visible, button:focus-visible{
   border-radius:var(--radius); box-shadow:var(--ombra);
 }
 
+/* ---------------- Sezioni libere (aggiunte dal pannello) ---------------- */
+.sezione-foto{ margin:20px 0 0; }
+.sezione-foto img{
+  width:100%; aspect-ratio:3/2; object-fit:cover;
+  border-radius:var(--radius); box-shadow:var(--ombra);
+}
+
 /* ---------------- Testata pagina interna ---------------- */
 .page-head{
   background:linear-gradient(180deg, var(--sabbia) 0%, var(--crema) 100%);

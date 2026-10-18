@@ -302,7 +302,10 @@
     etichetta.htmlFor = id
     box.appendChild(etichetta)
 
-    if (opzioni.aiuto) box.appendChild(creaElemento('p', 'aiuto', opzioni.aiuto))
+    // "Facoltativo": se resta vuoto, quel pezzo sparisce dalla pagina.
+    var aiuto = [opzioni.aiuto, opzioni.facoltativo ? 'Facoltativo: se lo lasci vuoto, non compare.' : '']
+      .filter(Boolean).join(' ')
+    if (aiuto) box.appendChild(creaElemento('p', 'aiuto', aiuto))
 
     var campo = document.createElement(opzioni.tipo === 'area' ? 'textarea' : 'input')
     if (opzioni.tipo !== 'area') campo.type = opzioni.tipo || 'text'
@@ -334,6 +337,35 @@
       aggiornaConteggio()
     })
     aggiornaConteggio()
+    return box
+  }
+
+  /* Scelta da un elenco chiuso (per esempio: dove porta una voce del
+     menu). Se il valore salvato non e' piu' fra le scelte, lo si
+     mostra lo stesso, segnalato, invece di cambiarlo di nascosto. */
+  function campoScelta(percorso, opzioni) {
+    var box = creaElemento('div', 'campo')
+    var id = 'c_' + percorso.replace(/\./g, '_')
+    var etichetta = creaElemento('label', null, opzioni.etichetta)
+    etichetta.htmlFor = id
+    box.appendChild(etichetta)
+    if (opzioni.aiuto) box.appendChild(creaElemento('p', 'aiuto', opzioni.aiuto))
+
+    var scelta = document.createElement('select')
+    scelta.id = id
+    var attuale = leggi(percorso)
+    var scelte = opzioni.scelte.slice()
+    if (!scelte.some(function (s) { return s.valore === attuale })) {
+      scelte.unshift({ valore: attuale, testo: '(non esiste più: scegli dove portarla)' })
+    }
+    scelte.forEach(function (s) {
+      var o = creaElemento('option', null, s.testo)
+      o.value = s.valore
+      scelta.appendChild(o)
+    })
+    scelta.value = attuale
+    scelta.addEventListener('change', function () { scrivi(percorso, scelta.value) })
+    box.appendChild(scelta)
     return box
   }
 
@@ -601,7 +633,7 @@
     }))
 
     if (opzioni.togli) {
-      var b = creaElemento('button', 'btn btn-rosso btn-sm', 'Togli questo logo')
+      var b = creaElemento('button', 'btn btn-rosso btn-sm', opzioni.testoTogli || 'Togli questo logo')
       b.type = 'button'
       b.addEventListener('click', opzioni.togli)
       lato.appendChild(b)
@@ -662,13 +694,21 @@
       titolo: 'La prima schermata della home',
       guida: 'È quello che si vede appena si apre il sito: la frase grande, la riga sotto e i bottoni.',
       disegna: function (box) {
-        box.appendChild(campoTesto('home.eyebrow', { etichetta: 'Riga piccola in alto' }))
+        box.appendChild(campoTesto('home.eyebrow', { etichetta: 'Riga piccola in alto', facoltativo: true }))
         box.appendChild(campoTesto('home.titolo', { etichetta: 'Frase grande (titolo)', tipo: 'area', righe: 2, aiuto: 'È la frase più importante del sito, anche per Google: meglio se contiene "dermatologo" o "dermatologa" e il nome della città.' }))
-        box.appendChild(campoTesto('home.lead', { etichetta: 'Frase di presentazione', tipo: 'area' }))
-        box.appendChild(campoTesto('home.bottonePrestazioni', { etichetta: 'Secondo bottone' }))
-        box.appendChild(campoTesto('home.bottoneMappa', { etichetta: 'Terzo bottone (mappa)' }))
-        box.appendChild(campoTesto('home.nota', { etichetta: 'Riga sotto i bottoni' }))
+        box.appendChild(campoTesto('home.lead', { etichetta: 'Frase di presentazione', tipo: 'area', facoltativo: true }))
+        box.appendChild(campoTesto('home.bottonePrestazioni', { etichetta: 'Secondo bottone', facoltativo: true }))
+        box.appendChild(campoTesto('home.bottoneMappa', { etichetta: 'Terzo bottone (mappa)', facoltativo: true }))
+        box.appendChild(campoTesto('home.nota', { etichetta: 'Riga sotto i bottoni', facoltativo: true }))
       }
+    },
+
+    {
+      id: 'sezioni',
+      nome: 'Sezioni e menu',
+      titolo: 'Sezioni della home e menu in alto',
+      guida: 'Qui si decide quali parti compaiono nella home, sotto la prima schermata, e in che ordine. Si possono nascondere, spostare e aggiungere sezioni nuove; più in basso c’è il menu in alto. La prima schermata e il fondo pagina con i dati di legge restano sempre.',
+      disegna: disegnaSezioniEMenu
     },
 
     {
@@ -677,11 +717,12 @@
       titolo: 'Sezione “Chi ti visita”',
       guida: 'La presentazione. I paragrafi sono il testo corrente, i punti sono l’elenco con la spunta.',
       disegna: function (box) {
-        box.appendChild(campoTesto('chiSono.eyebrow', { etichetta: 'Riga piccola' }))
+        box.appendChild(campoTesto('chiSono.eyebrow', { etichetta: 'Riga piccola', facoltativo: true }))
         box.appendChild(campoTesto('chiSono.titolo', { etichetta: 'Titolo' }))
         box.appendChild(creaElemento('h3', null, 'Paragrafi'))
         box.appendChild(elencoTesti('chiSono.paragrafi', { nomeVoce: 'Paragrafo', tipo: 'area' }))
         box.appendChild(creaElemento('h3', null, 'Elenco con la spunta'))
+        box.appendChild(creaElemento('p', 'aiuto', 'Facoltativo: se togli tutti i punti, l’elenco non compare.'))
         box.appendChild(elencoTesti('chiSono.punti', { nomeVoce: 'Punto', tipo: 'testo' }))
       }
     },
@@ -702,10 +743,10 @@
         ], { nomeVoce: 'Prestazione' }))
 
         box.appendChild(creaElemento('h3', null, 'Testi della sezione in home'))
-        box.appendChild(campoTesto('sezionePrestazioni.eyebrow', { etichetta: 'Riga piccola' }))
+        box.appendChild(campoTesto('sezionePrestazioni.eyebrow', { etichetta: 'Riga piccola', facoltativo: true }))
         box.appendChild(campoTesto('sezionePrestazioni.titolo', { etichetta: 'Titolo' }))
-        box.appendChild(campoTesto('sezionePrestazioni.intro', { etichetta: 'Testo introduttivo', tipo: 'area' }))
-        box.appendChild(campoTesto('sezionePrestazioni.bottone', { etichetta: 'Bottone in fondo' }))
+        box.appendChild(campoTesto('sezionePrestazioni.intro', { etichetta: 'Testo introduttivo', tipo: 'area', facoltativo: true }))
+        box.appendChild(campoTesto('sezionePrestazioni.bottone', { etichetta: 'Bottone in fondo', facoltativo: true }))
 
         box.appendChild(creaElemento('h3', null, 'Testi della pagina Prestazioni'))
         box.appendChild(campoTesto('paginaPrestazioni.eyebrow', { etichetta: 'Riga piccola' }))
@@ -725,9 +766,9 @@
       disegna: function (box) {
         box.appendChild(elencoFoto())
         box.appendChild(creaElemento('h3', null, 'Testi della sezione “Lo studio”'))
-        box.appendChild(campoTesto('sezioneStudio.eyebrow', { etichetta: 'Riga piccola' }))
+        box.appendChild(campoTesto('sezioneStudio.eyebrow', { etichetta: 'Riga piccola', facoltativo: true }))
         box.appendChild(campoTesto('sezioneStudio.titolo', { etichetta: 'Titolo' }))
-        box.appendChild(campoTesto('sezioneStudio.intro', { etichetta: 'Testo sotto il titolo', tipo: 'area' }))
+        box.appendChild(campoTesto('sezioneStudio.intro', { etichetta: 'Testo sotto il titolo', tipo: 'area', facoltativo: true }))
       }
     },
 
@@ -750,9 +791,9 @@
       disegna: function (box) {
         box.appendChild(tabellaOrari())
         box.appendChild(creaElemento('h3', null, 'Testi intorno alla tabella'))
-        box.appendChild(campoTesto('contatti.titoloOrari', { etichetta: 'Titolo del riquadro' }))
-        box.appendChild(campoTesto('contatti.bottoneOrari', { etichetta: 'Bottone sotto la tabella' }))
-        box.appendChild(campoTesto('contatti.notaOrari', { etichetta: 'Nota sotto il bottone' }))
+        box.appendChild(campoTesto('contatti.titoloOrari', { etichetta: 'Titolo del riquadro', facoltativo: true }))
+        box.appendChild(campoTesto('contatti.bottoneOrari', { etichetta: 'Bottone sotto la tabella', facoltativo: true }))
+        box.appendChild(campoTesto('contatti.notaOrari', { etichetta: 'Nota sotto il bottone', facoltativo: true }))
       }
     },
 
@@ -762,9 +803,9 @@
       titolo: 'La sezione “Dove siamo e come prenotare”',
       guida: 'Telefono, indirizzo ed email li prende dalla sezione "Studio e contatti": qui si cambiano solo le scritte che li accompagnano.',
       disegna: function (box) {
-        box.appendChild(campoTesto('contatti.eyebrow', { etichetta: 'Riga piccola' }))
+        box.appendChild(campoTesto('contatti.eyebrow', { etichetta: 'Riga piccola', facoltativo: true }))
         box.appendChild(campoTesto('contatti.titolo', { etichetta: 'Titolo' }))
-        box.appendChild(campoTesto('contatti.intro', { etichetta: 'Testo introduttivo', tipo: 'area' }))
+        box.appendChild(campoTesto('contatti.intro', { etichetta: 'Testo introduttivo', tipo: 'area', facoltativo: true }))
         box.appendChild(campoTesto('contatti.sottoTelefono', { etichetta: 'Scritta sotto il telefono' }))
         box.appendChild(campoTesto('contatti.sottoMappa', { etichetta: 'Scritta sotto l’indirizzo' }))
         box.appendChild(campoTesto('contatti.sottoEmail', { etichetta: 'Scritta sotto l’email' }))
@@ -827,6 +868,205 @@
       disegna: disegnaPubblicazione
     }
   ]
+
+  /* -------------------------------------------------------------------
+     Sezioni della home e menu in alto
+     ----------------------------------------------------------------
+     Le cinque sezioni di serie si possono solo nascondere: i loro testi
+     restano salvati e tornano quando le si rimette visibili. Le sezioni
+     "libere" si scrivono qui e si possono togliere del tutto.
+     ---------------------------------------------------------------- */
+  var TIPI = NucleoGenera.TIPI_SEZIONE
+
+  function nomeSezione(s) {
+    if (s.tipo !== 'libera') return TIPI[s.tipo] ? TIPI[s.tipo].nome : s.tipo
+    return 'Sezione libera: ' + (s.titolo && s.titolo.trim() ? s.titolo : 'senza titolo')
+  }
+
+  function nuovaSezioneLibera() {
+    return {
+      id: 'libera-' + Date.now().toString(36),
+      tipo: 'libera',
+      visibile: true,
+      eyebrow: '',
+      titolo: 'Nuova sezione',
+      paragrafi: [''],
+      punti: [],
+      foto: { file: '', alt: '' },
+      bottone: { testo: '', link: '' }
+    }
+  }
+
+  function disegnaSezioniEMenu(box) {
+    var listaSezioni = creaElemento('div')
+    var listaMenu = creaElemento('div')
+
+    function ridisegna() {
+      disegnaSezioni()
+      disegnaMenuSito()
+    }
+
+    /* --- Le sezioni --- */
+    function disegnaSezioni() {
+      listaSezioni.textContent = ''
+      dati.sezioniHome.forEach(function (s, i) {
+        var voce = creaElemento('div', 'voce' + (s.visibile === false ? ' nascosta' : ''))
+        var testa = creaElemento('div', 'voce-testa')
+        var nome = creaElemento('span', 'numero', (i + 1) + '. ' + nomeSezione(s))
+        testa.appendChild(nome)
+
+        var spunta = creaElemento('label', 'spunta')
+        var casella = document.createElement('input')
+        casella.type = 'checkbox'
+        casella.checked = s.visibile !== false
+        casella.addEventListener('change', function () {
+          s.visibile = casella.checked
+          segnaModificato()
+          ridisegna()
+        })
+        spunta.appendChild(casella)
+        spunta.appendChild(document.createTextNode(' Visibile'))
+        testa.appendChild(spunta)
+
+        testa.appendChild(bottoneSposta('sezioniHome', i, -1, ridisegna))
+        testa.appendChild(bottoneSposta('sezioniHome', i, +1, ridisegna))
+
+        if (s.tipo === 'libera') {
+          var togli = creaElemento('button', 'btn btn-rosso btn-sm', 'Togli')
+          togli.type = 'button'
+          togli.addEventListener('click', function () {
+            if (!confirm('Vuoi togliere la sezione “' + (s.titolo || 'senza titolo') + '” dal sito?\n\nVa via anche la sua voce nel menu, se c’era. Sparisce solo dopo che premi "Salva e pubblica".')) return
+            dati.sezioniHome.splice(i, 1)
+            dati.menu = dati.menu.filter(function (v) { return v.dove !== s.id })
+            segnaModificato()
+            ridisegna()
+          })
+          testa.appendChild(togli)
+        }
+        voce.appendChild(testa)
+
+        if (s.visibile === false) {
+          voce.appendChild(creaElemento('p', 'aiuto', 'Nascosta: non compare sul sito, ma i testi restano salvati. Spunta "Visibile" per rimetterla.'))
+        }
+        if (s.tipo === 'libera') {
+          corpoSezioneLibera(voce, s, i, nome)
+        } else if (TIPI[s.tipo]) {
+          var rimando = creaElemento('p', 'aiuto')
+          rimando.appendChild(document.createTextNode('I testi di questa sezione si modificano in '))
+          var vai = creaElemento('button', 'link', '“' + nomePannello(TIPI[s.tipo].pannello) + '”')
+          vai.type = 'button'
+          vai.addEventListener('click', function () { apriSezione(TIPI[s.tipo].pannello) })
+          rimando.appendChild(vai)
+          rimando.appendChild(document.createTextNode('.'))
+          voce.appendChild(rimando)
+        }
+        listaSezioni.appendChild(voce)
+      })
+    }
+
+    /* Una sezione libera: titolo obbligatorio, tutto il resto facoltativo. */
+    function corpoSezioneLibera(voce, s, i, nome) {
+      var p = 'sezioniHome.' + i
+      voce.appendChild(campoTesto(p + '.eyebrow', { etichetta: 'Riga piccola sopra il titolo', facoltativo: true }))
+      voce.appendChild(campoTesto(p + '.titolo', {
+        etichetta: 'Titolo',
+        aiuto: 'Obbligatorio. Diventa anche l’indirizzo della sezione, per il menu.',
+        dopo: function (valore) { nome.textContent = (i + 1) + '. Sezione libera: ' + (valore.trim() || 'senza titolo') }
+      }))
+      voce.appendChild(creaElemento('h4', null, 'Paragrafi'))
+      voce.appendChild(creaElemento('p', 'aiuto', 'Scrivendo {telefono} compare il numero dello studio, cliccabile.'))
+      voce.appendChild(elencoTesti(p + '.paragrafi', { nomeVoce: 'Paragrafo', tipo: 'area' }))
+      voce.appendChild(creaElemento('h4', null, 'Elenco con la spunta'))
+      voce.appendChild(creaElemento('p', 'aiuto', 'Facoltativo: senza punti, l’elenco non compare.'))
+      voce.appendChild(elencoTesti(p + '.punti', { nomeVoce: 'Punto', tipo: 'testo' }))
+
+      voce.appendChild(creaElemento('h4', null, 'Foto'))
+      voce.appendChild(rigaImmagine({
+        titolo: 'Foto della sezione',
+        nota: 'Facoltativa. Compare sotto il testo, in formato orizzontale.',
+        percorsoFile: p + '.foto.file',
+        percorsoAlt: p + '.foto.alt',
+        nomeFile: 'sezione',
+        cartella: 'img/',
+        formato: 'image/jpeg',
+        maxLato: 1600,
+        qualita: 0.82,
+        testoTogli: 'Togli la foto',
+        togli: s.foto.file ? function () {
+          s.foto.file = ''
+          s.foto.alt = ''
+          segnaModificato()
+          ridisegna()
+        } : null
+      }))
+
+      voce.appendChild(creaElemento('h4', null, 'Bottone'))
+      voce.appendChild(campoTesto(p + '.bottone.testo', { etichetta: 'Testo del bottone', facoltativo: true }))
+      voce.appendChild(campoTesto(p + '.bottone.link', {
+        etichetta: 'Dove porta il bottone',
+        aiuto: 'Scrivi {telefono} per chiamare lo studio, {mappa} per la scheda Google, {email} per scrivere; prestazioni.html o domande.html per una pagina del sito; oppure un indirizzo completo che inizia con https://'
+      }))
+    }
+
+    /* --- Il menu in alto --- */
+    function sceltePerMenu() {
+      return dati.sezioniHome.map(function (s) {
+        return { valore: s.id, testo: 'Sezione: ' + nomeSezione(s).replace(/^Sezione libera: /, '') + (s.visibile === false ? ' (nascosta)' : '') }
+      }).concat(NucleoGenera.PAGINE_MENU.map(function (pag) {
+        return { valore: pag.dove, testo: pag.nome }
+      }))
+    }
+
+    function disegnaMenuSito() {
+      listaMenu.textContent = ''
+      dati.menu.forEach(function (v, i) {
+        var voce = creaElemento('div', 'voce')
+        var testa = creaElemento('div', 'voce-testa')
+        testa.appendChild(creaElemento('span', 'numero', 'Voce ' + (i + 1)))
+        testa.appendChild(bottoneSposta('menu', i, -1, disegnaMenuSito))
+        testa.appendChild(bottoneSposta('menu', i, +1, disegnaMenuSito))
+        testa.appendChild(bottoneTogli('menu', i, disegnaMenuSito, 'Voce del menu', v.testo))
+        voce.appendChild(testa)
+        voce.appendChild(campoTesto('menu.' + i + '.testo', { etichetta: 'Testo della voce' }))
+        voce.appendChild(campoScelta('menu.' + i + '.dove', { etichetta: 'Porta a', scelte: sceltePerMenu() }))
+        listaMenu.appendChild(voce)
+      })
+    }
+
+    box.appendChild(listaSezioni)
+    var aggiungi = creaElemento('button', 'btn btn-ghost', '+ Aggiungi una sezione')
+    aggiungi.type = 'button'
+    aggiungi.addEventListener('click', function () {
+      // Di solito una sezione nuova va prima di "Dove siamo e orari", che
+      // chiude la pagina: la si mette li', poi si sposta se serve.
+      var dove = dati.sezioniHome.map(function (s) { return s.tipo }).lastIndexOf('contatti')
+      if (dove === -1) dove = dati.sezioniHome.length
+      dati.sezioniHome.splice(dove, 0, nuovaSezioneLibera())
+      segnaModificato()
+      ridisegna()
+      listaSezioni.children[dove].scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+    box.appendChild(aggiungi)
+
+    box.appendChild(creaElemento('h3', null, 'Menu in alto'))
+    box.appendChild(creaElemento('p', 'aiuto', 'Le voci che portano a una sezione nascosta spariscono dal menu finché la sezione resta nascosta. Il bottone "Prenota" c’è sempre.'))
+    box.appendChild(listaMenu)
+    var aggiungiVoce = creaElemento('button', 'btn btn-ghost', '+ Aggiungi una voce al menu')
+    aggiungiVoce.type = 'button'
+    aggiungiVoce.addEventListener('click', function () {
+      dati.menu.push({ testo: '', dove: dati.sezioniHome.length ? dati.sezioniHome[0].id : 'prestazioni.html' })
+      segnaModificato()
+      disegnaMenuSito()
+    })
+    box.appendChild(aggiungiVoce)
+
+    ridisegna()
+  }
+
+  function nomePannello(id) {
+    var trovata = SEZIONI.filter(function (s) { return s.id === id })[0]
+    return trovata ? trovata.nome : id
+  }
 
   /* Riquadro "impostazioni avanzate": aperto solo da chi serve. */
   function avanzate(campi) {
@@ -1005,6 +1245,7 @@
   var DOVE_GUARDARE = {
     studio: ['index.html', '#contatti'],
     home: ['index.html', ''],
+    sezioni: ['index.html', ''],
     medico: ['index.html', '#chi-sono'],
     prestazioni: ['prestazioni.html', ''],
     foto: ['index.html', '#studio'],
@@ -1133,6 +1374,20 @@
     })
   }
 
+  /* Se la parte della home che si sta modificando e' nascosta, lo si
+     dice subito: altrimenti si scrive e non si capisce perche' il sito
+     non cambia. */
+  var PARTE_DELLA_HOME = { medico: 'medico', prestazioni: 'prestazioni', foto: 'studio', collaborazioni: 'collaborazioni', orari: 'contatti', contatti: 'contatti' }
+
+  function avvisoSeNascosta(idPannello, box) {
+    var tipo = PARTE_DELLA_HOME[idPannello]
+    var sezione = tipo && dati.sezioniHome.filter(function (s) { return s.tipo === tipo })[0]
+    if (!sezione || sezione.visibile !== false) return
+    var testo = 'La sezione “' + NucleoGenera.TIPI_SEZIONE[tipo].nome + '” della home è nascosta: questi testi restano salvati ma non compaiono sul sito. Si rimette visibile da “Sezioni e menu”.'
+    if (tipo === 'prestazioni') testo += ' La pagina Prestazioni invece c’è sempre.'
+    box.appendChild(creaElemento('p', 'avviso avviso-info', testo))
+  }
+
   function apriSezione(id) {
     sezioneAperta = id
     var sezione = SEZIONI.filter(function (s) { return s.id === id })[0]
@@ -1140,6 +1395,7 @@
     box.textContent = ''
     box.appendChild(creaElemento('h2', null, sezione.titolo))
     if (sezione.guida) box.appendChild(creaElemento('p', 'guida', sezione.guida))
+    avvisoSeNascosta(id, box)
     var corpo = creaElemento('div', 'sezione')
     sezione.disegna(corpo)
     box.appendChild(corpo)
@@ -1295,6 +1551,9 @@
 
       dati = await caricaContenuti()
       offriBozza()
+      // Un contenuti.json (o una bozza) di prima che sezioni e menu fossero
+      // modificabili: si riempiono i campi mancanti con il sito com'era.
+      NucleoGenera.completa(dati)
 
       $('accesso').hidden = true
       $('pannello').hidden = false
