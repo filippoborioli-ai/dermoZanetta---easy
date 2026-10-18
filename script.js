@@ -9,16 +9,26 @@
   var nav = document.getElementById('nav');
 
   if (toggle && nav) {
+    var impostaMenu = function (aperto) {
+      nav.classList.toggle('open', aperto);
+      toggle.setAttribute('aria-expanded', String(aperto));
+      toggle.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+    };
+
     toggle.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', String(open));
+      impostaMenu(!nav.classList.contains('open'));
     });
 
     // Chiude il menu dopo il clic su una voce.
     nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A' && nav.classList.contains('open')) {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
+      if (e.target.tagName === 'A' && nav.classList.contains('open')) impostaMenu(false);
+    });
+
+    // Esc chiude il menu e riporta la tastiera sul bottone che l'ha aperto.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('open')) {
+        impostaMenu(false);
+        toggle.focus();
       }
     });
   }
@@ -108,6 +118,12 @@
   // scritte nel pannello (chi ha l'acne scrive "brufoli").
   var schede = box.querySelectorAll('.card');
 
+  // Il numero da suggerire si prende dal footer, che lo riceve da
+  // contenuti.json: scritto qui, resterebbe quello vecchio il giorno
+  // in cui il numero cambia dal pannello.
+  var telefonoFooter = document.querySelector('.site-footer a[href^="tel:"]');
+  var telefono = telefonoFooter ? ': ' + telefonoFooter.textContent.trim() : '';
+
   campo.addEventListener('input', function () {
     var q = normalizza(campo.value).trim();
     var parole = q ? q.split(/\s+/) : [];
@@ -122,7 +138,7 @@
 
     if (!esito) return;
     if (!q) esito.textContent = '';
-    else if (!trovate) esito.textContent = 'Nessuna prestazione trovata. Chiama lo studio: 351 511 8880.';
+    else if (!trovate) esito.textContent = 'Nessuna prestazione trovata. Chiama lo studio' + telefono + '.';
     else esito.textContent = trovate === 1 ? '1 prestazione trovata.' : trovate + ' prestazioni trovate.';
   });
 })();

@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Sicurezza: la pagina carica solo file di questo sito. Se un domani
+     si aggiunge qualcosa da fuori (mappa incorporata, font di Google,
+     statistiche) va aggiunto qui, oltre che nell'informativa privacy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title data-t="seo.domande.titolo">Domande frequenti — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
 <meta name="description" data-c="seo.domande.descrizione" content="Cosa portare alla visita, se è convenzionata con il SSN, quanto dura: le domande frequenti sullo studio della Dott.ssa Roberta Zanetta a Verbania.">
 <meta name="theme-color" content="#c0764e">
@@ -15,8 +19,6 @@
 <meta property="og:site_name" data-c="seo.sitoNome" content="Dott.ssa Roberta Zanetta — Dermatologa">
 <meta property="og:url" content="https://dermozanetta.it/domande.html">
 <meta property="og:image" data-c="foto.ritrattoOg" content="https://dermozanetta.it/img/dottoressa.jpg">
-<meta property="og:image:width" content="596">
-<meta property="og:image:height" content="335">
 <meta property="og:image:alt" data-c="foto.ritrattoOgAlt" content="Ritratto della Dott.ssa Roberta Zanetta">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
@@ -37,7 +39,7 @@
       <!--/B-->
     </a>
 
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
       <span></span><span></span><span></span>
     </button>
 
@@ -65,7 +67,7 @@
       </p>
       <p>
         <!--B:bottoneChiama-->
-        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
         <!--/B-->
       </p>
     </div>
@@ -82,7 +84,7 @@
       </details>
       <details class="faq">
         <summary>La visita è convenzionata con il Servizio Sanitario Nazionale?</summary>
-        <p>Per informazioni su costi e modalità di pagamento chiama lo studio al <a href="tel:+393515118880">351 511 8880</a>: te lo diciamo prima di fissare l’appuntamento, senza impegno.</p>
+        <p>Per informazioni su costi e modalità di pagamento chiama lo studio al <a href="tel:+393515118880">351&nbsp;511&nbsp;8880</a>: te lo diciamo prima di fissare l’appuntamento, senza impegno.</p>
       </details>
       <details class="faq">
         <summary>Quanto dura la visita dermatologica?</summary>
@@ -100,7 +102,7 @@
         <p class="section-intro">Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27, 28921 Verbania (VB).</p>
       </div>
       <div class="cta-strip-actions">
-        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
         <a class="btn btn-ghost" data-c="mappa" href="https://maps.google.com/?cid=15553148866995770811" target="_blank" rel="noopener">Apri in Google Maps</a>
       </div>
       <!--/B-->
@@ -119,7 +121,7 @@
     <div>
       Piazza Castello 27<br>
       28921 Verbania (VB)<br>
-      <a data-c="tel" href="tel:+393515118880">351 511 8880</a>
+      <a data-c="tel" href="tel:+393515118880">351&nbsp;511&nbsp;8880</a>
     </div>
     <div class="footer-note">
       <!-- Dati obbligatori per legge sul sito di un medico (pubblicita'
@@ -135,7 +137,7 @@
 </footer>
 
 <!--B:bottoneChiamaFisso-->
-<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
 <!--/B-->
 
 <!-- Le stesse domande in forma leggibile da Google: possono comparire

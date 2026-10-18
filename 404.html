@@ -2,7 +2,16 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
+<!-- GitHub mostra questa pagina a qualunque profondita' (/vecchia/pagina/):
+     senza <base> i percorsi relativi (style.css, privacy.html) verrebbero
+     cercati dentro la cartella inesistente e la pagina uscirebbe senza
+     stile e con i link rotti. -->
+<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Sicurezza: la pagina carica solo file di questo sito. Se un domani
+     si aggiunge qualcosa da fuori (mappa incorporata, font di Google,
+     statistiche) va aggiunto qui, oltre che nell'informativa privacy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <!-- Pagina che GitHub mostra quando un indirizzo non esiste (link vecchio,
      indirizzo scritto male). Senza questo file il visitatore vede la pagina
      grigia di GitHub, che non sembra nemmeno il sito dello studio.
@@ -16,8 +25,6 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<a class="skip" href="#main">Vai al contenuto</a>
 
 <header class="site-header" id="top">
   <div class="wrap header-inner">
@@ -49,7 +56,7 @@
       </ul>
       <div class="hero-cta">
         <!--B:bottoneChiama-->
-        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
         <!--/B-->
       </div>
     </div>
@@ -66,7 +73,7 @@
     <div>
       Piazza Castello 27<br>
       28921 Verbania (VB)<br>
-      <a data-c="tel" href="tel:+393515118880">351 511 8880</a>
+      <a data-c="tel" href="tel:+393515118880">351&nbsp;511&nbsp;8880</a>
     </div>
     <div class="footer-note">
       <!-- Dati obbligatori per legge sul sito di un medico (pubblicita'

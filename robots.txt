@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
 
-# Pagina di servizio per chi gestisce il sito: non e' contenuto da indicizzare.
-Disallow: /admin.html
+# admin.html (il pannello) NON e' bloccato qui apposta: ha gia' il tag
+# <meta name="robots" content="noindex">, e Google lo rispetta solo se
+# puo' leggere la pagina. Bloccarla qui gli impedirebbe di vederlo.
 
 Sitemap: https://dermozanetta.it/sitemap.xml

@@ -41,6 +41,15 @@
 (function () {
   'use strict'
 
+  /* Il pannello non si lascia incorniciare dentro un altro sito: chi lo
+     facesse potrebbe coprirlo con una pagina finta e far cliccare
+     "Salva e pubblica" a tradimento (clickjacking). GitHub Pages non
+     permette di vietarlo dal server, quindi lo si fa da qui. */
+  if (window.top !== window.self) {
+    document.body.textContent = 'Il pannello va aperto da solo, non dentro un’altra pagina.'
+    return
+  }
+
   /* -------------------------------------------------------------------
      Configurazione
      ---------------------------------------------------------------- */
@@ -1024,17 +1033,22 @@
     return html
   }
 
-  /* L'anteprima e' una pagina a se': le servono un indirizzo di base
-     per ritrovare style.css e le foto, e un piccolo freno ai link, che
-     altrimenti porterebbero fuori dal pannello. */
+  /* L'anteprima e' una pagina a se': le serve un indirizzo di base per
+     ritrovare style.css e le foto. */
   function perIlTelaio(html) {
     var base = location.href.replace(/[^/]*$/, '')
-    var aggiunte = '<base href="' + base + '">' +
-      '<script>document.addEventListener("click",function(e){' +
-      'var a=e.target.closest&&e.target.closest("a");' +
-      'if(a&&a.getAttribute("href")&&a.getAttribute("href").charAt(0)!=="#")e.preventDefault();' +
-      '},true)<\/script>'
-    return html.replace('<head>', '<head>' + aggiunte)
+    return html.replace('<head>', '<head><base href="' + base + '">')
+  }
+
+  /* Un piccolo freno ai link dell'anteprima, che altrimenti porterebbero
+     fuori dal pannello. Lo mette il pannello da fuori, a pagina caricata:
+     uno script scritto dentro l'anteprima lo bloccherebbero le regole di
+     sicurezza della pagina stessa (Content-Security-Policy). */
+  function frenaLink(documento) {
+    documento.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a')
+      if (a && a.getAttribute('href') && a.getAttribute('href').charAt(0) !== '#') e.preventDefault()
+    }, true)
   }
 
   function aggiornaAnteprima() {
@@ -1058,6 +1072,7 @@
       telaio.onload = function () {
         try {
           var finestra = telaio.contentWindow
+          frenaLink(finestra.document)
           // Mentre si scrive l'anteprima non deve saltare: resta dov'era.
           if (destinazioneAnteprima === null) { finestra.scrollTo(0, altezza); return }
           var punto = destinazioneAnteprima && finestra.document.querySelector(destinazioneAnteprima)

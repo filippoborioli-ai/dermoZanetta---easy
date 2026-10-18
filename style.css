@@ -9,7 +9,15 @@
   --sabbia-2:   #eadbcb;
   --terracotta: #c0764e;
   --terracotta-scuro: #a45f3b;
+  /* Fondo dei bottoni pieni: la terracotta chiara con la scritta bianca
+     si ferma a 3,5:1 di contrasto, sotto il minimo di leggibilita'
+     (4,5:1, WCAG AA). Questa e' la tinta piu' chiara che ci arriva. */
+  --terracotta-forte: #ab633d;
+  --terracotta-forte-hover: #8e4d2c;
   --salvia:     #7f8f7a;
+  /* Salvia per le scritte piccole (occhielli, etichette): quella piena
+     resta per i pallini, dove il contrasto del testo non conta. */
+  --salvia-testo: #606d5c;
   --bruno:      #3b2e27;
   --bruno-soft: #6d5c50;
   --bianco:     #fffdfb;
@@ -25,7 +33,10 @@
 
 *,*::before,*::after{ box-sizing:border-box; }
 
-html{ scroll-behavior:smooth; }
+/* L'intestazione resta fissa in alto: senza margine, chi salta a
+   "Dove siamo" o "Lo studio" si ritrova il titolo della sezione
+   nascosto sotto la barra. */
+html{ scroll-behavior:smooth; scroll-padding-top:90px; }
 
 body{
   margin:0;
@@ -57,7 +68,7 @@ p{ margin:0 0 .8em; }
   letter-spacing:.14em;
   font-size:.7rem;
   font-weight:700;
-  color:var(--salvia);
+  color:var(--salvia-testo);
   margin:0 0 .35em;
 }
 
@@ -72,10 +83,23 @@ p{ margin:0 0 .8em; }
 }
 .skip:focus{ left:8px; top:8px; }
 
+/* Testo per i lettori di schermo: c'e' nella pagina ma non si vede. */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* Chi naviga con la tastiera deve vedere dove si trova. Solo con
+   :focus-visible: al clic del mouse il bordo non compare. */
+a:focus-visible, button:focus-visible{
+  outline:2px solid var(--terracotta-scuro); outline-offset:3px;
+}
+.site-footer a:focus-visible{ outline-color:#f0c9ac; }
+
 /* ---------------- Bottoni ---------------- */
 .btn{
   display:inline-block;
-  background:var(--terracotta);
+  background:var(--terracotta-forte);
   color:#fff;
   text-decoration:none;
   font-weight:600;
@@ -84,7 +108,7 @@ p{ margin:0 0 .8em; }
   transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
   box-shadow:0 6px 18px rgba(192,118,78,.28);
 }
-.btn:hover{ background:var(--terracotta-scuro); transform:translateY(-2px); box-shadow:0 10px 24px rgba(192,118,78,.34); }
+.btn:hover{ background:var(--terracotta-forte-hover); transform:translateY(-2px); box-shadow:0 10px 24px rgba(192,118,78,.34); }
 .btn-ghost{
   background:transparent; color:var(--bruno);
   border:1.5px solid var(--sabbia-2); box-shadow:none;
@@ -92,6 +116,8 @@ p{ margin:0 0 .8em; }
 .btn-ghost:hover{ background:var(--sabbia); color:var(--bruno); }
 .btn-sm{ padding:9px 18px; font-size:.92rem; }
 .btn-block{ display:block; text-align:center; margin-top:14px; }
+/* Bottone isolato in fondo a una sezione (es. "Vedi tutte le prestazioni"). */
+.azione-sezione{ margin-top:34px; }
 
 /* ---------------- Header ---------------- */
 .site-header{
@@ -293,7 +319,7 @@ p{ margin:0 0 .8em; }
 .search label{
   display:block; margin-bottom:8px;
   font-size:.8rem; font-weight:700;
-  text-transform:uppercase; letter-spacing:.14em; color:var(--salvia);
+  text-transform:uppercase; letter-spacing:.14em; color:var(--salvia-testo);
 }
 .search input{
   width:100%; font:inherit; color:var(--bruno);
@@ -320,15 +346,19 @@ p{ margin:0 0 .8em; }
 .cta-strip-actions{ display:flex; flex-wrap:wrap; gap:12px; }
 
 /* ---------------- Collaborazioni ----------------
-   Riga a scorrimento laterale, non a capo: con pochi loghi (come ora)
-   restano centrati senza barra di scorrimento; se in futuro se ne
-   aggiungono altri oltre a quelli che stanno nella larghezza
-   disponibile, si scorre invece di andare a capo su piu' righe. */
+   Riga a scorrimento laterale, non a capo: con pochi loghi restano
+   centrati senza barra di scorrimento; se non stanno nella larghezza
+   disponibile (sul telefono, gia' con quattro) si scorre invece di
+   andare a capo su piu' righe.
+   Il centraggio lo fanno i margini automatici del primo e dell'ultimo
+   logo, NON justify-content:center: con quello, quando i loghi
+   sbordano, la parte che esce a sinistra non si puo' piu' scorrere e
+   il primo logo resta tagliato per sempre. I margini automatici
+   invece si azzerano da soli appena manca lo spazio. */
 .logos{
   display:flex;
   flex-wrap:nowrap;
   overflow-x:auto;
-  justify-content:center;
   align-items:stretch;
   gap:18px;
   margin-top:16px;                 /* accostati al titolo: qui sopra c'e'
@@ -336,6 +366,8 @@ p{ margin:0 0 .8em; }
   scroll-snap-type:x proximity;
 }
 .logo-card{ scroll-snap-align:center; flex:0 0 auto; }
+.logo-card:first-child{ margin-left:auto; }
+.logo-card:last-child{ margin-right:auto; }
 .logo-card{
   display:flex;
   align-items:center;
@@ -424,7 +456,7 @@ p{ margin:0 0 .8em; }
 .call-fab{
   display:none;
   position:fixed; left:16px; right:16px; bottom:16px; z-index:60;
-  background:var(--terracotta); color:#fff;
+  background:var(--terracotta-forte); color:#fff;
   text-align:center; text-decoration:none; font-weight:600;
   padding:15px; border-radius:999px;
   box-shadow:0 10px 26px rgba(59,46,39,.3);
@@ -483,6 +515,9 @@ p{ margin:0 0 .8em; }
 
   .call-fab{ display:block; }
   body{ padding-bottom:76px; }
+  /* Stesso discorso dell'intestazione, in basso: il bottone "Chiama"
+     fisso non deve coprire il campo o il link su cui si sta. */
+  html{ scroll-padding-bottom:90px; }
 }
 
 @media (prefers-reduced-motion: reduce){

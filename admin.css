@@ -10,7 +10,12 @@
   --sabbia-2:   #eadbcb;
   --terracotta: #c0764e;
   --terracotta-scuro: #a45f3b;
+  /* Come in style.css: fondo dei bottoni con la scritta bianca e salvia
+     per le scritte piccole, abbastanza scuri da leggersi (WCAG AA). */
+  --terracotta-forte: #ab633d;
+  --terracotta-forte-hover: #8e4d2c;
   --salvia:     #7f8f7a;
+  --salvia-testo: #606d5c;
   --bruno:      #3b2e27;
   --bruno-soft: #6d5c50;
   --bianco:     #fffdfb;
@@ -110,7 +115,7 @@ a{ color:var(--terracotta-scuro); }
   font:inherit; font-size:.95rem; cursor:pointer;
 }
 .menu button:hover{ background:var(--sabbia); }
-.menu button[aria-current="true"]{ background:var(--terracotta); color:#fff; }
+.menu button[aria-current="true"]{ background:var(--terracotta-forte); color:#fff; }
 
 .contenuto{ padding:26px 28px 90px; max-width:820px; }
 
@@ -128,6 +133,8 @@ a{ color:var(--terracotta-scuro); }
 .campo{ margin:0 0 20px; }
 .campo > label{ display:block; font-weight:600; font-size:.95rem; margin-bottom:4px; }
 .campo .aiuto{ font-size:.85rem; color:var(--bruno-soft); margin:0 0 6px; }
+/* Nota "password dimenticata?" sotto il modulo di accesso. */
+.accesso-box .aiuto{ font-size:.85rem; color:var(--bruno-soft); margin:0; }
 
 input[type=text], input[type=email], input[type=password], input[type=url], input[type=number], textarea, select{
   width:100%;
@@ -150,11 +157,11 @@ input:focus, textarea:focus{ outline:2px solid var(--terracotta); outline-offset
   display:inline-block;
   padding:10px 18px;
   border:0; border-radius:999px;
-  background:var(--terracotta); color:#fff;
+  background:var(--terracotta-forte); color:#fff;
   font:inherit; font-weight:600; cursor:pointer;
   text-decoration:none;
 }
-.btn:hover{ background:var(--terracotta-scuro); }
+.btn:hover{ background:var(--terracotta-forte-hover); }
 .btn:disabled{ opacity:.5; cursor:default; }
 .btn-ghost{ background:transparent; color:var(--terracotta-scuro); border:1px solid var(--sabbia-2); }
 .btn-ghost:hover{ background:var(--sabbia); color:var(--terracotta-scuro); }
@@ -175,7 +182,7 @@ input:focus, textarea:focus{ outline:2px solid var(--terracotta); outline-offset
   margin-bottom:10px;
 }
 .voce-testa .numero{
-  font-size:.8rem; font-weight:700; color:var(--salvia);
+  font-size:.8rem; font-weight:700; color:var(--salvia-testo);
   text-transform:uppercase; letter-spacing:.1em;
   margin-right:auto;
 }
@@ -262,7 +269,7 @@ code{
   border:0; background:transparent; color:var(--bruno-soft);
   font:inherit; font-size:.82rem; padding:5px 12px; cursor:pointer;
 }
-.anteprima-misure button[aria-pressed="true"]{ background:var(--terracotta); color:#fff; }
+.anteprima-misure button[aria-pressed="true"]{ background:var(--terracotta-forte); color:#fff; }
 
 .anteprima-cornice{
   flex:1; min-height:0;

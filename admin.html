@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Sicurezza: questa pagina tiene in memoria il codice di collegamento
+     a GitHub. Puo' eseguire solo i propri file e parlare solo con questo
+     sito e con api.github.com: anche se qualcosa di estraneo finisse
+     nella pagina, non potrebbe spedire il codice altrove.
+     L'anteprima eredita le stesse regole. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://api.github.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Modifica il sito — Dott.ssa Roberta Zanetta</title>
 <!-- Questa pagina non deve finire su Google: e' di servizio, non fa parte
      del sito. Il divieto e' ripetuto anche in robots.txt. -->
@@ -36,7 +42,7 @@
 
     <p class="avviso avviso-errore" id="erroreAccesso" hidden></p>
     <p><button class="btn" type="submit" id="bottoneEntra">Entra</button></p>
-    <p class="aiuto" style="font-size:.85rem;color:var(--bruno-soft);margin:0">
+    <p class="aiuto">
       Password dimenticata? È scritta nel file <code>CREDENZIALI.md</code> che ti è
       stato consegnato. Se non lo trovi, chiedi a chi gestisce il sito.
     </p>

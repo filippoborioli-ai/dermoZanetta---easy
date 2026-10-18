@@ -70,11 +70,18 @@
         .replace(/"/g, '&quot;')
     }
 
+    /* Il numero come si legge in pagina, con spazi che non vanno a
+       capo: "351 511" su una riga e "8880" sulla successiva non si
+       riesce piu' a leggere come un numero solo. */
+    function telefono() {
+      return esc(c.studio.telefonoVisibile).replace(/ /g, '&nbsp;')
+    }
+
     /* {telefono} dentro un testo diventa il numero, cliccabile. */
     function conTelefono(t) {
       return esc(t).replace(
         /\{telefono\}/g,
-        '<a href="tel:' + esc(c.studio.telefonoLink) + '">' + esc(c.studio.telefonoVisibile) + '</a>'
+        '<a href="tel:' + esc(c.studio.telefonoLink) + '">' + telefono() + '</a>'
       )
     }
 
@@ -143,6 +150,10 @@
         'mappa': { href: c.studio.mappaUrl },
 
         'foto.dottoressa': { src: c.foto.dottoressa.file, alt: c.foto.dottoressa.alt },
+        // Il <link rel="preload"> deve seguire la foto: se il ritratto
+        // cambia dal pannello e questo resta indietro, il browser scarica
+        // per prima una foto che non usa piu'.
+        'foto.precarica': { href: c.foto.dottoressa.file },
         'foto.ritrattoOg': { content: c.studio.sito.replace(/\/$/, '') + '/' + c.foto.dottoressa.file },
         'foto.ritrattoOgAlt': { content: c.foto.dottoressa.alt },
 
@@ -248,7 +259,7 @@
         return [
           '<a class="contact-row" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">',
           '  <span class="contact-icon" aria-hidden="true">&#9990;</span>',
-          '  <span><strong>' + esc(c.studio.telefonoVisibile) + '</strong><small>' + esc(c.contatti.sottoTelefono) + '</small></span>',
+          '  <span><strong>' + telefono() + '</strong><small>' + esc(c.contatti.sottoTelefono) + '</small></span>',
           '</a>',
           '<a class="contact-row" data-c="mappa" href="' + esc(c.studio.mappaUrl) + '" target="_blank" rel="noopener">',
           '  <span class="contact-icon" aria-hidden="true">&#9906;</span>',
@@ -272,7 +283,7 @@
           '<div>',
           '  ' + esc(c.studio.via) + '<br>',
           '  ' + esc(c.studio.cap) + ' ' + esc(c.studio.citta) + ' (' + esc(c.studio.provincia) + ')<br>',
-          '  <a data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">' + esc(c.studio.telefonoVisibile) + '</a>',
+          '  <a data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">' + telefono() + '</a>',
           '</div>',
           '<div class="footer-note">',
           '  <!-- Dati obbligatori per legge sul sito di un medico (pubblicita\'',
@@ -295,7 +306,7 @@
           '  <p class="section-intro">' + conTelefono(c.ctaFinale.testo) + '</p>',
           '</div>',
           '<div class="cta-strip-actions">',
-          '  <a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + esc(c.studio.telefonoVisibile) + '</a>',
+          '  <a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + telefono() + '</a>',
           '  <a class="btn btn-ghost" data-c="mappa" href="' + esc(c.studio.mappaUrl) + '" target="_blank" rel="noopener">' + esc(c.ctaFinale.bottoneMappa) + '</a>',
           '</div>'
         ].join('\n')
@@ -310,7 +321,7 @@
           '  <p class="section-intro">' + conTelefono(c.ctaFinale.testo) + '</p>',
           '</div>',
           '<div class="cta-strip-actions">',
-          '  <a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + esc(c.studio.telefonoVisibile) + '</a>',
+          '  <a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + telefono() + '</a>',
           '  <a class="btn btn-ghost" href="index.html">Torna alla home</a>',
           '</div>'
         ].join('\n')
@@ -322,7 +333,7 @@
         return [
           '<p>',
           '  ' + esc(c.studio.nomeMedico) + ', ' + esc(indirizzoCompleto()) + '.<br>',
-          '  Telefono <a data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">' + esc(c.studio.telefonoVisibile) + '</a>.',
+          '  Telefono <a data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">' + telefono() + '</a>.',
           '</p>',
           '<p>Email: <a data-c="mail" href="mailto:' + esc(c.studio.email) + '">' + esc(c.studio.email) + '</a></p>'
         ].join('\n')
@@ -331,7 +342,7 @@
       /* Tutti i bottoni "Chiama 351...": il numero visibile sta nel
          testo, non solo nel link, quindi va riscritto anche quello. */
       bottoneChiama: function () {
-        return '<a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + esc(c.studio.telefonoVisibile) + '</a>'
+        return '<a class="btn" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + telefono() + '</a>'
       },
 
       bottoneChiamaPiccolo: function () {
@@ -339,7 +350,7 @@
       },
 
       bottoneChiamaFisso: function () {
-        return '<a class="call-fab" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + esc(c.studio.telefonoVisibile) + '</a>'
+        return '<a class="call-fab" data-c="tel" href="tel:' + esc(c.studio.telefonoLink) + '">Chiama ' + telefono() + '</a>'
       },
 
       bottoneOrari: function () {
@@ -481,6 +492,29 @@
     }
     (c.domande || []).forEach(function (d, i) {
       if (!d.domanda || !d.risposta) problemi.push('La domanda n. ' + (i + 1) + ' non ha testo o risposta.')
+    })
+
+    /* Gli indirizzi finiscono dentro href e nei dati per Google. Solo
+       https://: un link scritto male (o un "javascript:" incollato per
+       sbaglio) non deve arrivare in pagina. */
+    function eIndirizzoWeb(u) { return /^https:\/\/[^\s"'<>]+$/.test(String(u || '')) }
+    if (!eIndirizzoWeb(c.studio.sito)) problemi.push('L’indirizzo del sito deve iniziare con https://')
+    if (!eIndirizzoWeb(c.studio.mappaUrl)) problemi.push('Il link a Google Maps deve iniziare con https://')
+    ;(c.studio.profili || []).forEach(function (u, i) {
+      if (!eIndirizzoWeb(u)) problemi.push('Il profilo n. ' + (i + 1) + ' (studio.profili) deve iniziare con https://')
+    })
+    if (!/^[^\s@"'<>]+@[^\s@"'<>]+\.[a-z]{2,}$/i.test(String(c.studio.email || ''))) {
+      problemi.push('L’email dello studio non sembra valida.')
+    }
+
+    /* Le immagini stanno nel sito, sotto img/. Un logo aggiunto e mai
+       caricato lascerebbe in pagina un riquadro con l'icona rotta. */
+    function eFileImmagine(f) { return /^img\/[\w./-]+\.(jpe?g|png|webp|svg)$/i.test(String(f || '')) && f.indexOf('..') === -1 }
+    Object.keys(c.foto || {}).forEach(function (k) {
+      if (!eFileImmagine(c.foto[k].file)) problemi.push('Manca la foto “' + k + '”, oppure il suo nome non va bene.')
+    })
+    ;(c.loghi || []).forEach(function (l, i) {
+      if (!eFileImmagine(l.file)) problemi.push('Il logo n. ' + (i + 1) + ' non ha un’immagine: caricala o togli il logo.')
     })
     return problemi
   }

@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Sicurezza: la pagina carica solo file di questo sito. Se un domani
+     si aggiunge qualcosa da fuori (mappa incorporata, font di Google,
+     statistiche) va aggiunto qui, oltre che nell'informativa privacy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title data-t="seo.privacy.titolo">Privacy — Dott.ssa Roberta Zanetta, dermatologa a Verbania</title>
 <meta name="description" data-c="seo.privacy.descrizione" content="Informativa privacy del sito della Dott.ssa Roberta Zanetta, dermatologa a Verbania. Il sito non usa cookie e non raccoglie dati tramite moduli.">
 <meta name="theme-color" content="#c0764e">
@@ -32,7 +36,7 @@
       <!--/B-->
     </a>
 
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Apri il menu">
       <span></span><span></span><span></span>
     </button>
 
@@ -75,7 +79,7 @@
       <!--B:titolarePrivacy-->
       <p>
         Dott.ssa Roberta Zanetta, Piazza Castello 27, 28921 Verbania (VB).<br>
-        Telefono <a data-c="tel" href="tel:+393515118880">351 511 8880</a>.
+        Telefono <a data-c="tel" href="tel:+393515118880">351&nbsp;511&nbsp;8880</a>.
       </p>
       <p>Email: <a data-c="mail" href="mailto:dermozanetta@gmail.com">dermozanetta@gmail.com</a></p>
       <!--/B-->
@@ -155,7 +159,7 @@
         <p class="section-intro">Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27, 28921 Verbania (VB).</p>
       </div>
       <div class="cta-strip-actions">
-        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+        <a class="btn" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
         <a class="btn btn-ghost" href="index.html">Torna alla home</a>
       </div>
       <!--/B-->
@@ -174,7 +178,7 @@
     <div>
       Piazza Castello 27<br>
       28921 Verbania (VB)<br>
-      <a data-c="tel" href="tel:+393515118880">351 511 8880</a>
+      <a data-c="tel" href="tel:+393515118880">351&nbsp;511&nbsp;8880</a>
     </div>
     <div class="footer-note">
       <!-- Dati obbligatori per legge sul sito di un medico (pubblicita'
@@ -190,7 +194,7 @@
 </footer>
 
 <!--B:bottoneChiamaFisso-->
-<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351 511 8880</a>
+<a class="call-fab" data-c="tel" href="tel:+393515118880">Chiama 351&nbsp;511&nbsp;8880</a>
 <!--/B-->
 
 <!--B:briciolePrivacy-->
