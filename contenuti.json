@@ -315,7 +315,7 @@
     {
       "id": "pagina-domande",
       "tipo": "domande",
-      "visibile": true
+      "visibile": false
     }
   ]
 }
