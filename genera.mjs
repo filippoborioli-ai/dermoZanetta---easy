@@ -34,7 +34,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync } from 'node:fs'
 import './genera-nucleo.js'
 
-const { generaPagina, controlla, completa, fileDellaPagina, paginaOnline } = globalThis.NucleoGenera
+const { generaPagina, controlla, completa, fileDellaPagina, paginaOnline, favicon } = globalThis.NucleoGenera
 
 const c = completa(JSON.parse(readFileSync('contenuti.json', 'utf8')))
 const PAGINE = ['index.html', 'prestazioni.html', 'domande.html', 'privacy.html', '404.html']
@@ -79,6 +79,9 @@ for (const file of readdirSync('.').filter(f => f.endsWith('.html') && f !== STA
     console.log(`${file}: tolta (la pagina non e' piu' nel sito)`)
   }
 }
+
+/* L'icona del sito con le lettere del marchio (studio.iniziale). */
+scrivi('img/favicon.svg', favicon(c))
 
 /* 4. La sitemap: dice a Google quali pagine ci sono e quando sono
    cambiate. La si riscrive intera, cosi' una pagina nascosta ne esce e

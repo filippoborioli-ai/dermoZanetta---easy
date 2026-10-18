@@ -201,6 +201,23 @@
   /* C'e' qualcosa di scritto? Spazi e a capo non contano. */
   function pieno(t) { return String(t == null ? '' : t).trim() !== '' }
 
+  /* L'icona del sito (linguetta del browser, risultati di Google): le
+     stesse lettere del cerchio in testata, prese da studio.iniziale.
+     Con due lettere il corpo scende, perche' stiano nel quadratino. */
+  function favicon(c) {
+    var lettere = String(c.studio.iniziale || '').trim()
+    var corpo = lettere.length > 1 ? 30 : 38
+    var base = lettere.length > 1 ? 43 : 45
+    var testo = lettere.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    return [
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">',
+      '  <rect width="64" height="64" rx="16" fill="#c0764e"/>',
+      '  <text x="32" y="' + base + '" font-family="Georgia,serif" font-size="' + corpo + '" fill="#fdf8f3" text-anchor="middle">' + testo + '</text>',
+      '</svg>',
+      ''
+    ].join('\n')
+  }
+
   /* Una pagina e' online? Home e privacy sempre; le altre se visibili. */
   function paginaOnline(c, file) {
     if (file === 'index.html' || file === 'privacy.html') return true
@@ -1013,6 +1030,11 @@
     (c.prestazioni || []).forEach(function (p, i) {
       if (!p.nome || !p.testo) problemi.push('La prestazione n. ' + (i + 1) + ' non ha nome o descrizione.')
     })
+    // Le lettere del marchio stanno in un cerchio piccolo e nell'icona
+    // del sito: piu' di due non ci entrano.
+    if (!/^\S{1,2}$/.test(String(c.studio.iniziale || '').trim())) {
+      problemi.push('La lettera del marchio deve essere una o due lettere (per esempio Z oppure RZ).')
+    }
     if (!c.studio.telefonoLink || c.studio.telefonoLink.charAt(0) !== '+') {
       problemi.push('Il numero di telefono non è valido.')
     }
@@ -1116,6 +1138,7 @@
     // contenuti.json vecchio, e sa quali sezioni e quali pagine esistono.
     completa: completa,
     fissaFilePagine: fissaFilePagine,
+    favicon: favicon,
     fileDellaPagina: fileDellaPagina,
     sceltePagine: sceltePagine,
     paginaOnline: paginaOnline,

@@ -679,7 +679,7 @@
           aiuto: 'Obbligatoria per legge. Compare in fondo a ogni pagina.'
         }))
         box.appendChild(avanzate([
-          campoTesto('studio.iniziale', { etichetta: 'Lettera del marchio', aiuto: 'La lettera nel cerchio in alto a sinistra.' }),
+          campoTesto('studio.iniziale', { etichetta: 'Lettera del marchio', aiuto: 'Una o due lettere. Compaiono nel cerchio in alto a sinistra e nell’icona del sito (la linguetta del browser e i risultati di Google).' }),
           campoTesto('studio.viaDatiStrutturati', { etichetta: 'Indirizzo per Google', aiuto: 'Stesso indirizzo con la virgola prima del numero: Piazza Castello, 27.' }),
           campoTesto('studio.sito', { etichetta: 'Indirizzo del sito', aiuto: 'Con https:// e la barra finale.' }),
           campoTesto('studio.latitudine', { etichetta: 'Latitudine', tipo: 'number' }),

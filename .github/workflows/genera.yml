@@ -49,14 +49,14 @@ jobs:
       - name: Salva le pagine, se sono cambiate
         run: |
           # Tutte le pagine HTML, comprese quelle libere create o cancellate
-          # dal generatore, piu' la sitemap. Nient'altro.
-          if [ -z "$(git status --porcelain -- '*.html' sitemap.xml)" ]; then
+          # dal generatore, piu' la sitemap e l'icona. Nient'altro.
+          if [ -z "$(git status --porcelain -- '*.html' sitemap.xml img/favicon.svg)" ]; then
             echo "Niente da fare: le pagine erano gia' allineate a contenuti.json."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- '*.html' sitemap.xml
+          git add -A -- '*.html' sitemap.xml img/favicon.svg
           git commit -m "Rigenerate le pagine da contenuti.json"
           # Se fra la lettura e la scrittura e' arrivato un altro push, ci si
           # rimette in coda a quello e si riprova una volta.
