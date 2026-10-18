@@ -373,7 +373,7 @@ checker" prima di pubblicare.
 | Ho pubblicato ma **il sito è uguale** | aspetta due minuti e ricarica con `Ctrl+F5`. Se dopo cinque minuti è ancora uguale, guarda la scheda **Actions** su GitHub: se c'è una crocetta rossa, il generatore si è fermato e il messaggio dice perché |
 | **"Qualcun altro ha modificato il sito nel frattempo"** | il file è cambiato da un altro dispositivo. Ricarica il pannello e rifai la modifica: è la protezione che impedisce di cancellare il lavoro altrui |
 | `genera.mjs` dice **"chiave assente in contenuti.json"** | in una pagina c'è un segnaposto `<!--T:...-->` che punta a una voce che non esiste. O si aggiunge la voce, o si toglie il segnaposto |
-| `genera.mjs` dice **"blocco sconosciuto"** | c'è un `<!--B:nome-->` senza la funzione corrispondente in `BLOCCHI`, dentro `genera.mjs` |
+| `genera.mjs` dice **"blocco sconosciuto"** | c'è un `<!--B:nome-->` senza la funzione corrispondente in `BLOCCHI`, dentro `genera-nucleo.js` |
 | Su GitHub compare una **richiesta di Dependabot** ("Bump actions/…") | è l'aggiornamento mensile delle azioni di `genera.yml`. Si apre, si controlla che i controlli siano verdi e si preme *Merge*. Lasciarla lì non rompe niente subito, ma a lungo andare le azioni invecchiano |
 | Il pannello dice **"Il link a Google Maps deve iniziare con https://"** (o simile) | un indirizzo, un'email o un logo senza immagine non passano il controllo: va corretto il campo indicato, poi si ripubblica |
 | Ho sostituito una foto e **si vede ancora la vecchia** | non dovrebbe succedere: il pannello dà un nome nuovo a ogni foto. Se capita, è la cache del browser: `Ctrl+F5` |
@@ -391,7 +391,7 @@ a mano.
 - [x] Email dello studio nei contatti, nei dati strutturati e nella privacy
 - [x] Orari reali nella tabella **e** nei dati per Google (li allinea il generatore:
   non sono più due punti da tenere d'accordo a mano)
-- [ ] **Record DNS inseriti dal registrar** e *Enforce HTTPS* attivo su GitHub
+- [x] **Record DNS inseriti dal registrar** e *Enforce HTTPS* attivo su GitHub
   (vedi "Dominio personalizzato")
 - [x] Foto vere al posto dei segnaposto in `img/`
 - [ ] **Ritratto della prima schermata più definito.** Quello di oggi è 596×335,
@@ -432,7 +432,11 @@ Il dominio **senza `www`** è quello principale: è la forma usata nei canonical
 `www.dermozanetta.it` funziona grazie al record CNAME qui sotto, e GitHub lo
 reindirizza da solo sul dominio nudo.
 
-### Cosa resta da fare (una volta sola)
+### Come è stato configurato (una volta sola)
+
+> **Fatto.** Controllato il 18 ottobre 2026: i quattro record A rispondono, il
+> certificato è attivo e *Enforce HTTPS* è acceso (`http://` rimanda a `https://`).
+> I passi restano qui nel caso si debba rifare tutto, per esempio cambiando registrar.
 
 **1. DNS — dal pannello del registrar.** Sono cinque record:
 
