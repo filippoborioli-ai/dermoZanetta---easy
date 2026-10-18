@@ -3,7 +3,7 @@
   "studio": {
     "nomeMedico": "Dott.ssa Roberta Zanetta",
     "specialita": "Dermatologia e Venereologia",
-    "iniziale": "Z",
+    "iniziale": "RZ",
     "telefonoLink": "+393515118880",
     "telefonoVisibile": "351 511 8880",
     "email": "dermozanetta@gmail.com",
@@ -22,11 +22,11 @@
   },
   "home": {
     "eyebrow": "Dermatologia e Venereologia — Verbania",
-    "titolo": "Dermatologa a Verbania: visite dermatologiche e controllo dei nei, su appuntamento.",
+    "titolo": "Studio dermatologico a Verbania: Cura delle malattie della pelle e dei capelli.",
     "lead": "La Dott.ssa Roberta Zanetta riceve nel suo studio di Verbania, in Piazza Castello. Ogni visita ha il tempo che serve.",
     "bottonePrestazioni": "Vedi le prestazioni",
     "bottoneMappa": "Dove si trova",
-    "nota": "Stesso numero per prenotazioni e informazioni."
+    "nota": ""
   },
   "sezioniHome": [
     {
@@ -77,29 +77,15 @@
       "dove": "contatti"
     }
   ],
-  "pagine": [
-    {
-      "id": "pagina-prestazioni",
-      "tipo": "prestazioni",
-      "visibile": true
-    },
-    {
-      "id": "pagina-domande",
-      "tipo": "domande",
-      "visibile": true
-    }
-  ],
   "chiSono": {
     "eyebrow": "Il medico",
     "titolo": "Chi ti visita",
     "paragrafi": [
-      "Specialista in Dermatologia e Venereologia, la Dott.ssa Roberta Zanetta riceve su appuntamento nel suo studio di Verbania, in Piazza Castello.",
-      "La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio."
+      "Dermatologa con pluriennale esperienza clinica, con particolare competenze in dermochirurgia e nella diagnosi e trattamento delle patologie infiammatorie cutanee.",
+      "La visita comprende la valutazione della pelle, delle mucose, dei capelli e delle unghie. Per il controllo dei nei viene impiegato il dermatoscopio, crioterapia per trattamento di verruche."
     ],
     "punti": [
-      "Visite e controlli su appuntamento, in orari concordati",
-      "Dermatoscopia digitale con archiviazione delle immagini",
-      "Iscritta all’Ordine dei Medici Chirurghi e Odontoiatri della provincia del Verbano-Cusio-Ossola, n. 604"
+      ""
     ]
   },
   "sezionePrestazioni": {
@@ -122,7 +108,7 @@
     "intro": "Le visite sono su appuntamento. Chiama lo studio: è lo stesso numero per prenotazioni e informazioni.",
     "sottoTelefono": "Prenotazioni e informazioni",
     "sottoMappa": "Apri in Google Maps",
-    "sottoEmail": "Per informazioni non urgenti",
+    "sottoEmail": "",
     "titoloOrari": "Orari",
     "bottoneOrari": "Chiama per prenotare",
     "notaOrari": "Le visite si svolgono solo su appuntamento."
@@ -136,12 +122,12 @@
     {
       "giorno": "Martedì",
       "codice": "Tu",
-      "orario": "10:00 – 17:00"
+      "orario": "14:30 – 19:00"
     },
     {
       "giorno": "Mercoledì",
       "codice": "We",
-      "orario": "14:00 – 18:00"
+      "orario": "14:30 – 19:00"
     },
     {
       "giorno": "Giovedì",
@@ -151,7 +137,7 @@
     {
       "giorno": "Venerdì",
       "codice": "Fr",
-      "orario": "10:00 – 17:00"
+      "orario": "14:30 – 19:00"
     },
     {
       "giorno": "Sabato",
@@ -209,32 +195,19 @@
     "notaLegale": "Le descrizioni hanno finalità informativa e non sostituiscono la visita medica: sarà il medico, durante la visita, a indicare il percorso adatto al singolo caso."
   },
   "paginaDomande": {
-    "eyebrow": "Prima della visita",
-    "titolo": "Domande frequenti",
-    "lead": "Le domande che ci vengono fatte più spesso al telefono. Se la tua non è qui, chiama pure: rispondiamo noi."
+    "eyebrow": "",
+    "titolo": "",
+    "lead": ""
   },
   "ctaFinale": {
-    "titolo": "Prenotare è una telefonata",
+    "titolo": "Prenotare con una telefonata",
     "testo": "Stesso numero per prenotazioni e informazioni. Studio in Piazza Castello 27, 28921 Verbania (VB).",
     "bottoneMappa": "Apri in Google Maps"
   },
   "footer": {
-    "avviso": "Le informazioni di questo sito hanno finalità informativa e non sostituiscono la visita medica. In caso di emergenza chiamare il 112."
+    "avviso": ""
   },
-  "domande": [
-    {
-      "domanda": "Cosa devo portare alla visita?",
-      "risposta": "Un documento d’identità e la tessera sanitaria. Se hai referti di visite precedenti, esami istologici o fotografie di lesioni cambiate nel tempo, portali con te: aiutano il confronto. Se segui una terapia, porta l’elenco dei farmaci."
-    },
-    {
-      "domanda": "La visita è convenzionata con il Servizio Sanitario Nazionale?",
-      "risposta": "Per informazioni su costi e modalità di pagamento chiama lo studio al {telefono}: te lo diciamo prima di fissare l’appuntamento, senza impegno."
-    },
-    {
-      "domanda": "Quanto dura la visita dermatologica?",
-      "risposta": "Gli appuntamenti sono fissati a intervalli di quindici minuti. Per una mappatura completa dei nei, o per una visita che richiede più tempo, viene riservato più spazio in agenda: se pensi di averne bisogno, segnalalo quando chiami."
-    }
-  ],
+  "domande": [],
   "prestazioni": [
     {
       "nome": "Visita dermatologica",
@@ -332,5 +305,17 @@
       "titolo": "Privacy — Dott.ssa Roberta Zanetta, dermatologa a Verbania",
       "descrizione": "Informativa privacy del sito della Dott.ssa Roberta Zanetta, dermatologa a Verbania. Il sito non usa cookie e non raccoglie dati tramite moduli."
     }
-  }
+  },
+  "pagine": [
+    {
+      "id": "pagina-prestazioni",
+      "tipo": "prestazioni",
+      "visibile": true
+    },
+    {
+      "id": "pagina-domande",
+      "tipo": "domande",
+      "visibile": true
+    }
+  ]
 }
