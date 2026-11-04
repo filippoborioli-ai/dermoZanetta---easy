@@ -122,7 +122,7 @@ generazione**: modificarlo a mano è tempo perso.
 | `script.js` | menu mobile, carosello delle prestazioni (barra e frecce), ricerca, evidenzia il giorno di oggi negli orari |
 | `fonts/` | i caratteri del sito (Fraunces e Figtree), in locale: la CSP non ammette font esterni |
 | `v1/` | la versione precedente di `style.css` e `script.js`. Nessuna pagina la usa: serve solo per tornare indietro. Le versioni dopo vanno in `v2/`, `v3/`… (vedi [Restyling](#restyling-come-si-fa)) |
-| `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
+| `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni. Le foto originali del telefono (`img/*.jpeg`, 1-2 MB) sono ignorate da git: si caricano dal pannello, che le ridimensiona |
 | `sitemap.xml` · `robots.txt` | elenco delle pagine per i motori di ricerca. La sitemap la riscrive `genera.mjs` con le sole pagine online |
 | `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
 | `CNAME` | una riga sola: il dominio `dermozanetta.it`. Serve a GitHub Pages |

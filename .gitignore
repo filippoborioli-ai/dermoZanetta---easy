@@ -7,3 +7,8 @@ CREDENZIALI.md
 node_modules/
 .DS_Store
 Thumbs.db
+
+# Foto originali del telefono (3024x4032, 1-2 MB): non vanno online cosi com'e.
+# Si caricano dal pannello, che le ridimensiona, oppure si ottimizzano prima.
+img/*.jpeg
+img/dottoressa v2.jpg
