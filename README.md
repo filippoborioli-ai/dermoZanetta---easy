@@ -118,8 +118,10 @@ generazione**: modificarlo a mano è tempo perso.
 | `prestazioni.html` | elenco completo delle prestazioni, con la ricerca |
 | `domande.html` | domande frequenti |
 | `privacy.html` | informativa privacy del sito, collegata dal footer |
-| `style.css` | colori, tipografia, layout del sito |
-| `script.js` | menu mobile, barra del carosello, ricerca delle prestazioni |
+| `style.css` | colori, tipografia, layout del sito (versione "carta intestata", dal 04/11/2026) |
+| `script.js` | menu mobile, carosello delle prestazioni (barra e frecce), ricerca, evidenzia il giorno di oggi negli orari |
+| `fonts/` | i caratteri del sito (Fraunces e Figtree), in locale: la CSP non ammette font esterni |
+| `v1/` | la versione precedente di `style.css` e `script.js`. Nessuna pagina la usa: serve solo per tornare indietro. Le versioni dopo vanno in `v2/`, `v3/`… (vedi [Restyling](#restyling-come-si-fa)) |
 | `img/` | foto del sito, più `img/loghi/` per i loghi delle collaborazioni |
 | `sitemap.xml` · `robots.txt` | elenco delle pagine per i motori di ricerca. La sitemap la riscrive `genera.mjs` con le sole pagine online |
 | `invia-indexnow.mjs` | segnala le pagine a Bing e affini (non a Google) |
@@ -421,25 +423,75 @@ ven 10–17, sabato e domenica chiuso.
 
 ## Colori
 
-Tutti in cima a `style.css`, nel blocco `:root`. Cambiare `--terracotta` cambia
-filetti e dettagli in tutto il sito; i bottoni pieni usano `--terracotta-forte`. Il pannello usa la stessa palette
-(`admin.css`), così le due cose restano visivamente parenti.
+Tutti in cima a `style.css`, nel blocco `:root`. I bottoni d'azione (chiama,
+prenota) usano `--terracotta`; titoli, marchio e footer usano `--petrolio`.
+Il pannello ha una palette sua (`admin.css`), ancora quella calda della grafica
+precedente: il restyling del 04/11/2026 non l'ha toccato.
 
 ```css
---crema:      #fdf8f3;  /* sfondo pagina */
---sabbia:     #f4e9de;  /* sfondo sezioni alternate */
---terracotta: #c0764e;  /* filetti, bordi, accenti */
---terracotta-forte: #ab633d;  /* fondo dei bottoni con la scritta bianca */
---salvia:     #7f8f7a;  /* pallini elenco */
---salvia-testo: #606d5c;  /* eyebrow ed etichette piccole */
---bruno:      #3b2e27;  /* testo principale, footer */
+--carta:       #fcfbf8;  /* sfondo pagina */
+--salvia-1:    #f2f5f2;  /* sfondo sezioni alternate */
+--salvia-2:    #e1ebe6;  /* fondo del ritratto, giorno di oggi negli orari */
+--linea:       #d5ddd8;  /* filetti */
+--petrolio:    #1c4f4b;  /* titoli, marchio, bordi dei bottoni vuoti */
+--petrolio-2:  #153c39;  /* footer */
+--inchiostro:  #1b2b29;  /* testo principale */
+--testo-soft:  #4a5b58;  /* testo secondario */
+--terracotta:  #a8532f;  /* solo azioni e piccoli dettagli */
+--terracotta-2:#8c4222;  /* bottoni al passaggio del mouse */
 ```
 
-Le due varianti "forte" e "testo" esistono per la leggibilità: con la scritta
-bianca la terracotta chiara arriva a un contrasto di 3,5:1, la salvia chiara sullo
-sfondo sabbia a 2,9:1; il minimo per un testo di quella misura è 4,5:1 (WCAG AA).
-Se si cambia un colore, conviene ricontrollarlo con un qualsiasi "contrast
-checker" prima di pubblicare.
+Contrasti misurati (minimo WCAG AA: 4,5:1): bianco su `--terracotta` 5,3:1,
+`--terracotta` su `--salvia-1` 4,8:1, `--testo-soft` su bianco 7,2:1. Se si cambia
+un colore conviene ricontrollarlo con un qualsiasi "contrast checker" prima di
+pubblicare.
+
+---
+
+## Restyling: come si fa
+
+Regola di fondo: **il sito online non si tocca finché il nuovo aspetto non è
+approvato.** Un restyling cambia solo `style.css`, `script.js` e `fonts/`;
+l'HTML lo scrive `genera.mjs` e non si ritocca a mano.
+
+1. **Copia di lavoro.** Si lavora su una copia (cartella a parte o branch), mai
+   su `main`. Per mostrarla ad altri si usa un repo di prova separato, con
+   `noindex` e un `robots.txt` che blocca tutto: quei due blocchi non devono mai
+   arrivare sul sito vero.
+2. **Prove prima di approvare.** Desktop (1280 px) e telefono (390 px) su home,
+   Prestazioni, Privacy e 404. Il pannello va provato su una **copia** con una
+   password di test (`node cambia-password.mjs` sulla copia, mai sul repo):
+   anteprima, sezione libera, pagina libera, domande frequenti. Poi Lighthouse.
+3. **Approvato: la versione vecchia va in archivio.** Con `git mv`, mai
+   cancellando: `style.css`, `script.js` (e i font non più usati) vanno nella
+   prima cartella `vN/` libera (`v1/`, `v2/`, `v3/`…). Poi si mettono i file nuovi
+   al loro posto.
+4. **Cosa non si tocca.** `CNAME`, gli indirizzi delle pagine, titoli e testi
+   (arrivano da `contenuti.json`), `robots.txt`. Dopo `node genera.mjs` si guarda
+   `git diff`: se le pagine non sono cambiate davvero, si ripristinano pagine e
+   sitemap (la data in `sitemap.xml` deve cambiare solo quando cambia il
+   contenuto).
+5. **Aggiornare i `.md`.** Questo README (tabella "I file", "Colori", la
+   cronologia qui sotto) e `SEO-DA-FARE.md` se il lavoro tocca la SEO.
+6. **Push.** Commit con un messaggio chiaro, push normale: mai `--force`.
+7. **Controllo di allineamento, sempre a fine lavoro** (cartella aperta in
+   VS Code = GitHub = sito online):
+   ```
+   git fetch origin
+   git status -sb                       # "main...origin/main" senza ahead/behind
+   git rev-parse main origin/main       # due sigle uguali
+   git log main..origin/main            # vuoto: niente da scaricare
+   ```
+   Poi si apre il sito vero (con Ctrl+F5: GitHub fa tenere i file al browser per
+   10 minuti) e si controlla che serva il file nuovo. File modificati o
+   cancellati in locale e non voluti vanno segnalati, non committati di nascosto.
+
+### Cronologia delle versioni
+
+| Versione | Periodo | Dove | Com'era |
+|---|---|---|---|
+| v1 | fino al 04/11/2026 | `v1/` | terracotta e crema, schede a tre colonne, caratteri di sistema |
+| corrente | dal 04/11/2026 | radice | "carta intestata": verde-petrolio, Fraunces e Figtree, carosello con frecce, prestazioni a indice, doppio filetto |
 
 ---
 
