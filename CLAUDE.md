@@ -13,6 +13,7 @@ Sito statico di dermozanetta.it (GitHub Pages). Cosa è cosa e come si lavora: *
 ## Git e pubblicazione
 - Push normale, **mai `--force`**. Commit solo dei file del lavoro, per nome: foto cancellate o non tracciate in locale non vanno committate di nascosto.
 - Mai `noindex` o `robots.txt` bloccante sul sito vero (servono solo nella copia di prova online). Mai toccare `CNAME`.
+- Dopo il push, controllare la pubblicazione con `gh run list --limit 3` (lavoro "pages build and deployment"). L'indicatore dei build può dire "errored" mentre il lavoro è in corso e il passo "Deploy" è solo lento: si aspetta, **senza rifare push** (un nuovo push cancella la pubblicazione in corso). Un nuovo push solo se il lavoro finisce con `failure`.
 - **Alla fine di ogni lavoro verificare l'allineamento** cartella locale (VS Code) = GitHub = sito online: `git fetch`, `git status -sb`, `git rev-parse main origin/main`, `git log main..origin/main`, poi aprire il sito vero. Riferire anche i file locali non allineati.
 
 ## Dati
