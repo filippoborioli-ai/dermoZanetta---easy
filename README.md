@@ -429,22 +429,42 @@ Il pannello ha una palette sua (`admin.css`), ancora quella calda della grafica
 precedente: il restyling del 04/11/2026 non l'ha toccato.
 
 ```css
---carta:       #fcfbf8;  /* sfondo pagina */
---salvia-1:    #f2f5f2;  /* sfondo sezioni alternate */
---salvia-2:    #e1ebe6;  /* fondo del ritratto, giorno di oggi negli orari */
---linea:       #d5ddd8;  /* filetti */
---petrolio:    #1c4f4b;  /* titoli, marchio, bordi dei bottoni vuoti */
---petrolio-2:  #153c39;  /* footer */
+--carta:       #fdfbf6;  /* sfondo pagina: avorio caldo */
+--salvia-1:    #f4f4ec;  /* sfondo sezioni alternate: quasi neutro, un filo di salvia */
+--salvia-2:    #e3ebe3;  /* fondo del ritratto, giorno di oggi negli orari */
+--linea:       #dcdfd2;  /* filetti */
+--petrolio:    #185049;  /* titoli, marchio, bordi dei bottoni vuoti */
+--petrolio-2:  #123f3a;  /* footer */
 --inchiostro:  #1b2b29;  /* testo principale */
 --testo-soft:  #4a5b58;  /* testo secondario */
 --terracotta:  #a8532f;  /* solo azioni e piccoli dettagli */
 --terracotta-2:#8c4222;  /* bottoni al passaggio del mouse */
 ```
 
-Contrasti misurati (minimo WCAG AA: 4,5:1): bianco su `--terracotta` 5,3:1,
-`--terracotta` su `--salvia-1` 4,8:1, `--testo-soft` su bianco 7,2:1. Se si cambia
-un colore conviene ricontrollarlo con un qualsiasi "contrast checker" prima di
-pubblicare.
+Contrasti misurati (minimo WCAG AA: 4,5:1): testo secondario su `--salvia-1` 6,5:1,
+`--terracotta` su `--carta` 5,1:1, bianco su `--petrolio-2` (footer) 11,7:1. Se si
+cambia un colore conviene ricontrollarlo con un qualsiasi "contrast checker" prima
+di pubblicare.
+
+### Perché questi colori (cosa è provato e cosa è scelta di design)
+
+- **Provato:** il colore conta per la fiducia, ma poco rispetto al resto. In uno
+  studio su oltre 200 persone (Alberts e van der Geest, 2011, siti di finanza,
+  legge e medicina) cambiando solo lo schema di colore la fiducia percepita
+  cambiava in modo significativo ma limitato; il blu risultava il più affidabile e
+  il nero il meno. Altri studi su fiducia e aspetto delle pagine di salute vanno
+  nella stessa direzione: l'impressione estetica si forma in pochi decimi di
+  secondo, ma autore, foto vere e informazioni chiare pesano di più.
+- **Provato:** per un bottone d'azione conta il **contrasto con la pagina**, non il
+  colore in sé (l'effetto di isolamento). Per questo il terracotta sta su un fondo
+  verde-neutro: sullo sfondo beige di una prova alternativa il bottone si
+  confondeva e attirava meno.
+- **Scelta di design, non dimostrata:** verde-petrolio al posto del blu (il blu
+  nella ricerca vince sulla fiducia, ma è il colore di ogni studio medico e di
+  ogni banca) e fondi leggermente caldi (per una dermatologa sembrano più
+  accoglienti). Se un domani conta di più il segnale di fiducia immediato, le
+  variabili sopra permettono di passare al blu cambiando solo `--petrolio`,
+  `--petrolio-2` e gli sfondi.
 
 ---
 
@@ -491,7 +511,7 @@ l'HTML lo scrive `genera.mjs` e non si ritocca a mano.
 | Versione | Periodo | Dove | Com'era |
 |---|---|---|---|
 | v1 | fino al 04/11/2026 | `v1/` | terracotta e crema, schede a tre colonne, caratteri di sistema |
-| corrente | dal 04/11/2026 | radice | "carta intestata": verde-petrolio, Fraunces e Figtree, carosello con frecce, prestazioni a indice, doppio filetto |
+| corrente | dal 04/11/2026 | radice | "carta intestata": verde-petrolio con fondi avorio, Fraunces e Figtree, carosello con frecce, prestazioni a indice, doppio filetto |
 
 ---
 
