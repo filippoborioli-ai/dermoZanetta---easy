@@ -429,20 +429,22 @@ Il pannello ha una palette sua (`admin.css`), ancora quella calda della grafica
 precedente: il restyling del 04/11/2026 non l'ha toccato.
 
 ```css
---carta:       #fdfbf6;  /* sfondo pagina: avorio caldo */
---salvia-1:    #f4f4ec;  /* sfondo sezioni alternate: quasi neutro, un filo di salvia */
---salvia-2:    #e3ebe3;  /* fondo del ritratto, giorno di oggi negli orari */
---linea:       #dcdfd2;  /* filetti */
---petrolio:    #185049;  /* titoli, marchio, bordi dei bottoni vuoti */
---petrolio-2:  #123f3a;  /* footer */
+--carta:       #f9fcfc;  /* sfondo pagina: bianco con un filo di acqua */
+--salvia-1:    #edf6f6;  /* sfondo sezioni alternate: azzurro acqua chiarissimo */
+--salvia-2:    #d9ebeb;  /* fondo del ritratto, giorno di oggi negli orari */
+--linea:       #cfe1e1;  /* filetti */
+--petrolio:    #17505c;  /* titoli, marchio, bordi dei bottoni vuoti: petrolio */
+--petrolio-2:  #0f3c45;  /* footer */
 --inchiostro:  #1b2b29;  /* testo principale */
 --testo-soft:  #4a5b58;  /* testo secondario */
 --terracotta:  #a8532f;  /* solo azioni e piccoli dettagli */
 --terracotta-2:#8c4222;  /* bottoni al passaggio del mouse */
 ```
 
+(I nomi `--salvia-*` sono rimasti dalla prima versione: oggi sono azzurri.)
+
 Contrasti misurati (minimo WCAG AA: 4,5:1): testo secondario su `--salvia-1` 6,5:1,
-`--terracotta` su `--carta` 5,1:1, bianco su `--petrolio-2` (footer) 11,7:1. Se si
+`--terracotta` su `--salvia-1` 4,8:1 e su `--carta` 5,2:1, bianco su `--petrolio-2` (footer) 12,0:1. Se si
 cambia un colore conviene ricontrollarlo con un qualsiasi "contrast checker" prima
 di pubblicare.
 
@@ -459,12 +461,12 @@ di pubblicare.
   colore in sé (l'effetto di isolamento). Per questo il terracotta sta su un fondo
   verde-neutro: sullo sfondo beige di una prova alternativa il bottone si
   confondeva e attirava meno.
-- **Scelta di design, non dimostrata:** verde-petrolio al posto del blu (il blu
-  nella ricerca vince sulla fiducia, ma è il colore di ogni studio medico e di
-  ogni banca) e fondi leggermente caldi (per una dermatologa sembrano più
-  accoglienti). Se un domani conta di più il segnale di fiducia immediato, le
-  variabili sopra permettono di passare al blu cambiando solo `--petrolio`,
-  `--petrolio-2` e gli sfondi.
+- **Scelta di design, non dimostrata:** il petrolio (blu-verde) con fondi azzurro
+  acqua invece del blu pieno. La ricerca premia il blu sulla fiducia, ma il blu
+  pieno è il colore di ogni studio medico e di ogni banca; il petrolio con
+  l'acqua ne tiene la freschezza e distingue il sito. Se un domani conta di più
+  il segnale di fiducia immediato, le variabili sopra permettono di passare al
+  blu cambiando solo `--petrolio`, `--petrolio-2` e gli sfondi.
 
 ---
 
@@ -511,7 +513,7 @@ l'HTML lo scrive `genera.mjs` e non si ritocca a mano.
 | Versione | Periodo | Dove | Com'era |
 |---|---|---|---|
 | v1 | fino al 04/11/2026 | `v1/` | terracotta e crema, schede a tre colonne, caratteri di sistema |
-| corrente | dal 04/11/2026 | radice | "carta intestata": verde-petrolio con fondi avorio, Fraunces e Figtree, carosello con frecce, prestazioni a indice, doppio filetto |
+| corrente | dal 04/11/2026 | radice | "carta intestata": petrolio con fondi azzurro acqua, Fraunces e Figtree, carosello con frecce, prestazioni a indice, doppio filetto |
 
 ---
 

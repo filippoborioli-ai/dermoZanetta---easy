@@ -30,13 +30,13 @@
 
 :root{
   --bianco:      #ffffff;
-  --carta:       #fdfbf6;
-  --salvia-1:    #f4f4ec;
-  --salvia-2:    #e3ebe3;
-  --linea:       #dcdfd2;
+  --carta:       #f9fcfc;
+  --salvia-1:    #edf6f6;
+  --salvia-2:    #d9ebeb;
+  --linea:       #cfe1e1;
 
-  --petrolio:    #185049;
-  --petrolio-2:  #123f3a;
+  --petrolio:    #17505c;
+  --petrolio-2:  #0f3c45;
   --inchiostro:  #1b2b29;
   --testo-soft:  #4a5b58;
 
@@ -223,7 +223,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   content:""; position:absolute; left:0; top:.35em;
   width:15px; height:15px; border-radius:50%;
   background:var(--salvia-2)
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6.5 12.5l4 4 7-8' fill='none' stroke='%23185049' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/10px no-repeat;
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6.5 12.5l4 4 7-8' fill='none' stroke='%2317505c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/10px no-repeat;
 }
 
 /* ---------------- Il medico: titolo sopra il testo ---------------- */
@@ -326,7 +326,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   border:1.5px solid var(--linea);
   border-radius:999px;
 }
-.search input:focus{ outline:none; border-color:var(--petrolio); box-shadow:0 0 0 3px rgba(24,80,73,.14); }
+.search input:focus{ outline:none; border-color:var(--petrolio); box-shadow:0 0 0 3px rgba(23,80,92,.14); }
 .search-esito{ margin:8px 4px 0; font-size:.88rem; color:var(--testo-soft); min-height:1.2em; }
 
 .note-legale{
@@ -442,7 +442,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   background:var(--terracotta); color:#fff;
   text-align:center; text-decoration:none; font-weight:700; font-size:.98rem;
   padding:13px; border-radius:999px;
-  box-shadow:0 8px 22px rgba(18,63,58,.4);
+  box-shadow:0 8px 22px rgba(15,60,69,.4);
 }
 
 /* ---------------- Responsive ---------------- */
@@ -471,7 +471,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
     flex-direction:column; align-items:stretch; gap:0;
     background:var(--bianco);
     border-bottom:1px solid var(--linea);
-    box-shadow:0 18px 26px -18px rgba(18,63,58,.35);
+    box-shadow:0 18px 26px -18px rgba(15,60,69,.35);
     padding:4px 20px 18px;
     display:none;
   }
