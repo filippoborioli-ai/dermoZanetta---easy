@@ -37,6 +37,18 @@
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  /* ---------- Orari: il giorno di oggi ----------
+     Evidenzia nella tabella degli orari (che arriva da contenuti.json)
+     la riga del giorno corrente: nessun orario scritto qui dentro. */
+  var GIORNI = ['domenica', 'lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato'];
+  var oggi = GIORNI[new Date().getDay()];
+  Array.prototype.forEach.call(document.querySelectorAll('.hours tr'), function (riga) {
+    var nome = riga.querySelector('th');
+    if (!nome) return;
+    var giorno = nome.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    if (giorno === oggi) riga.classList.add('oggi');
+  });
+
   /* ---------- Prestazioni ----------
      Le schede NON le disegna piu' il browser: stanno gia' scritte
      nell'HTML, generate da contenuti.json con `node genera.mjs`. Il motivo e'
@@ -55,10 +67,33 @@
   if (barra) {
     var pallino = barra.querySelector('span');
 
+    // Frecce accanto alla barra: su desktop la rotellina scorre in
+    // verticale, quindi servono comandi che si vedano e si possano cliccare.
+    var comandi = document.createElement('div');
+    comandi.className = 'carosello-comandi';
+    var freccia = function (testo, etichetta, verso) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'carosello-freccia';
+      b.textContent = testo;
+      b.setAttribute('aria-label', etichetta);
+      b.addEventListener('click', function () {
+        var scheda = box.querySelector('.card');
+        var passo = scheda ? scheda.getBoundingClientRect().width + 14 : box.clientWidth * 0.8;
+        box.scrollBy({ left: verso * passo, behavior: 'smooth' });
+      });
+      return b;
+    };
+    barra.parentNode.insertBefore(comandi, barra);
+    comandi.appendChild(freccia('←', 'Prestazioni precedenti', -1));
+    comandi.appendChild(barra);
+    comandi.appendChild(freccia('→', 'Prestazioni successive', 1));
+
     var aggiornaBarra = function () {
       var scorrimento = box.scrollWidth - box.clientWidth;
       // Se le schede entrano tutte, la barra non serve.
       barra.hidden = scorrimento <= 1;
+      comandi.hidden = barra.hidden;
       if (barra.hidden) return;
       var quota = box.clientWidth / box.scrollWidth;          // porzione visibile
       pallino.style.width = (quota * 100) + '%';
